@@ -9,4 +9,5 @@ db.sqlite3
 node_modules/*
 *.old
 __pycache__/*
+.python-version
 static/css/base.css
