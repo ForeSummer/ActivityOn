@@ -25,7 +25,7 @@ SECRET_KEY = '=l3oo*cee_r974z*p6rdv03!ss&li-z5yt9hs1%=m4416s+ds&'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-TEMPLATE_DEBUG = True
+#TEMPLATE_DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
 
@@ -63,6 +63,7 @@ TEMPLATES = [
         ],
         'APP_DIRS': True,
         'OPTIONS': {
+            'debug': DEBUG,
             'context_processors': [
                 "django.contrib.auth.context_processors.auth",
                 "django.core.context_processors.debug",

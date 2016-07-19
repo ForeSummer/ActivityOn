@@ -14,11 +14,16 @@ Including another URLconf
     2. Add a URL to urlpatterns:  url(r'^blog/', include(blog_urls))
 """
 from django.conf.urls import patterns, include, url
-
+import app.views
 from django.contrib import admin
 admin.autodiscover()
 
-urlpatterns = patterns(
+urlpatterns = [
+    url(r'^.*$', app.views.index),
+]
+
+
+'''urlpatterns = patterns(
     '',
     # Examples:
     # url(r'^$', 'aips.views.home', name='home'),
@@ -46,5 +51,5 @@ urlpatterns = patterns(
     url(r'^regist/(?P<act_id>.*?)$', 'app.registration.regist_all'),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^.*$', 'app.views.index'),
-)
+)'''
 

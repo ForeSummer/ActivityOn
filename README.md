@@ -16,3 +16,10 @@ branch master used to release, branch src used to dev
 
 ## Release
     $ grunt build
+
+# 注意！
+
+ActivityOn/settings.py中写死了mysql的配置。。本地mysql的帐号密码自己改一下就好。。数据库名字还是按照settings来就行
+这次settings有别的地方改了 就不加到gitignore里了 之后会添加进去 之后如果更新了settings会特别说明
+
+python版本3.5.0

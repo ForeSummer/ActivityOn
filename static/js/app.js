@@ -2,27 +2,16 @@
 
 
 // Declare app level module which depends on filters, and services
-angular.module('activityon', [
+angular.module('act', [
     'ngRoute',
-    'ui.tinymce',
-    'ui.bootstrap',
     'ngCookies',
     'angularFileUpload',
-    'angular-google-analytics',
-    'aips.filters',
-    'aips.services',
-    'aips.directives',
-    'aips.controllers',
+    'act.filters',
+    'act.services',
+    'act.directives',
+    'act.controllers',
     //semantic directives
-    'angularify.semantic.accordion',
-	'angularify.semantic.checkbox',
-	'angularify.semantic.dimmer',
-	'angularify.semantic.dropdown',
-	'angularify.semantic.modal',
-	'angularify.semantic.popup',
-	'angularify.semantic.rating',
-	'angularify.semantic.sidebar',
-	'angularify.semantic.wizard'
+    'ngMaterial'
 ]).
     constant('urls', {
         'part': '/static/partials',
@@ -54,12 +43,6 @@ angular.module('activityon', [
         
         $routeProvider.otherwise({redirectTo: '/'});
     }]).
-    config(function(AnalyticsProvider){
-        AnalyticsProvider.setAccount('UA-62785664-1');
-        AnalyticsProvider.trackPages(true);
-        AnalyticsProvider.trackUrlParams(true);
-        AnalyticsProvider.useDisplayFeatures(true);
-    }).
     run(['$location', '$rootScope', 'urls', function($location, $rootScope, urls){
         //Configure header title of the page
         $rootScope.urls = urls;

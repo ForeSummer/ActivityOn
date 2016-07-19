@@ -2,16 +2,16 @@
 
 /* Controllers */
 
-angular.module('activityon.controllers', []).
-    controller('HomepageCtrl', ['$scope', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$location','Analytics', function($scope, $http, $csrf, urls, $filter, $routeParams, $user, $location,Analytics){
-        //console.log('HomepageCtrl');
+angular.module('act.controllers', []).
+    controller('HomepageCtrl', ['$scope', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$location', function($scope, $http, $csrf, urls, $filter, $routeParams, $user, $location){
+        console.log('HomepageCtrl');
         $scope.dropdown_model = 'test';
         /**
          $scope.phonenum = '';
          $scope.step = 0;
          **/
-        Analytics.trackPage('/');
-        $scope.create_act = function(){
+        
+        /*$scope.create_act = function(){
             var param = {
                 'name': $scope.act_name
             };
@@ -38,11 +38,11 @@ angular.module('activityon.controllers', []).
         if($scope.act_name){
             $scope.create_act();
         }
-        $scope.get_act_count();
+        $scope.get_act_count();*/
     }]).
     controller('ActivityLoginCtrl', ['$scope', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$cookies', '$location', function($scope, $http, $csrf, urls, $filter, $routeParams, $user, $cookies, $location){
-        //console.log('ActivityLoginCtrl');
-        $scope.backpage = $routeParams.backpage;
+        console.log('ActivityLoginCtrl');
+        /*$scope.backpage = $routeParams.backpage;
         $scope.act_info = {
             act_id: '',
             security_key: ''
@@ -62,12 +62,12 @@ angular.module('activityon.controllers', []).
             });
         };
         $scope.get_act_info('auto');
-        $("#act_id").click(function() { $(this).select(); } );
+        $("#act_id").click(function() { $(this).select(); } );*/
     }]).
     controller('ActivityManageCtrl', ['$scope', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$cookies', '$location', function($scope, $http, $csrf, urls, $filter, $routeParams, $user, $cookies, $location){
-        //console.log('ActivityManageCtrl');
+        console.log('ActivityManageCtrl');
         
-        $scope.stepfour = $routeParams.step == 'four';
+        /*$scope.stepfour = $routeParams.step == 'four';
         $scope.act_info = {
             act_id: '',
             name: '',
@@ -165,15 +165,15 @@ angular.module('activityon.controllers', []).
         };
         $scope.qr_url = 'http://qr.liantu.com/api.php?w=350&el=m&text=' + urls.host + '/regist/' +$scope.act_info.act_id;
         $("#regist_url").click(function() { $(this).select(); } );
-        $scope.get_act_info();
+        $scope.get_act_info();*/
     }]).
     controller('RegStatisticCtrl', ['$scope', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', function($scope, $http, $csrf, urls, $filter, $routeParams, $user){
-        //console.log('RegStatisticCtrl');
+        console.log('RegStatisticCtrl');
         
     }]).
     controller('SetEmailCtrl', ['$scope', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$location',function($scope, $http, $csrf, urls, $filter, $routeParams, $user, $location){
-        //console.log('SetEmailCtrl');
-        $scope.stepthree = true;
+        console.log('SetEmailCtrl');
+        /*$scope.stepthree = true;
         $scope.act_info = {
             act_id: $routeParams.act_id,
             email: ''
@@ -192,11 +192,11 @@ angular.module('activityon.controllers', []).
                     $location.url('/act/' + $scope.act_info.act_id + '/manage?step=four');
                 }
             });
-        };
+        };*/
     }]).
     controller('FormViewCtrl', ['$scope', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$location', function($scope, $http, $csrf, urls, $filter, $routeParams, $user, $location){
-        //console.log('FormViewCtrl');
-        $scope.formdata = {};
+        console.log('FormViewCtrl');
+        /*$scope.formdata = {};
         $scope.steptwo = $routeParams.step == 'two';
         $scope.edit_show = false;
         $scope.act_info = {
@@ -307,13 +307,13 @@ angular.module('activityon.controllers', []).
                 check_list.push(form_list[index]['label']);
             }
             return true;
-        };
+        };*/
 
     }]).
 	
     controller('ActivityStatisticCtrl', ['$scope', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$location', function($scope, $http, $csrf, urls, $filter, $routeParams, $user, $location){
-        //console.log('ActivityStatisticCtrl');
-        $scope.act_info = {
+        console.log('ActivityStatisticCtrl');
+        /*$scope.act_info = {
             act_id: $routeParams.act_id
         };
         $scope.reg_list = [];
@@ -369,14 +369,14 @@ angular.module('activityon.controllers', []).
 		};
         
         $scope.get_act_info();
-        $scope.get_act_registrations();
+        $scope.get_act_registrations();*/
     }]).
 	controller('InstructionCtrl', ['$scope', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$cookies', '$location', function($scope, $http, $csrf, urls, $filter, $routeParams, $user, $cookies, $location){
         //console.log('InstructionCtrl');
         
     }]).
     controller('ActivityRegistCtrl', ['$scope', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$location', '$timeout', function($scope, $http, $csrf, urls, $filter, $routeParams, $user, $location, $timeout){
-        if($location.path().indexOf('/regist/') != 0){
+        /*if($location.path().indexOf('/regist/') != 0){
             $location.url('/regist/' + $routeParams.act_id);
         }
         //console.log('ActivityRegistCtrl');
@@ -467,7 +467,7 @@ angular.module('activityon.controllers', []).
         };
         $scope.logout_user = function(){
             $user.logout();
-        };
+        };*/
     }]).
     controller('FixCtrl', ['$scope', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$cookies', '$location', function($scope, $http, $csrf, urls, $filter, $routeParams, $user, $cookies, $location){
         //console.log('FixCtrl');
@@ -477,15 +477,15 @@ angular.module('activityon.controllers', []).
         }
     }]).
     controller('HeaderCtrl', ['$scope', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$cookies', '$location', function($scope, $http, $csrf, urls, $filter, $routeParams, $user, $cookies, $location){
-        //console.log('HeaderCtrl');
-        $scope.$on('$routeChangeStart', function(next, current) {
+        console.log('HeaderCtrl');
+        /*$scope.$on('$routeChangeStart', function(next, current) {
             $scope.show_backto = $cookies.act_url?true:false;
             $scope.back_page_url = $cookies.act_url?$cookies.act_url:'';
-        });
+        });*/
     }])
     .controller('DevCtrl', ['$scope', '$http', 'urls', 'CsrfService', function($scope, $http, urls, $csrf){
         ////console.log('DevCtrl');
-        $scope.api_url = '/test';
+        /*$scope.api_url = '/test';
         $scope.param_list = [];
         $scope.add_param = function(){
             $scope.param_list.push({'key':'', 'value':''});
@@ -521,11 +521,11 @@ angular.module('activityon.controllers', []).
         };
         $scope.clean_param = function(){
             $scope.param_list = [];
-        };
+        };*/
     }])
     .controller('authenticationCtrl',['$scope', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$location', function($scope, $http, $csrf, urls, $filter, $routeParams, $user, $location){
         //console.log('authenticationCtrl');
-        $scope.act_info = {
+        /*$scope.act_info = {
             act_id: $routeParams.act_id
         };
         $scope.formdata = {};
@@ -551,5 +551,5 @@ angular.module('activityon.controllers', []).
                     $location.url('/regist/' + $routeParams.act_id);
                 }
             });
-        };
+        };*/
     }]);

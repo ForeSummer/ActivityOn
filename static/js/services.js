@@ -5,7 +5,7 @@
 
 // Demonstrate how to register services
 // In this case it is a simple value service.
-angular.module('activityon.services', []).
+angular.module('act.services', []).
     value('version', '0.1').
     service('CsrfService', ['$cookies' ,function($cookies){
         return {
@@ -46,7 +46,7 @@ angular.module('activityon.services', []).
         var get_user_status = function(){
             $.get(urls.api + '/user/status', function(data){
                 user = data;
-                user.student_id = user.student_id?user.student_id:'';
+                //user.student_id = user.student_id?user.student_id:'';
                 student_id = user.student_id;
             });
         };
