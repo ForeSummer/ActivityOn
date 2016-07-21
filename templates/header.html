@@ -20,3 +20,27 @@
     </md-toolbar>
    </md-content>
 </div-->
+<div class="header-container">
+  <md-toolbar layout="row" class="toolbar">
+    <div flex-gt-sm="20" class="left-col">
+      <h3 class="icon">Activity On</h3>
+    </div>
+    <div flex-gt-sm="55" class="mid-col">
+      <md-input-container class="search">
+        <label>输入要搜索的活动</label>
+        <input class="search-input" type="text">
+      </md-input-container>
+      <md-button class="search-btn">Search!</md-button>
+    </div>
+    <div flex-gt-sm="25" class="right-col">
+      <img class="user-icon" src="/static/images/admin.png">
+      <div class="user-name">Username</div>
+      <md-button class="user-logout" title="登出">
+        <i id="logout-img" class="fa fa-sign-out fa-2x"></i>
+      </md-button>
+      <md-button class="user-msg" title="信息">
+        <i id="msg-img" class="fa fa-envelope fa-2x"></i>
+      </md-button>
+    </div>
+  </md-toolbar>
+</div>

@@ -1,1 +1,82 @@
+#container {
+	position: relative;
+	height: auto;
+	min-height: 100%;
+	#wrap {
+		padding-bottom: 60px;
+		.header-container {
+			position: fixed;
+			width: 100%;
+			.left-col {
+				.icon {
+					padding-left: 20px;
+				}
+			}
+			.mid-col {
+				padding-top: 6px;
+				.search {
+					padding-bottom: 6px;
+					label {
+						font-size: 15px;
+						color: #f7f7f7;
+						padding-left: 10px;
+					}
+					.search-input {
+						width: 250px;
+						border: 1px #f7f7f7 solid;
+					}
+					.search-input:focus {
+						border-width: 2px;
+						box-shadow: 0px 0px 5px #fff;
+					}
+				}
+				.search-btn {
+					background: #f7f7f7;
+					color: blue;
+					min-height: 0px;
+					height: 30px;
+					.ng-scope {
+						padding-top: 5px;
+					}
+				}
+			}
+			.right-col {
+				padding-top: 10px;
+				.user-icon {
+					height: 40px;
+					vertical-align: middle;
+					padding-right: 20px;
+				}
+				.user-name {
+					display: inline;
+				}
+				.user-logout {
+					margin-left: 20px;
+					min-width: 0px;
+					#logout-img {
+						vertical-align: middle;
+					}
+				}
+				.user-msg {
+					min-width: 0px;
+					#msg-img {
+						vertical-align: middle;
+					}
+				}
+			}
+		}
 
+		.article-container {
+			padding-top: 80px;
+		}
+	}
+
+	.footer-container {
+		position: absolute;
+		width: 100%;
+		bottom: 0px;
+		height: 60px;
+		text-align: center;
+		font-size: 12px;
+	}
+}
