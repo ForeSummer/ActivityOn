@@ -13,9 +13,9 @@ angular.module('act.controllers', []).
         //search access
         $scope.search = "";
         $scope.getResult = function() {
-            $http.post(urls.api + '').success(function(){
+            //$http.post(urls.api + '').success(function(){
 
-            });
+            //});
         };
         //logout
         $scope.logout = function(){
@@ -35,9 +35,14 @@ angular.module('act.controllers', []).
         };
         //get user info
         $scope.get_user_info = function() {
-            $http.get(urls.api + '/user/' + session.userId + "/info").success(function(data) {
-                $scope.avatarUrl = data.url;
-                $scope.nickname = data.nickname;
+            $http.get(urls.api + '/user/info/?UID=' + session.userId).success(function(data) {
+                if(data.ErrorCode == 1) {
+                    $scope.avatarUrl = data.url;
+                    $scope.nickname = data.nickname;
+                }
+                else {
+                    console.log("get info error");
+                }
             });
         };
     }]).
@@ -68,7 +73,7 @@ angular.module('act.controllers', []).
             };
             console.log(param);
             $http.post(urls.api + "/user/login", $.param(param)).success(function(res){
-                if(res.UID == 1){
+                if(res.ErrorCode == 1){
                     //success
                     session.create(0, res.UID);
                     //$('.header-container').show();
@@ -79,7 +84,7 @@ angular.module('act.controllers', []).
                 else {
                     $scope.user_name = "";
                     $scope.user_password = "";
-                    errormessage = "用户名密码错误！";
+                    $scope.errormessage = "用户名密码错误！";
                 }
             });
         };
