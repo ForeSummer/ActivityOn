@@ -20,7 +20,7 @@ class UserBase (models.Model):
     UName = models.CharField(max_length = 50)
     UAvatar = models.ImageField(blank=True)
     UInfo = models.CharField(blank=True,max_length = 50)
-    UStatus = models.IntegerField(blank=True,)
+    UStatus = models.IntegerField(blank=True,default=0)
     UFollow = models.CommaSeparatedIntegerField(blank=True,max_length = 10)
     UFollowed = models.CommaSeparatedIntegerField(blank=True,max_length = 10)
     UMessage = models.CommaSeparatedIntegerField(blank=True,max_length = 10)

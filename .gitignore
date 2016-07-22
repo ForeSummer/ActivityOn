@@ -12,3 +12,4 @@ __pycache__/*
 .python-version
 static/css/base.css
 ActivityOn/settings.py
+app/migrations/*

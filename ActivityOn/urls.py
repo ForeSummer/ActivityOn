@@ -20,8 +20,9 @@ admin.autodiscover()
 
 urlpatterns = [
     url(r'^$', app.views.index),
-    url(r'^api/user/register',app.views.register),
+    url(r'^api/user/regist',app.views.register),
     url(r'^api/user/login',app.views.login),
+    url(r'^user/',app.views.ReturnNone),
     url(r'^api/user/logout',app.views.logout)
 ]
 

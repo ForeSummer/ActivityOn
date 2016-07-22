@@ -21,17 +21,17 @@
           <br/>
           <md-input-container class="nickname-input">
             <label>昵称</label>
-            <input type="text">
+            <input type="text" ng-model="nickname">
           </md-input-container>
           <br/>
           <md-input-container class="password-input">
             <label>密码</label>
-            <input type="password">
+            <input type="password" ng-model="password">
           </md-input-container>
           <br/>
           <md-input-container class="confirm-input">
             <label>确认密码</label>
-            <input type="password">
+            <input type="password" ng-model="confirm">
           </md-input-container>
           <br/>
           <md-input-container class="email-input">
@@ -44,7 +44,7 @@
             <input type="email" ng-model="openemail">
           </md-input-container>
           <br/>
-          <md-button id="register-submit-btn" class="md-raised md-primary">Register!</md-button>
+          <md-button id="register-submit-btn" class="md-raised md-primary" ng-click="regist_user()">Register!</md-button>
         </md-tab>
       </md-tabs>
     </div>
