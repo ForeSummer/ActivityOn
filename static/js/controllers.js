@@ -3,45 +3,87 @@
 /* Controllers */
 
 angular.module('act.controllers', []).
-    controller('HomepageCtrl', ['$scope', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$location', function($scope, $http, $csrf, urls, $filter, $routeParams, $user, $location){
-        console.log('HomepageCtrl');
-        $scope.dropdown_model = 'test';
-        /**
-         $scope.phonenum = '';
-         $scope.step = 0;
-         **/
-        
-        /*$scope.create_act = function(){
-            var param = {
-                'name': $scope.act_name
-            };
-            $csrf.set_csrf(param);
-            $http.post(urls.api + '/activity/create', $.param(param)).success(function(data, status){
-                //console.log(data);
-                if(data.error.code == 1){
-                    //window.location.href = '/act/' + data.act_id + '/manage';
-                    $location.url('/form/' + data.act_id + '/view?step=two');
-                }
-            });
-        };
-        $scope.count = 'N!';
-        $scope.get_act_count = function(){
-            $http.get(urls.api + '/activity/count').success(function(data, status){
-                if(data.error.code == 1){
-                    $scope.count = data.count;
-                }else{
-                    $scope.count = 'N!';
-                }
-            });
-        };
-        $scope.act_name = $routeParams.actname;
-        if($scope.act_name){
-            $scope.create_act();
+    controller('HomepageCtrl', ['$scope', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$location', 'Session', function($scope, $http, $csrf, urls, $filter, $routeParams, $user, $location, session){
+        if (!$user.islogged) {
+            window.location = urls + '/user/login';
         }
-        $scope.get_act_count();*/
+        console.log('HomepageCtrl');
+        //search access
+
+        //logout
+        $scope.logout = function(){
+            $http.get(urls.api + '/user/logout').success(function(data){
+                console.log(data);
+                $csrf.show_error(data.error);
+                if(data.error.code == 1){
+                    session.destory();
+                    window.location = urls + '/user/login';
+                }
+            });
+        }
+        //get message list
+
+        //get user info
+    }]).
+    controller('UserLoginCtrl', ['$scope', '$window', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$location', 'Session', function($scope, $window, $http, $csrf, urls, $filter, $routeParams, $user, $location, session){
+        console.log('UserLoginCtrl');
+        $('.header-container').hide();
+        $('.footer-container').hide();
+
+        //for new user regist
+        $scope.privateEmail = "";
+        $scope.password = "";
+        $scope.confirm = "";
+        $scope.publicEmail = "";
+
+        //for user log in
+        $scope.user.name = "";
+        $scope.user.password = "";
+
+        //error use
+        $scope.errormessage = "";
+        $scope.login_user = function(){
+            var status = $user.login($scope.user.name, $scope.user.password);
+            if(status){
+                window.location = urls + '/user/homepage';
+            }
+            else {
+                $scope.user.name = "";
+                $scope.user.password = "";
+                errormessage = "用户名密码错误！"
+            }
+        };
+
+        
+        $scope.regist_user = function() {
+            if($scope.password != $scope.confirm) ｛
+                //error happen
+                $scope.password = "";
+                $scope.confirm = "";
+                $scope.errormessage = "两次输入密码不一致，请再次输入！";
+            ｝
+            var param = {
+                'privateemail': $scope.privateEmail,
+                'password': $scope.password,
+                'openemail': $scope.publicEmail，
+                'nickname': $scope.nickname
+            };
+            $http.post(urls.api + "/user/regist", $.param(param)).success(function(data){
+                console.log(data);
+                $csrf.show_error(data.error);
+                if(data.error.code == 1){
+                    window.location = urls + '/user/homepage';
+                }
+            };
+        };
+
+        $scope.alertError = function() {
+
+        }
     }]).
     controller('ActivityLoginCtrl', ['$scope', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$cookies', '$location', function($scope, $http, $csrf, urls, $filter, $routeParams, $user, $cookies, $location){
         console.log('ActivityLoginCtrl');
+
         /*$scope.backpage = $routeParams.backpage;
         $scope.act_info = {
             act_id: '',

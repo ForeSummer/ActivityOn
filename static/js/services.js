@@ -30,94 +30,46 @@ angular.module('act.services', []).
             }
         };
     }]).
-    service('UserService', ['urls', '$http', '$cookies', 'CsrfService', function(urls, $http, $cookies, $csrf){
-        var user = {};
-        var student_id = '';
-        var applied = false;
-        if($cookies.username){
-            user.username = $cookies.username;
-        }
-        if($cookies.status){
-            user.status = $cookies.status;
-        }
-        if($cookies.role){
-            user.role = $cookies.role;
-        }
-        var get_user_status = function(){
-            $.get(urls.api + '/user/status', function(data){
-                user = data;
-                //user.student_id = user.student_id?user.student_id:'';
-                student_id = user.student_id;
-            });
-        };
-        get_user_status();
-        var set_student_id = function(id){
-            get_user_status();
-            //student_id = id;
-            return id;
-        };
-        var set_apply = function(){
-            applied = ture;
-            return ture;
-        };
-        return {
-            'set_apply':function(){
-                return set_apply();
-            },
-            'applied':function(){
-                return applied;
-            },
-            'student_id': function(){
-                //console.log('[student_id]>>' + user.student_id);
-                return user.student_id;
-                //return  student_id;
-            },
-            'set_student_id': function(id){
-                return set_student_id(id);
-            },
-            'username': function(){
-                return user.username;
-            },
-            'refresh': function(){
-                $.get(urls.api + '/user/status', function(data){
-                    user = data;
-                });
-            },
-            'status': function(){
-                return user.status;
-            },
-            'role': function(){
-                if(!('role' in user)){
+    factory('UserService', function ($http, Session) {
+        var userService = {};
+        var islogin = Session.id && Session.userId  >= 2;
+        userService.login = function(user_id, user_password) {
+            var param = {
+                'id': user_id,
+                'password': user_password
+            };
+            $http.post(urls.api + "/user/login", $.param(param)).success(function(res){
+                if(data.error.code == 1){
+                    //success
+                    Session.create(res.data.id, res.data.user_id);
                     return 1;
                 }
-                return user.role;
-            },
-            'roles': function(){ //What's this?
-                return user.roles;
-            },
-            'school_manager': function(){
-                if(!('role' in user)){
-                    return false;
+                else {
+                    //error
+                    return 0;
                 }
-                return parseInt(user.role) == 0 || parseInt(user.role) == 4;
-            },
-            'department_manager': function(){
-                if(!('role' in user)){
-                    return false;
-                }
-                return parseInt(user.role) == 0 || parseInt(user.role) == 3;
-            },
-            'logout': function(){
-                user = {};
-                var param = {};
-                $csrf.set_csrf(param);
-                $http.post(urls.api + '/user/logout', $.param(param)).success(function(data){
-                    //console.log(data);
-                    window.location.reload();
-                });
-            }
+            });
+        }
+
+        userService.isLogged = function() {
+            return islogin;
+        }
+
+        return userService;
+    }).
+    .service('Session', function () {
+        this.id = null;
+        this.userId = null;
+        this.create = function (sessionId, userId) {
+            this.id = sessionId;
+            this.userId = userId;
         };
-    }]).
+        this.destroy = function () {
+            this.id = null;
+            this.userId = null;
+        };
+        return this;
+    })
     filter('cut', function(){
         return function (value, wordwise, max, tail) {
             if (!value) return '';

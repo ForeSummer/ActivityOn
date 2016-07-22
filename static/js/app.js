@@ -29,7 +29,8 @@ angular.module('act', [
         //Route configure
         $locationProvider.html5Mode(true);
         $locationProvider.hashPrefix = '';
-        $routeProvider.when('/', {templateUrl: urls.part + '/homepage.html', controller: 'HomepageCtrl', title: 'Homepage'});
+        $routeProvider.when('/', {templateUrl: urls.part + '/homepage.html', controller: 'HomepageCtrl', title: '个人主页'});
+        $routeProvider.when('/user/login', {templateUrl: urls.part + '/login.html', controller: 'UserLoginCtrl', title: '登陆'});
         $routeProvider.when('/act/:act_id/manage', {templateUrl: urls.part + '/act_manage.html', controller: 'ActivityManageCtrl', title: "活动管理"});
         $routeProvider.when('/act/:act_id/login', {templateUrl: urls.part + '/act_login.html', controller: 'ActivityLoginCtrl', title: "活动登录"});
         $routeProvider.when('/act/:act_id/regist', {templateUrl: urls.part + '/act_regist.html', controller: 'ActivityRegistCtrl', title: "活动报名"});
