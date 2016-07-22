@@ -47,11 +47,11 @@ angular.module('act.controllers', []).
         $('.footer-container').hide();
 
         //for new user regist
-        $scope.privateEmail = "";
+        $scope.privateemail = "";
         $scope.password = "";
         $scope.confirm = "";
-        $scope.publicEmail = "";
-
+        $scope.openemail = "1";
+        $scope.nickname = "";
         //for user log in
         $scope.user_name = "";
         $scope.user_password = "";
@@ -79,21 +79,33 @@ angular.module('act.controllers', []).
                 $scope.password = "";
                 $scope.confirm = "";
                 $scope.errormessage = "两次输入密码不一致，请再次输入！";
+                return;
             }
             var param = {
-                'privateemail': $scope.privateEmail,
+                'privateemail': $scope.privateemail,
                 'password': $scope.password,
-                'openemail': $scope.publicEmail,
+                'openemail': $scope.openemail,
                 'nickname': $scope.nickname
             };
+            console.log(param);
             $http.post(urls.api + "/user/regist", $.param(param)).success(function(data){
                 console.log(data);
                 //$csrf.show_error(data.error);
-                if(data.error.code == 1){
+                if(data.ErrorCode == 1){
                     session.create(data.id,data.userid);
                     $('.header-container').show();
                     $('.footer-container').show();
-                    window.location = urls + '/user/homepage';
+                    //window.location = '/user/homepage';
+                }
+                else {
+                    $scope.password = "";
+                    $scope.confirm = "";
+                    if(data.ErrorCode == 0) {
+                        $scope.privateEmail = "";
+                    }
+                    else {
+                        $scope.nickname = "";
+                    }
                 }
             });
         };
