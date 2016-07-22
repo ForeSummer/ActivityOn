@@ -11,18 +11,19 @@ try:
 except ImportError:
     from datetime import datetime
     datetime_now = datetime.now
+
+
 class UserBase (models.Model):
     UId = models.AutoField(primary_key=True)
     UPrivateEmail = models.EmailField()
     UPublicEmail = models.EmailField()
-    UName = models.CharField(max_length = 30)
-    UAvatar = models.ImageField()
-    UPassword = models.CharField(max_length = 30)
-    UInfo = models.CharField(max_length = 50)
-    UStatus = models.IntegerField()
-    UFollow = models.CommaSeparatedIntegerField(max_length = 10)
-    UFollowed = models.CommaSeparatedIntegerField(max_length = 10)
-    UMessage = models.CommaSeparatedIntegerField(max_length = 10)
+    UName = models.CharField(max_length = 50)
+    UAvatar = models.ImageField(blank=True)
+    UInfo = models.CharField(blank=True,max_length = 50)
+    UStatus = models.IntegerField(blank=True,)
+    UFollow = models.CommaSeparatedIntegerField(blank=True,max_length = 10)
+    UFollowed = models.CommaSeparatedIntegerField(blank=True,max_length = 10)
+    UMessage = models.CommaSeparatedIntegerField(blank=True,max_length = 10)
     
 class UserActivity(models.Model):
     UId = models.AutoField(primary_key=True)
