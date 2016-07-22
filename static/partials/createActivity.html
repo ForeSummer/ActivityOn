@@ -1,0 +1,38 @@
+<div class="article-container">
+	<div class="create-activity">
+		<h1>创建活动</h1>
+		<h4>完成下列表单即可创建活动</h4>
+		<hr>
+		<md-input-container class="username-input">
+			<label>活动名称</label>
+			<input type="text">
+		</md-input-container>
+		<md-input-container class="username-input">
+			<label>活动地点</label>
+			<input type="text">
+		</md-input-container>
+		<md-input-container class="username-input">
+			<label>最大接纳人数</label>
+			<input type="text">
+		</md-input-container>
+		<md-input-container>
+			<label>活动简介信息(将显示在简要介绍页面上)</label>
+			<textarea name="bio" rows="3" ng-model="summary" md-maxlength="50"></textarea>
+			<div ng-messages="userForm.bio.$error" ng-show="userForm.bio.$dirty">
+				<div ng-message="md-maxlength">That's too long!</div>
+			</div>
+		</md-input-container>
+		<md-input-container>
+			<label>活动简介信息(将显示在简要介绍页面上)</label>
+			<textarea name="bio" rows="3" ng-model="info" md-maxlength="150"></textarea>
+			<div ng-messages="userForm.bio.$error" ng-show="userForm.bio.$dirty">
+				<div ng-message="md-maxlength">That's too long!</div>
+			</div>
+		</md-input-container><br/>
+		<md-datepicker class="date-picker" ng-model="startDate" md-placeholder="活动起始时间"></md-datepicker>
+		<md-datepicker class="date-picker" ng-model="endDate" md-placeholder="活动结束时间"></md-datepicker>
+		<md-datepicker class="date-picker" ng-model="entryDDL" md-placeholder="截止报名时间"></md-datepicker>
+		<hr><br>
+		<md-button id="register-submit-btn" class="md-raised md-primary">Create!</md-button>
+	</div>
+</div>
