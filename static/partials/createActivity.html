@@ -16,14 +16,14 @@
 			<input type="text">
 		</md-input-container>
 		<md-input-container>
-			<label>活动简介信息(将显示在简要介绍页面上)</label>
+			<label>活动简介(将显示在简介页面上)</label>
 			<textarea name="bio" rows="3" ng-model="summary" md-maxlength="50"></textarea>
 			<div ng-messages="userForm.bio.$error" ng-show="userForm.bio.$dirty">
 				<div ng-message="md-maxlength">That's too long!</div>
 			</div>
 		</md-input-container>
 		<md-input-container>
-			<label>活动简介信息(将显示在简要介绍页面上)</label>
+			<label>活动信息(将显示在详细介绍页面上)</label>
 			<textarea name="bio" rows="3" ng-model="info" md-maxlength="150"></textarea>
 			<div ng-messages="userForm.bio.$error" ng-show="userForm.bio.$dirty">
 				<div ng-message="md-maxlength">That's too long!</div>
