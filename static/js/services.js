@@ -57,7 +57,7 @@ angular.module('act.services', []).
 
         return userService;
     }).
-    .service('Session', function () {
+    service('Session', function () {
         this.id = null;
         this.userId = null;
         this.create = function (sessionId, userId) {
@@ -69,7 +69,7 @@ angular.module('act.services', []).
             this.userId = null;
         };
         return this;
-    })
+    }).
     filter('cut', function(){
         return function (value, wordwise, max, tail) {
             if (!value) return '';

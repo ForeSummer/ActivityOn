@@ -33,12 +33,12 @@
               <br/>
               <md-input-container class="username-input">
                 <label>用户名</label>
-                <input type="text">
+                <input type="text" ng-model="user_name">
               </md-input-container>
               <br/>
               <md-input-container class="password-input">
                 <label>密码</label>
-                <input type="password">
+                <input type="password" ng-model="user_password">
               </md-input-container>
               <br/>
               <md-button onclick="showAlert($event)" id="login-submit-btn" class="md-raised md-primary">Log in!</md-button>
@@ -61,13 +61,13 @@
               </md-input-container>
               <br/>
               <md-input-container class="email-input">
-                <label>邮箱</label>
-                <input type="email">
+                <label>登录邮箱</label>
+                <input type="email" ng-model="privateemail">
               </md-input-container>
               <br/>
               <md-input-container class="public-email-input">
                 <label>公开邮箱</label>
-                <input type="email">
+                <input type="email" ng-model="openemail">
               </md-input-container>
               <br/>
               <md-button id="register-submit-btn" class="md-raised md-primary">Register!</md-button>

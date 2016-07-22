@@ -28,17 +28,17 @@
     <div flex-gt-sm="55" class="mid-col">
       <md-input-container class="search">
         <label>输入要搜索的活动</label>
-        <input class="search-input" type="text">
+        <input class="search-input" ng-model="search" type="text">
       </md-input-container>
-      <md-button class="search-btn">Search!</md-button>
+      <md-button class="search-btn" ng-click="getResult()">Search!</md-button>
     </div>
     <div flex-gt-sm="25" class="right-col">
       <img class="user-icon" src="/static/images/admin.png">
       <div class="user-name">Username</div>
-      <md-button class="user-logout" title="登出">
+      <md-button class="user-logout" title="登出" ng-click="showDialog()">
         <i id="logout-img" class="fa fa-sign-out fa-2x"></i>
       </md-button>
-      <md-button class="user-msg" title="信息">
+      <md-button class="user-msg" title="信息" ng-click="messageList()">
         <i id="msg-img" class="fa fa-envelope fa-2x"></i>
       </md-button>
     </div>
