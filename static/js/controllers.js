@@ -89,11 +89,21 @@ angular.module('act.controllers', []).
             $http.post(urls.api + "/user/regist", $.param(param)).success(function(data){
                 console.log(data);
                 //$csrf.show_error(data.error);
-                if(data.error.code == 1){
+                if(data.ErrorCode == 1){
                     session.create(data.id,data.userid);
                     $('.header-container').show();
                     $('.footer-container').show();
                     window.location = urls + '/user/homepage';
+                }
+                else {
+                    $scope.password = "";
+                    $scope.confirm = "";
+                    if(data.ErrorCode == 0) {
+                        $scope.privateEmail = "";
+                        
+                        $scope.publicEmail = "";
+                    }
+                    
                 }
             });
         };
