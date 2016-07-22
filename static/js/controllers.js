@@ -63,7 +63,7 @@ angular.module('act.controllers', []).
             if(status){
                 $('.header-container').show();
                 $('.footer-container').show();
-                window.location = urls + '/user/homepage';
+                window.location = '/user/homepage';
             }
             else {
                 $scope.user.name = "";

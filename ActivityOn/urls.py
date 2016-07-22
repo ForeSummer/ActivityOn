@@ -23,7 +23,9 @@ urlpatterns = [
     url(r'^api/user/regist',app.views.register),
     url(r'^api/user/login',app.views.login),
     url(r'^user/',app.views.ReturnNone),
-    url(r'^api/user/logout',app.views.logout)
+    url(r'^api/user/logout',app.views.logout),
+    url(r'^api/user/modify',app.views.modify),
+    url(r'^api/user/info/$',app.views.info)
 ]
 
 

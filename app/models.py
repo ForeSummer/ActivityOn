@@ -18,6 +18,7 @@ class UserBase (models.Model):
     UPrivateEmail = models.EmailField()
     UPublicEmail = models.EmailField()
     UName = models.CharField(max_length = 50)
+    UPassword = models.CharField(max_length = 50)
     UAvatar = models.ImageField(blank=True)
     UInfo = models.CharField(blank=True,max_length = 50)
     UStatus = models.IntegerField(blank=True,default=0)
