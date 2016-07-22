@@ -59,18 +59,27 @@ angular.module('act.controllers', []).
         //error use
         $scope.errormessage = "";
         $scope.login_user = function(){
-            var status = $user.login($scope.user_name, $scope.user_password);
-            if(status){
-                $('.header-container').show();
-                $('.footer-container').show();
-                window.location = urls + '/user/homepage';
-            }
-            else {
-                $scope.user.name = "";
-                $scope.user.password = "";
-                errormessage = "用户名密码错误！"
-            }
+            var param = {
+                'user_name': $scope.user_name,
+                'user_password': $scope.user_password
+            };
+            console.log(param);
+            $http.post(urls.api + "/user/login", $.param(param)).success(function(res){
+                if(data.error.code == 1){
+                    //success
+                    session.create(res.data.id, res.data.user_id);
+                    $('.header-container').show();
+                    $('.footer-container').show();
+                    window.location = '/user/homepage';
+                }
+                else {
+                    $scope.user_name = "";
+                    $scope.user_password = "";
+                    errormessage = "用户名密码错误！"
+                }
+            });
         };
+           
 
         
         $scope.regist_user = function() {

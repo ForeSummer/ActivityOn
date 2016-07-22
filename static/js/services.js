@@ -35,10 +35,10 @@ angular.module('act.services', []).
         var islogin = Session.id && Session.userId  >= 2;
         userService.login = function(user_id, user_password) {
             var param = {
-                'id': user_id,
-                'password': user_password
+                'user_name': user_id,
+                'user_password': user_password
             };
-            $http.post(urls.api + "/user/login_1", $.param(param)).success(function(res){
+            $http.post(urls.api + "/user/login", $.param(param)).success(function(res){
                 if(data.error.code == 1){
                     //success
                     Session.create(res.data.id, res.data.user_id);
