@@ -7,75 +7,36 @@
 						<img src="/static/images/admin.png" class="icon">
 					</div>
 					<div class="right-col" flex-gt-sm="80">
-						<h1>NickName</h1>
-						<h3><a href="mailto:email@site.com">email@site.com</a></h3>
+						<h1>[[user_name]]</h1>
+						<h3><a ng-href="[[user_publicEmailLink]]">[[user_publicEmail]]</a></h3>
 					</div>
 				</div>
 				<div class="detail">
 					<div class="user-info">
-						个人简介orz凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数
+					[[user_info]]
 					</div>
 					<div class="user-activity">
-						<h3>
-							参加的活动
-						</h3>
+						<h3>参加的活动</h3>
 						<md-list flex>
-							<md-list-item><a href="#">写前期文档</a></md-list-item>
-							<md-list-item><a href="#">准备中期检查</a></md-list-item>
-							<md-list-item><a href="#">交大作业</a></md-list-item>
+							<md-list-item ng-repeat="x in user_inact"><a href="#">[[x]]</a></md-list-item>
 						</md-list>
+						<md-button class="md-raised md-primary" ng-if="isMe" ng-click="edit_user_info()">编辑信息</md-button>
 					</div>
 				</div>
 			</md-content>
 			<md-sidenav flex-gt-sm="30" md-is-locked-open="true" class="md-whiteframe-z2" id="side">
 				<h3>You followed:</h3>
 				<md-grid-list md-cols="3" md-gutter="1em" md-row-height="100px" class="follow-list">
-					<md-grid-tile>
+					<md-grid-tile ng-repeat="x in user_follow">
 						<img src="/static/images/admin.png">
-						<md-grid-tile-footer><h3>SomeBody</h3></md-grid-tile-footer>
-					</md-grid-tile>
-					<md-grid-tile>
-						<img src="/static/images/admin.png">
-						<md-grid-tile-footer><h3>SomeBody</h3></md-grid-tile-footer>
-					</md-grid-tile>
-					<md-grid-tile>
-						<img src="/static/images/admin.png">
-						<md-grid-tile-footer><h3>SomeBody</h3></md-grid-tile-footer>
-					</md-grid-tile>
-					<md-grid-tile>
-						<img src="/static/images/admin.png">
-						<md-grid-tile-footer><h3>SomeBody</h3></md-grid-tile-footer>
-					</md-grid-tile>
-					<md-grid-tile>
-						<img src="/static/images/admin.png">
-						<md-grid-tile-footer><h3>SomeBody</h3></md-grid-tile-footer>
-					</md-grid-tile>
-					<md-grid-tile>
-						<img src="/static/images/admin.png">
-						<md-grid-tile-footer><h3>SomeBody</h3></md-grid-tile-footer>
-					</md-grid-tile>
-					<md-grid-tile>
-						<img src="/static/images/admin.png">
-						<md-grid-tile-footer><h3>SomeBody</h3></md-grid-tile-footer>
-					</md-grid-tile>
-					<md-grid-tile>
-						<img src="/static/images/admin.png">
-						<md-grid-tile-footer><h3>SomeBody</h3></md-grid-tile-footer>
+						<md-grid-tile-footer><h3>[[x]]</h3></md-grid-tile-footer>
 					</md-grid-tile>
 				</md-grid-list>
 				<h3>These people followed you:</h3>
 				<md-grid-list md-cols="3" md-gutter="1em" md-row-height="100px" class="follow-list">
-					<md-grid-tile>
+					<md-grid-tile ng-repeat="x in user_followed">
 						<img src="/static/images/admin.png">
-						<md-grid-tile-footer><h3>SomeBody</h3></md-grid-tile-footer>
-					</md-grid-tile>
-					<md-grid-tile>
-						<img src="/static/images/admin.png">
-						<md-grid-tile-footer><h3>SomeBody</h3></md-grid-tile-footer>
-					</md-grid-tile>
-					<md-grid-tile>
-						<img src="/static/images/admin.png">
-						<md-grid-tile-footer><h3>SomeBody</h3></md-grid-tile-footer>
+						<md-grid-tile-footer><h3>[[x]]</h3></md-grid-tile-footer>
 					</md-grid-tile>
 				</md-grid-list>
 			</md-sidenav>

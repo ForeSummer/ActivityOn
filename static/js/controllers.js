@@ -35,7 +35,7 @@ angular.module('act.controllers', []).
         };
         //get user info
         $scope.get_user_info = function() {
-            $http.get(urls.api + '/user/info').success(function(data) {
+            $http.get(urls.api + '/user/' + session.userId + "/info").success(function(data) {
                 $scope.avatarUrl = data.url;
                 $scope.nickname = data.nickname;
             });
@@ -59,18 +59,27 @@ angular.module('act.controllers', []).
         //error use
         $scope.errormessage = "";
         $scope.login_user = function(){
-            var status = $user.login($scope.user_name, $scope.user_password);
-            if(status){
-                $('.header-container').show();
-                $('.footer-container').show();
-                window.location = '/user/homepage';
-            }
-            else {
-                $scope.user.name = "";
-                $scope.user.password = "";
-                errormessage = "用户名密码错误！"
-            }
+            var param = {
+                'user_name': $scope.user_name,
+                'user_password': $scope.user_password
+            };
+            console.log(param);
+            $http.post(urls.api + "/user/login", $.param(param)).success(function(res){
+                if(data.error.code == 1){
+                    //success
+                    session.create(res.data.id, res.data.user_id);
+                    $('.header-container').show();
+                    $('.footer-container').show();
+                    window.location = '/user/homepage';
+                }
+                else {
+                    $scope.user_name = "";
+                    $scope.user_password = "";
+                    errormessage = "用户名密码错误！"
+                }
+            });
         };
+           
 
         
         $scope.regist_user = function() {
@@ -112,6 +121,58 @@ angular.module('act.controllers', []).
 
         $scope.alertError = function() {
 
+        }
+    }]).
+    controller('UserInfoCtrl', ['$scope', '$window', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$location', 'Session', function($scope, $window, $http, $csrf, urls, $filter, $routeParams, $user, $location, session){
+        console.log('UserInfoCtrl');
+        $scope.isMe = true;
+        $scope.user_name = "NickName";
+        $scope.user_publicEmail = "email@wtf.com"
+        $scope.user_info = "个人简介orz凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数";
+        $scope.user_inact = ["写前期文档", "应付中期检查", "交大作业"];
+        $scope.user_follow = ["李俊杰", "卫国扬", "唐人杰", "某某某", "abc", "一个很长的名字作为测试", "日了狗了", "可以的很django"];
+        $scope.user_followed = ["你一点都不django", "django强无敌", "毕竟django", "python"];
+        $scope.user_publicEmailLink = "mailto:" + $scope.user_publicEmail;
+        //console.log($routeParams.user_id);
+        if ($routeParams.user_id == session.id) {
+            $scope.isMe = true;
+        } else {
+            $scope.isMe = true;
+        }
+        $scope.edit_user_info = function () {
+            window.location = '/user/modify';
+        }
+    }]).
+    controller('UserModifyInfoCtrl', ['$scope', '$window', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$location', 'Session', function($scope, $window, $http, $csrf, urls, $filter, $routeParams, $user, $location, session){
+        console.log('UserModifyInfoCtrl');
+        $scope.user_name = "假装有用户名";
+        $scope.user_pass = "123456";
+        $scope.confirm = "123456";
+        $scope.user_publicEmail = "django@python.css";
+        $scope.user_info = "假装有一个非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常长的个人信息介绍";
+        $scope.errormessage = "";
+        $scope.modifyInfo = function () {
+            if ($scope.user_pass != $scope.confirm) {
+                $scope.user_pass = "";
+                $scope.confirm = "";
+                $scope.errormessage = "两次输入密码不一致，请再次输入！";
+            }
+            var param = {
+                'nickname': $scope.user_name,
+                'password': $scope.user_pass,
+                'openemail': $scope.user_publicEmail,
+                'info': $scope.user_info
+            };
+            $http.post(urls.api + "/user/info/modify", $.param(param)).success(function(data){
+                console.log(data);
+                //$csrf.show_error(data.error);
+                if(data.error.code == 1){
+                    session.create(data.id,data.userid);
+                    $('.header-container').show();
+                    $('.footer-container').show();
+                    window.location = urls + '/user/homepage';
+                }
+            });
         }
     }]).
     controller('ActivityLoginCtrl', ['$scope', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$cookies', '$location', function($scope, $http, $csrf, urls, $filter, $routeParams, $user, $cookies, $location){
