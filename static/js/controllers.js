@@ -74,7 +74,7 @@ angular.module('act.controllers', []).
             }
         };
     }]).
-    controller('UserLoginCtrl', ['$scope', '$window', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$location', 'Session', function($scope, $window, $http, $csrf, urls, $filter, $routeParams, $user, $location, session){
+    controller('UserLoginCtrl', ['$scope', '$window', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$location', 'Session', '$mdDialog', function($scope, $window, $http, $csrf, urls, $filter, $routeParams, $user, $location, session, $mdDialog){
         console.log('UserLoginCtrl');
         $('.header-container').hide();
         $('.footer-container').hide();
@@ -113,6 +113,7 @@ angular.module('act.controllers', []).
                     $scope.user_name = "";
                     $scope.user_password = "";
                     errormessage = "用户名密码错误！";
+                    $scope.alertError($scope.errormessage);
                 }
             });
         };
@@ -126,6 +127,7 @@ angular.module('act.controllers', []).
                 $scope.confirm = "";
                 $scope.errormessage = "两次输入密码不一致，请再次输入！";
                 console.log($scope.errormessage);
+                $scope.alertError($scope.errormessage);
                 return;
             }
             if($scope.password.length>18 || $scope.password.length<6) {
@@ -133,24 +135,28 @@ angular.module('act.controllers', []).
                 $scope.confirm = "";
                 $scope.errormessage = "请输入长度为6~18的密码！";
                 console.log($scope.errormessage);
+                $scope.alertError($scope.errormessage);
                 return;
             }
             if ($scope.nickname.length>16 || $scope.nickname.length<6) {
                 $scope.nickname = "";
                 $scope.errormessage = "请输入长度为6~16字节的昵称！";
                 console.log($scope.errormessage);
+                $scope.alertError($scope.errormessage);
                 return;
             }
             if(!reg.test($scope.privateemail)) {
                 $scope.privateemail = "";
                 $scope.errormessage = "请输入正确的登录邮箱！";
                 console.log($scope.errormessage) ;
+                $scope.alertError($scope.errormessage);
                 return;
             }
             if(!reg.test($scope.openemail)) {
                 $scope.openemail = "";
                 $scope.errormessage = "请输入正确的公开邮箱！";
                 console.log($scope.errormessage);
+                $scope.alertError($scope.errormessage);
                 return;
             }
             var param = {
@@ -182,8 +188,8 @@ angular.module('act.controllers', []).
             });
         };
 
-        $scope.alertError = function() {
-
+        $scope.alertError = function(msg) {
+            $scope.showAlert(false, msg);
         }
 
         $scope.confirmStatus = false;
@@ -215,7 +221,7 @@ angular.module('act.controllers', []).
             }
         };
     }]).
-    controller('UserInfoCtrl', ['$scope', '$window', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$location', 'Session', function($scope, $window, $http, $csrf, urls, $filter, $routeParams, $user, $location, session){
+    controller('UserInfoCtrl', ['$scope', '$window', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$location', 'Session', '$mdDialog', function($scope, $window, $http, $csrf, urls, $filter, $routeParams, $user, $location, session, $mdDialog){
         console.log('UserInfoCtrl');
         $scope.isMe = true;
         $scope.user_name = "NickName";
@@ -264,7 +270,7 @@ angular.module('act.controllers', []).
             }
         };
     }]).
-    controller('UserModifyInfoCtrl', ['$scope', '$window', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$location', 'Session', function($scope, $window, $http, $csrf, urls, $filter, $routeParams, $user, $location, session){
+    controller('UserModifyInfoCtrl', ['$scope', '$window', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$location', 'Session', '$mdDialog', function($scope, $window, $http, $csrf, urls, $filter, $routeParams, $user, $location, session, $mdDialog){
         console.log('UserModifyInfoCtrl');
         $scope.user_name = "假装有用户名";
         $scope.user_pass = "123456";
