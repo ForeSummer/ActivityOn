@@ -3,7 +3,6 @@ from django.shortcuts import render, render_to_response
 from django.http import HttpResponse
 from django.template import RequestContext
 from app.models import error
-from django.contrib.auth.models import User 
 from .models import *
 from django.contrib.auth import authenticate
 from django.template import loader
@@ -29,41 +28,55 @@ def server_time(request):
     return HttpResponse(json.dumps(re), content_type = 'application/json')
 
 def register(request):
+    for i in request.POST:
+        print(i)
     try :
         user = UserBase.objects.get(UPrivateEmail = request.POST.get('privateemail'))
-        print(User.objects.all())
     except UserBase.DoesNotExist:
-        print("aaa")
-        try:
+        try: 
             user = UserBase.objects.get(UName = request.POST.get('nickname'))
-            print("aa")
         except UserBase.DoesNotExist:
             p = request.POST
-            print("1")
-            user = User.objects.create_user(username = p.get('nickname'),password = p.get('password'),email = p.get('privateemail'),first_name = p.get('openemail'))
-            base = UserBase(UPrivateEmail = p.get('privateemail'),UPublicEmail = p.get('openemail'),UName = p.get('nickname'))
+            base = UserBase(UPrivateEmail = p.get('privateemail'),UPublicEmail = p.get('openemail'),UName = p.get('nickname'),UPassword = p.get('password'))
             base.save()
             return HttpResponse(json.dumps({"ErrorCode":1,"UID":base.UId}))
             pass
         else :
-            print("-1")
             return HttpResponse(json.dumps({"ErrorCode":-1}))
             pass
     else :
-        print('0')
         return HttpResponse(json.dumps({"ErrorCode":0}))
         pass
     print("fuckingdjango")
 
 def login(request):
-    user = authenticate(request.POST.get('username'),request.POST.get('password'))
-    if user is not None and user.is_active:
-        return {"ErrorCode":1,"UID":UserBase.objects.get(UName = request.POST.get('username'))}
-    else:
+    try:
+        user = UserBase.objects.get(UPrivateEmail = request.POST.get('user_name'), UPassword = request.objects.get('User_password'))
+    except UserBase.DoesNotExist:
         return {"ErrorCode":0}
+    else :
+        return {"ErrorCode":1,"UID":UserBase.objects.get(UName = request.POST.get('username')).UId}
     
 def logout(request):
-   return 
+   return  render(request,'index.html',{})
 
 def ReturnNone(request):
     return render(request,'index.html',{})
+
+def info(request):
+    try:
+        user = UserBase.objects.get(UId = request.GET.get('UID'))
+    except UserBase.DoesNotExist:
+        return HttpResponse(json.dumps({'ErrorCode':0}))
+    else:
+        return HttpResponse(json.dumps({'ErrorCode':1, 'UName':user.UName, 'UID':user.UId, 'UPrivateEmail':user.UPrivateEmail, 'UPublicEmail':user.UPublicEmail, 'UAvatar':user.Avatar, 'UInfo':user.UInfo, 'UStatus':user.UStatus, 'UFollow':user.UFollow, 'UFollowed':user.UFollowed, 'UMessage':user.UMessage}))
+
+def modify(request):
+    try:
+        user = UserBase.objects.get(UId = request.POST.get('UID'))
+    except UserBase.DoesNotExist:
+        return HttpResponse(json.dumps({'ErrorCode':0}))
+    else:
+        for i in request:
+            user[i] = request.POST.get(i)
+        return HttpResponse(json.dumps({'ErrorCode':1}))
