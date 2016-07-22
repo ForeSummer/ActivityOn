@@ -33,6 +33,7 @@ angular.module('act', [
         $routeProvider.when('/user/login', {templateUrl: urls.part + '/login.html', controller: 'UserLoginCtrl', title: '登陆'});
         $routeProvider.when('/:user_id/info', {templateUrl: urls.part + '/userInfo.html', controller: 'UserInfoCtrl', title: '个人信息'});
         $routeProvider.when('/user/modify', {templateUrl: urls.part + '/userModifyInfo.html', controller: 'UserModifyInfoCtrl', title: '修改个人信息'});
+        $routeProvider.when('/user/createAct', {templateUrl: urls.part + '/createActivity.html', controller: '', title: '创建活动'});
         $routeProvider.when('/act/:act_id/manage', {templateUrl: urls.part + '/act_manage.html', controller: 'ActivityManageCtrl', title: "活动管理"});
         $routeProvider.when('/act/:act_id/login', {templateUrl: urls.part + '/act_login.html', controller: 'ActivityLoginCtrl', title: "活动登录"});
         $routeProvider.when('/act/:act_id/regist', {templateUrl: urls.part + '/act_regist.html', controller: 'ActivityRegistCtrl', title: "活动报名"});

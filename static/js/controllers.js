@@ -3,7 +3,7 @@
 /* Controllers */
 
 angular.module('act.controllers', []).
-    controller('HomepageCtrl', ['$scope', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$location', 'Session', function($scope, $http, $csrf, urls, $filter, $routeParams, $user, $location, session){
+    controller('HomepageCtrl', ['$scope', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$location', 'Session', '$mdDialog', function($scope, $http, $csrf, urls, $filter, $routeParams, $user, $location, session, $mdDialog){
         console.log('HomepageCtrl');
         if (!$user.islogged) {
             window.location = '/user/login';
@@ -39,6 +39,39 @@ angular.module('act.controllers', []).
                 $scope.avatarUrl = data.url;
                 $scope.nickname = data.nickname;
             });
+        };
+        $scope.user_follow_num = 0;
+        $scope.user_activity_num = 0;
+        $scope.createActivity = function () {
+            window.location = '/user/createAct';
+        }
+        $scope.confirmStatus = false;
+        $scope.showAlert = function(isAbleToCancel, msg, ev) {
+            if (!isAbleToCancel) {
+                $mdDialog.show(
+                    $mdDialog.alert()
+                    .parent(angular.element(document.querySelector('#popupContainer')))
+                    .clickOutsideToClose(true)
+                    .title('注意!')
+                    .textContent(msg)
+                    .ariaLabel('Alert Dialog')
+                    .ok('确定')
+                    .targetEvent(ev)
+                );
+            } else {
+                var confirm = $mdDialog.confirm()
+                .title('请确认:')
+                .textContent(msg)
+                .ariaLabel('Confirm Dialog')
+                .targetEvent(ev)
+                .ok('我确定')
+                .cancel('取消');
+                $mdDialog.show(confirm).then(function() {
+                    $scope.confirmStatus = true;
+                }, function() {
+                    $scope.confirmStatus = false;
+                });
+            }
         };
     }]).
     controller('UserLoginCtrl', ['$scope', '$window', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$location', 'Session', function($scope, $window, $http, $csrf, urls, $filter, $routeParams, $user, $location, session){
@@ -113,6 +146,35 @@ angular.module('act.controllers', []).
         $scope.alertError = function() {
 
         }
+
+        $scope.confirmStatus = false;
+        $scope.showAlert = function(isAbleToCancel, msg, ev) {
+            if (!isAbleToCancel) {
+                $mdDialog.show(
+                    $mdDialog.alert()
+                    .parent(angular.element(document.querySelector('#popupContainer')))
+                    .clickOutsideToClose(true)
+                    .title('注意!')
+                    .textContent(msg)
+                    .ariaLabel('Alert Dialog')
+                    .ok('确定')
+                    .targetEvent(ev)
+                );
+            } else {
+                var confirm = $mdDialog.confirm()
+                .title('请确认:')
+                .textContent(msg)
+                .ariaLabel('Confirm Dialog')
+                .targetEvent(ev)
+                .ok('我确定')
+                .cancel('取消');
+                $mdDialog.show(confirm).then(function() {
+                    $scope.confirmStatus = true;
+                }, function() {
+                    $scope.confirmStatus = false;
+                });
+            }
+        };
     }]).
     controller('UserInfoCtrl', ['$scope', '$window', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$location', 'Session', function($scope, $window, $http, $csrf, urls, $filter, $routeParams, $user, $location, session){
         console.log('UserInfoCtrl');
@@ -133,6 +195,35 @@ angular.module('act.controllers', []).
         $scope.edit_user_info = function () {
             window.location = '/user/modify';
         }
+
+        $scope.confirmStatus = false;
+        $scope.showAlert = function(isAbleToCancel, msg, ev) {
+            if (!isAbleToCancel) {
+                $mdDialog.show(
+                    $mdDialog.alert()
+                    .parent(angular.element(document.querySelector('#popupContainer')))
+                    .clickOutsideToClose(true)
+                    .title('注意!')
+                    .textContent(msg)
+                    .ariaLabel('Alert Dialog')
+                    .ok('确定')
+                    .targetEvent(ev)
+                );
+            } else {
+                var confirm = $mdDialog.confirm()
+                .title('请确认:')
+                .textContent(msg)
+                .ariaLabel('Confirm Dialog')
+                .targetEvent(ev)
+                .ok('我确定')
+                .cancel('取消');
+                $mdDialog.show(confirm).then(function() {
+                    $scope.confirmStatus = true;
+                }, function() {
+                    $scope.confirmStatus = false;
+                });
+            }
+        };
     }]).
     controller('UserModifyInfoCtrl', ['$scope', '$window', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$location', 'Session', function($scope, $window, $http, $csrf, urls, $filter, $routeParams, $user, $location, session){
         console.log('UserModifyInfoCtrl');
@@ -165,6 +256,35 @@ angular.module('act.controllers', []).
                 }
             });
         }
+
+        $scope.confirmStatus = false;
+        $scope.showAlert = function(isAbleToCancel, msg, ev) {
+            if (!isAbleToCancel) {
+                $mdDialog.show(
+                    $mdDialog.alert()
+                    .parent(angular.element(document.querySelector('#popupContainer')))
+                    .clickOutsideToClose(true)
+                    .title('注意!')
+                    .textContent(msg)
+                    .ariaLabel('Alert Dialog')
+                    .ok('确定')
+                    .targetEvent(ev)
+                );
+            } else {
+                var confirm = $mdDialog.confirm()
+                .title('请确认:')
+                .textContent(msg)
+                .ariaLabel('Confirm Dialog')
+                .targetEvent(ev)
+                .ok('我确定')
+                .cancel('取消');
+                $mdDialog.show(confirm).then(function() {
+                    $scope.confirmStatus = true;
+                }, function() {
+                    $scope.confirmStatus = false;
+                });
+            }
+        };
     }]).
     controller('ActivityLoginCtrl', ['$scope', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$cookies', '$location', function($scope, $http, $csrf, urls, $filter, $routeParams, $user, $cookies, $location){
         console.log('ActivityLoginCtrl');

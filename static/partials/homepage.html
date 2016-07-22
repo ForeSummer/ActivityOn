@@ -5,7 +5,10 @@
 				<h3>您还未报名任何活动>_<</h3>
 			</md-content>
 			<md-sidenav flex-gt-sm="30" md-is-locked-open="true" class="md-whiteframe-z2" id="side">
-				<md-button id="register-submit-btn" class="md-raised md-primary">创建一个活动!</md-button>
+				<md-button class="md-raised md-primary" ng-click="createActivity()">创建一个活动!</md-button>
+				<div class="user-info">
+					您follow了[[user_follow_num]]个人<br><br>您已报名[[user_activity_num]]个活动
+				</div>
 			</md-sidenav>
 		</div>
 	</div>
