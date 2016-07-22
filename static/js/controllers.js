@@ -68,7 +68,8 @@ angular.module('act.controllers', []).
             };
             console.log(param);
             $http.post(urls.api + "/user/login", $.param(param)).success(function(res){
-                if(res.UID == 1){
+                console.log(res);
+                if(res.ErrorCode == 1){
                     //success
                     session.create(0, res.UID);
                     //$('.header-container').show();
@@ -79,7 +80,7 @@ angular.module('act.controllers', []).
                 else {
                     $scope.user_name = "";
                     $scope.user_password = "";
-                    errormessage = "用户名密码错误！";
+                    $scope.errormessage = "用户名密码错误！";
                 }
             });
         };
