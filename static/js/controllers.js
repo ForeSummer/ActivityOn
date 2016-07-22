@@ -101,7 +101,8 @@ angular.module('act.controllers', []).
             };
             console.log(param);
             $http.post(urls.api + "/user/login", $.param(param)).success(function(res){
-                if(res.UID == 1){
+                console.log(res);
+                if(res.ErrorCode == 1){
                     //success
                     session.create(0, res.UID);
                     //$('.header-container').show();
