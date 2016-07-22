@@ -50,7 +50,7 @@ angular.module('act.controllers', []).
         $scope.privateemail = "";
         $scope.password = "";
         $scope.confirm = "";
-        $scope.openemail = "1";
+        $scope.openemail = "";
         $scope.nickname = "";
         //for user log in
         $scope.user_name = "";
@@ -58,6 +58,9 @@ angular.module('act.controllers', []).
 
         //error use
         $scope.errormessage = "";
+        //use for check form of emails
+        var reg = /^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$/;
+
         $scope.login_user = function(){
             var param = {
                 'user_name': $scope.user_name,
@@ -65,17 +68,18 @@ angular.module('act.controllers', []).
             };
             console.log(param);
             $http.post(urls.api + "/user/login", $.param(param)).success(function(res){
-                if(data.error.code == 1){
+                if(res.UID == 1){
                     //success
-                    session.create(res.data.id, res.data.user_id);
-                    $('.header-container').show();
-                    $('.footer-container').show();
-                    window.location = '/user/homepage';
+                    session.create(0, res.UID);
+                    //$('.header-container').show();
+                    //$('.footer-container').show();
+                    //window.location = '/user/homepage';
+                    console.log("login succeed");
                 }
                 else {
                     $scope.user_name = "";
                     $scope.user_password = "";
-                    errormessage = "用户名密码错误！"
+                    errormessage = "用户名密码错误！";
                 }
             });
         };
@@ -83,11 +87,37 @@ angular.module('act.controllers', []).
 
         
         $scope.regist_user = function() {
+            //check password&confirm
             if($scope.password != $scope.confirm) {
-                //error happen
                 $scope.password = "";
                 $scope.confirm = "";
                 $scope.errormessage = "两次输入密码不一致，请再次输入！";
+                console.log($scope.errormessage);
+                return;
+            }
+            if($scope.password.length>18 || $scope.password.length<6) {
+                $scope.password = "";
+                $scope.confirm = "";
+                $scope.errormessage = "请输入长度为6~18的密码！";
+                console.log($scope.errormessage);
+                return;
+            }
+            if ($scope.nickname.length>16 || $scope.nickname.length<6) {
+                $scope.nickname = "";
+                $scope.errormessage = "请输入长度为6~16字节的昵称！";
+                console.log($scope.errormessage);
+                return;
+            }
+            if(!reg.test($scope.privateemail)) {
+                $scope.privateemail = "";
+                $scope.errormessage = "请输入正确的登录邮箱！";
+                console.log($scope.errormessage) ;
+                return;
+            }
+            if(!reg.test($scope.openemail)) {
+                $scope.openemail = "";
+                $scope.errormessage = "请输入正确的公开邮箱！";
+                console.log($scope.errormessage);
                 return;
             }
             var param = {
@@ -104,7 +134,7 @@ angular.module('act.controllers', []).
                     session.create(data.id,data.userid);
                     $('.header-container').show();
                     $('.footer-container').show();
-                    //window.location = '/user/homepage';
+                    window.location = '/user/homepage';
                 }
                 else {
                     $scope.password = "";
