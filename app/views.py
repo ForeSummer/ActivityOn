@@ -28,8 +28,6 @@ def server_time(request):
     return HttpResponse(json.dumps(re), content_type = 'application/json')
 
 def register(request):
-    for i in request.POST:
-        print(i)
     try :
         user = UserBase.objects.get(UPrivateEmail = request.POST.get('privateemail'))
     except UserBase.DoesNotExist:
@@ -47,15 +45,15 @@ def register(request):
     else :
         return HttpResponse(json.dumps({"ErrorCode":0}))
         pass
-    print("fuckingdjango")
 
 def login(request):
     try:
-        user = UserBase.objects.get(UPrivateEmail = request.POST.get('user_name'), UPassword = request.objects.get('User_password'))
+        user = UserBase.objects.get(UPrivateEmail = request.POST.get('user_name'), UPassword = request.POST.get('user_password'))
     except UserBase.DoesNotExist:
-        return {"ErrorCode":0}
+        return  HttpResponse(json.dumps({"ErrorCode":0}))
     else :
-        return {"ErrorCode":1,"UID":UserBase.objects.get(UName = request.POST.get('username')).UId}
+        
+        return  HttpResponse(json.dumps({"ErrorCode":1,"UID":user.UId}))
     
 def logout(request):
    return  render(request,'index.html',{})
