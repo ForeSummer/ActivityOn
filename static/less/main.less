@@ -1,1 +1,133 @@
+#container {
+	position: relative;
+	height: auto;
+	min-height: 100%;
+	#wrap {
+		padding-bottom: 60px;
+		.header-container {
+			position: fixed;
+			width: 100%;
+			.left-col {
+				.icon {
+					padding-left: 20px;
+				}
+			}
+			.mid-col {
+				padding-top: 6px;
+				.search {
+					padding-bottom: 6px;
+					label {
+						font-size: 15px;
+						color: #f7f7f7;
+						padding-left: 10px;
+					}
+					.search-input {
+						width: 250px;
+						border: 1px #f7f7f7 solid;
+					}
+					.search-input:focus {
+						border-width: 2px;
+						box-shadow: 0px 0px 5px #fff;
+					}
+				}
+				.search-btn {
+					background: #f7f7f7;
+					color: blue;
+					min-height: 0px;
+					height: 30px;
+					.ng-scope {
+						padding-top: 5px;
+					}
+				}
+			}
+			.right-col {
+				padding-top: 10px;
+				.user-icon {
+					height: 40px;
+					vertical-align: middle;
+					padding-right: 20px;
+				}
+				.user-name {
+					display: inline;
+				}
+				.user-logout {
+					margin-left: 20px;
+					min-width: 0px;
+					#logout-img {
+						vertical-align: middle;
+					}
+				}
+				.user-msg {
+					min-width: 0px;
+					#msg-img {
+						vertical-align: middle;
+					}
+				}
+			}
+		}
 
+		.article-container {
+			padding-top: 80px;
+			.create-activity {
+				width: 750px;
+				margin: 0 auto;
+				input {
+					border-color: rgba(0, 0, 0, 0.8);
+					width: 400px;
+				}
+				textarea {
+					border-color: rgba(0, 0, 0, 0.8);
+					width: 400px;
+				}
+				.date-picker input {
+					width: 100px;
+				}
+			}
+			.activity-info {
+				padding-left: 25px;
+				padding-right: 25px;
+			}
+			.uesr-info {
+				#content {
+					padding-top: 20px;
+					padding-left: 40px;
+					.left-col {
+						.icon {
+							width: 150px;
+						}
+					}
+					.right-col {
+						a {
+							color: #555;
+							text-decoration: none;
+						}
+					}
+					.detail {
+						padding-top: 20px;
+					}
+				}
+				#side {
+					padding-left: 20px;
+					.follow-list {
+						img {
+							width: 100px;
+						}
+						md-grid-tile-footer {
+							width: 100px;
+							margin: 0 auto;
+						}
+					}
+				}
+			}
+		}
+	}
+
+	.footer-container {
+		position: absolute;
+		width: 100%;
+		bottom: 0px;
+		height: 60px;
+		text-align: center;
+		font-size: 12px;
+	}
+}

@@ -11,51 +11,58 @@ try:
 except ImportError:
     from datetime import datetime
     datetime_now = datetime.now
+class UserBase (models.Model):
+    UId = models.AutoField(primary_key=True)
+    UPrivateEmail = models.EmailField()
+    UPublicEmail = models.EmailField()
+    UName = models.CharField(max_length = 30)
+    UAvatar = models.ImageField()
+    UPassword = models.CharField(max_length = 30)
+    UInfo = models.CharField(max_length = 50)
+    UStatus = models.IntegerField()
+    UFollow = models.CommaSeparatedIntegerField(max_length = 10)
+    UFollowed = models.CommaSeparatedIntegerField(max_length = 10)
+    UMessage = models.CommaSeparatedIntegerField(max_length = 10)
+    
+class UserActivity(models.Model):
+    UId = models.AutoField(primary_key=True)
+    UInAct = models.CommaSeparatedIntegerField(max_length = 20)
+    UInActNum = models.IntegerField()
+    UOrganizedAct = models.CommaSeparatedIntegerField(max_length = 20)
+    UOrganizedNum = models.IntegerField()
+    UTags = models.CharField(max_length = 40)
+    
+class UserTimeline(models.Model):
+    UId = models.AutoField(primary_key=True)
+    UTimelineFrom = models.CommaSeparatedIntegerField(max_length=10)
+    UTimelineAct = models.CommaSeparatedIntegerField(max_length=10)
+    UTimelineContent = models.CharField(max_length = 1000)
 
-'''class Activity(Document):
-    cellphone = StringField(max_length=100)
-    email = StringField(max_length=100)
-    name = StringField(max_length=1000)
-    security_key = StringField(required=True, max_length=1000)
-    s_form  = ListField(DictField())
-    reg_start = StringField(max_length=100)
-    reg_end = StringField(max_length=100)
-    total = IntField(default=-1)
-    description = StringField(max_length=10000)
-    create_time = DateTimeField()
-    update_time = DateTimeField()
-    has_file = BooleanField(default=False)
-    mail_sended = IntField(default=0)
-    auth_user = IntField(default=0)
-
-class Registration(Document):
-    state = StringField(default='wait', max_length=100) #wait, agree, disagree
-    act_id = StringField(required=True, max_length=1000)
-    name = StringField(max_length=100)
-    cellphone = StringField(max_length=100)
-    email = StringField(max_length=100)
-    form_data = ListField(DictField())
-    has_file = BooleanField()
-    student_id = StringField(max_length=100)
-
-class RegBackup(Document):
-    state = StringField(default='wait', max_length=100) #wait, agree, disagree
-    act_id = StringField(required=True, max_length=1000)
-    name = StringField(max_length=100)
-    cellphone = StringField(max_length=100)
-    email = StringField(max_length=100)
-    form_data = ListField(DictField())
-    has_file = BooleanField()
-    student_id = StringField(max_length=100)
-
-class File(Document):
-    name = StringField(max_length=100)
-    display_name = StringField(max_length=100)
-    description = StringField(max_length=10000)
-    file_type = StringField(max_length=100)
-    category = StringField(max_length=100)
-    value = FileField()
-  '''  
+class Activity(models.Model):
+    AId = models.AutoField(primary_key=True)
+    AType = models.IntegerField()
+    AAdmin = models.ImageField()
+    ARegister = models.CommaSeparatedIntegerField(max_length=30)
+    AUnregister = models.CommaSeparatedIntegerField(max_length=30)
+    AMaxRegister = models.ImageField()
+    ACreateTime = models.DateField()
+    AEntryDDL = models.DateField()
+    AStartTime = models.DateField()
+    AEndTime = models.DateField()
+    AStatus = models.IntegerField()
+    ATitle = models.CharField(max_length=30)
+    ALocation = models.CharField(max_length=40)
+    AInfo = models.CharField(max_length = 50)
+    ASummary = models.CharField(max_length=100)
+    
+class Message(models.Model):
+    Mid = models.AutoField(primary_key=True)
+    MisRead = models.BooleanField()
+    MContent = models.CharField(max_length=50)
+    MFrom = models.IntegerField()
+    MTo = models.ImageField()
+    MTime = models.DateField()
+    
 def auth_by_info(username, password):
     url_login = 'http://www.student.tsinghua.edu.cn/practiceLogin.do'
     data = (
