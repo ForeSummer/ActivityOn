@@ -8,14 +8,6 @@
 			<input type="text" ng-model="user_name">
 		</md-input-container>
 		<md-input-container class="username-input">
-			<label>密码</label>
-			<input type="password" ng-model="user_pass">
-		</md-input-container>
-		<md-input-container class="username-input">
-			<label>确认密码</label>
-			<input type="password" ng-model="confirm">
-		</md-input-container>
-		<md-input-container class="username-input">
 			<label>公开邮箱</label>
 			<input type="email" ng-model="user_publicEmail">
 		</md-input-container>
@@ -25,7 +17,15 @@
 			<div ng-messages="userForm.bio.$error" ng-show="userForm.bio.$dirty">
 				<div ng-message="md-maxlength">That's too long!</div>
 			</div>
-		</md-input-container><br/>
+		</md-input-container>
+		<md-list class="follow-enable">
+			<md-list-item>
+				<p>是否允许其他用户follow</p>
+				<md-switch class="md-secondary"></md-switch>
+			</md-list-item>
+		</md-list>
+		<br/>
 		<md-button id="register-submit-btn" class="md-raised md-primary" ng-click="modifyInfo()">Save!</md-button>
+		<md-button id="password-btn" class="md-raised md-primary" ng-click="modifyPassword()">修改密码</md-button>
 	</dir>
 </div>
