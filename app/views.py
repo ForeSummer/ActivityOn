@@ -74,8 +74,12 @@ def modify(request):
     except UserBase.DoesNotExist:
         return HttpResponse(json.dumps({'ErrorCode':0}))
     else:
-        for i in request:
-            user[i] = request.POST.get(i)
+        if 'UName' in request.POST:
+            user.UName = request.POST.get('UName')
+        if 'UInfo' in request.POST:
+            user.UName = request.POST.get('UInfo')
+        if 'UPublicEmail' in request.POST:
+            user.UName = request.POST.get('UPublicEmail')
         return HttpResponse(json.dumps({'ErrorCode':1}))
 
 
@@ -85,7 +89,7 @@ def modifyPassword(request):
     except UserBase.DoesNotExist:
         return HttpResponse(json.dumps({'ErrorCode':0}))
     else:
-            user[UPassword] = request.POST.get('NewUPassword')
+            user.UPassword = request.POST.get('NewUPassword')
         return HttpResponse(json.dumps({'ErrorCode':1}))
 
         
