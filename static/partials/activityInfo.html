@@ -1,23 +1,46 @@
 <div class="article-container">
 	<div class="activity-info">
-		<h1>活动名称</h1>
+		<h1>[[act_title]]</h1>
 		<table>
 			<tr>
+				<td>发起人:</td>
+				<td>[[act_admin]]</td>
+			</tr>
+			<tr>
 				<td>活动时间:</td>
-				<td>2016-7-21 至 2016-7-29</td>
+				<td>[[act_startDate]] 至 [[act_endDate]]</td>
 			</tr>
 			<tr>
 				<td>报名截止时间:&nbsp;&nbsp;&nbsp;</td>
-				<td>2016-7-28</td>
+				<td>[[act_entryDDL]]</td>
 			</tr>
 			<tr>
 				<td>活动地点:</td>
-				<td>清华大学软件学院</td>
+				<td>[[act_location]]</td>
 			</tr>
 		</table>
 		<hr>
-		这是一个比较长的活动介绍，至少它有很多字。这是一个比较长的活动介绍，至少它有很多字。这是一个比较长的活动介绍，至少它有很多字。这是一个比较长的活动介绍，至少它有很多字。
-		这是一个比较长的活动介绍，至少它有很多字。这是一个比较长的活动介绍，至少它有很多字。这是一个比较长的活动介绍，至少它有很多字。这是一个比较长的活动介绍，至少它有很多字。
-		这是一个比较长的活动介绍，至少它有很多字。这是一个比较长的活动介绍，至少它有很多字。这是一个比较长的活动介绍，至少它有很多字。这是一个比较长的活动介绍，至少它有很多字。
+		[[act_info]]
+		<br><br>
+		<md-button ng-if="!isAdmin" class="md-raised md-primary" ng-click="participateActivity()">我要报名!</md-button>
+		<div ng-if="isAdmin" class="activity-manage">
+			<h3>已报名用户:</h3>
+			<md-grid-list md-cols="8" md-gutter="1em" md-row-height="100px" class="user-list">
+				<md-grid-tile ng-repeat="x in act_register">
+					<img src="/static/images/admin.png">
+					<md-grid-tile-footer><h3>[[x]]</h3></md-grid-tile-footer>
+				</md-grid-tile>
+			</md-grid-list>
+			<h3>待审批用户:</h3>
+			<md-grid-list md-cols="8" md-gutter="1em" md-row-height="100px" class="user-list">
+				<md-grid-tile ng-repeat="x in act_unregister">
+					<img src="/static/images/admin.png">
+					<md-grid-tile-footer><h3>[[x]]</h3></md-grid-tile-footer>
+				</md-grid-tile>
+			</md-grid-list>
+			<br><br>
+			<md-button class="md-raised md-primary" ng-click="modifyActivityInfo()">管理活动</md-button>
+			<md-button class="md-raised md-primary" ng-click="modifyActivityInfo()">审核用户</md-button>
+		</div>
 	</div>
 </div>
