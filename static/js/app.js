@@ -31,7 +31,7 @@ angular.module('act', [
         $locationProvider.hashPrefix = '';
         $routeProvider.when('/', {templateUrl: urls.part + '/homepage.html', controller: 'HomepageCtrl', title: '个人主页'});
         $routeProvider.when('/user/login', {templateUrl: urls.part + '/login.html', controller: 'UserLoginCtrl', title: '登陆'});
-        $routeProvider.when('/:user_id/info', {templateUrl: urls.part + '/userInfo.html', controller: 'UserInfoCtrl', title: '个人信息'});
+        $routeProvider.when('/user/:user_id/info', {templateUrl: urls.part + '/userInfo.html', controller: 'UserInfoCtrl', title: '个人信息'});
         $routeProvider.when('/user/modify', {templateUrl: urls.part + '/userModifyInfo.html', controller: 'UserModifyInfoCtrl', title: '修改个人信息'});
         $routeProvider.when('/user/password', {templateUrl: urls.part + '/userModifyPass.html', controller: 'UserModifyPassCtrl', title: '修改密码'});
         $routeProvider.when('/act/create', {templateUrl: urls.part + '/createActivity.html', controller: 'ActivityCreateCtrl', title: '创建活动'});

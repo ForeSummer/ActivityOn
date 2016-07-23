@@ -74,12 +74,18 @@ def modify(request):
     except UserBase.DoesNotExist:
         return HttpResponse(json.dumps({'ErrorCode':0}))
     else:
+<<<<<<< HEAD
         if 'UName' in request.POST:
             user.UName = request.POST.get('UName')
         if 'UInfo' in request.POST:
             user.UName = request.POST.get('UInfo')
         if 'UPublicEmail' in request.POST:
             user.UName = request.POST.get('UPublicEmail')
+=======
+        for i in request.POST:
+            print(i);
+            user[i] = request.POST.get(i)
+>>>>>>> c7ce2dfec520e890f8d7ac0e13ac37a24a227270
         return HttpResponse(json.dumps({'ErrorCode':1}))
 
 
@@ -89,7 +95,7 @@ def modifyPassword(request):
     except UserBase.DoesNotExist:
         return HttpResponse(json.dumps({'ErrorCode':0}))
     else:
-            user.UPassword = request.POST.get('NewUPassword')
+        user.UPassword = request.POST.get('NewUPassword')
         return HttpResponse(json.dumps({'ErrorCode':1}))
 
         
@@ -105,7 +111,7 @@ def Create_Activity(request):
         act.ARegister = p.get('register')
         act.AUnregister = p.get('Unregsiter')
         act.AMaxRegister = p.get('MaxRegister')
-        act.AEntryDDL = 
+        
     else :
        re['ErrorCode']=0 
             
