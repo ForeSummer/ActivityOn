@@ -162,6 +162,7 @@ angular.module('act.controllers', []).
                 console.log(res);
                 if(res.ErrorCode == 1){
                     //success
+                    console.log($user);
                     $user.create(1, res.UID);
                     $rootScope.$broadcast('userLog');
                     $('.header-container').show();
@@ -358,8 +359,6 @@ angular.module('act.controllers', []).
     controller('UserModifyInfoCtrl', ['$scope', '$window', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$location', '$mdDialog', function($scope, $window, $http, $csrf, urls, $filter, $routeParams, $user, $location, $mdDialog){
         console.log('UserModifyInfoCtrl');
         $scope.user_name = "假装有用户名";
-        $scope.user_pass = "123456";
-        $scope.confirm = "123456";
         $scope.user_publicEmail = "django@python.css";
         $scope.user_info = "假装有一个非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常长的个人信息介绍";
         $scope.errormessage = "";
@@ -459,7 +458,81 @@ angular.module('act.controllers', []).
                 });
             }
         };
+
         $scope.get_user_info();
+        $scope.modifyPassword = function () {
+            $location.url('/user/password');
+        }
+    }]).
+    controller('UserModifyPassCtrl', ['$scope', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$cookies', '$location', '$mdDialog', function($scope, $http, $csrf, urls, $filter, $routeParams, $user, $cookies, $location, $mdDialog){
+        $scope.user_orgin_pass = "";
+        $scope.user_pass = "";
+        $scope.confirm = "";
+        $scope.modifyPass = function () {
+            if($scope.user_pass != $scope.confirm) {
+                $scope.user_pass = "";
+                $scope.confirm = "";
+                $scope.errormessage = "两次输入密码不一致，请再次输入！";
+                console.log($scope.errormessage);
+                $scope.alertError($scope.errormessage);
+                return;
+            }
+            if($scope.user_pass.length>18 || $scope.user_pass.length<6) {
+                $scope.user_pass = "";
+                $scope.confirm = "";
+                $scope.errormessage = "请输入长度为6~18的密码！";
+                console.log($scope.errormessage);
+                $scope.alertError($scope.errormessage);
+                return;
+            }
+            var param = {
+                'UID': $user.userId,
+                'UPassword': $scope.user_orgin_pass,
+                'NewUPassword': $scope.user_pass
+            };
+            console.log(param);
+            $http.post(urls.api + "/user/modifyPassword", $.param(param)).success(function(res){
+                console.log(res);
+                if(res.ErrorCode == 1){
+                    $location.url('/');
+                }
+                else {
+                    $scope.user_orgin_pass = "";
+                    $scope.errormessage = "密码错误！";
+                    $scope.alertError($scope.errormessage);
+                }
+            });
+        }
+        $scope.alertError = function(msg) {
+            $scope.showAlert(false, msg);
+        }
+        $scope.showAlert = function(isAbleToCancel, msg, ev) {
+            if (!isAbleToCancel) {
+                $mdDialog.show(
+                    $mdDialog.alert()
+                    .parent(angular.element(document.querySelector('#popupContainer')))
+                    .clickOutsideToClose(true)
+                    .title('注意!')
+                    .textContent(msg)
+                    .ariaLabel('Alert Dialog')
+                    .ok('确定')
+                    .targetEvent(ev)
+                );
+            } else {
+                var confirm = $mdDialog.confirm()
+                .title('请确认:')
+                .textContent(msg)
+                .ariaLabel('Confirm Dialog')
+                .targetEvent(ev)
+                .ok('我确定')
+                .cancel('取消');
+                $mdDialog.show(confirm).then(function() {
+                    $scope.confirmStatus = true;
+                }, function() {
+                    $scope.confirmStatus = false;
+                });
+            }
+        };
     }]).
     controller('ActivityCreateCtrl', ['$scope', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$cookies', '$location', function($scope, $http, $csrf, urls, $filter, $routeParams, $user, $cookies, $location){
         console.log('ActivityCreateCtrl');
