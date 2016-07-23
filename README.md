@@ -5,7 +5,11 @@ branch master used to release, branch src used to dev
 
 # Development Guide
 
-## Preparetion
+## Prepare
+
+First, make sure you have latest nodejs & npm installed,
+MySQL-server is also required
+Also, your Python version must be at least 3.5.0, pip should be installed too.
 
     $ pip install -r requirements.txt
     $ npm install

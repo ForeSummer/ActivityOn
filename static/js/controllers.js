@@ -110,9 +110,9 @@ angular.module('act.controllers', []).
                 if(res.ErrorCode == 1){
                     //success
                     session.create(0, res.UID);
-                    //$('.header-container').show();
-                    //$('.footer-container').show();
-                    //window.location = '/user/homepage';
+                    $('.header-container').show();
+                    $('.footer-container').show();
+                    window.location = '/user/homepage';
                     console.log("login succeed");
                 }
                 else {
@@ -122,6 +122,11 @@ angular.module('act.controllers', []).
                     $scope.alertError($scope.errormessage);
                 }
             });
+            /*session.create(0, 3);
+            console.log(!$user.islogged);
+            session.destory();
+            console.log(!$user.islogged);*/
+
         };
            
 
@@ -165,6 +170,7 @@ angular.module('act.controllers', []).
                 $scope.alertError($scope.errormessage);
                 return;
             }
+            showAlert(true, "")
             var param = {
                 'privateemail': $scope.privateemail,
                 'password': $scope.password,
@@ -196,6 +202,7 @@ angular.module('act.controllers', []).
 
         $scope.alertError = function(msg) {
             $scope.showAlert(false, msg);
+
         }
 
         $scope.confirmStatus = false;
@@ -417,14 +424,4 @@ angular.module('act.controllers', []).
     }]).
     controller('FixCtrl', ['$scope', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$cookies', '$location', function($scope, $http, $csrf, urls, $filter, $routeParams, $user, $cookies, $location){
         //console.log('FixCtrl');
-        $scope.show_fix = false;
-        if($location.host() == 'wq.zhixing.today'){
-            $scope.show_fix = true;
-        }
-    }]).
-    .controller('DevCtrl', ['$scope', '$http', 'urls', 'CsrfService', function($scope, $http, urls, $csrf){
-       
-    }])
-    .controller('authenticationCtrl',['$scope', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$location', function($scope, $http, $csrf, urls, $filter, $routeParams, $user, $location){
-        
     }]);
