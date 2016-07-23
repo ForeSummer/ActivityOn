@@ -22,8 +22,10 @@ angular.module('act.controllers', []).
 
             $http.get(urls.api + '  /user/logout').success(function(data){
                 console.log(data);
+                $user.destory();
+                window.location = '/';
                 //$csrf.show_error(data.error);
-                if(data.error.code == 1){
+                if(data.ErrorCode == 1){
                     $user.destory();
                     window.location = '/';
                 }
