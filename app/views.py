@@ -79,15 +79,17 @@ def modify(request):
         if 'UName' in request.POST:
             user.UName = request.POST.get('UName')
         if 'UInfo' in request.POST:
-            user.UName = request.POST.get('UInfo')
+            print(request.POST.get('UInfo'))
+            user.UInfo = request.POST.get('UInfo')
         if 'UPublicEmail' in request.POST:
-            user.UName = request.POST.get('UPublicEmail')
+            user.UPublicEmail = request.POST.get('UPublicEmail')
         user.save()
         return HttpResponse(json.dumps({'ErrorCode':1}))
 
 
 def modifyPassword(request):
     try:
+        print(request.POST.get("UID"))
         user = UserBase.objects.get(UId = request.POST.get('UID'),UPassword = request.POST.get('UPassword'))
     except UserBase.DoesNotExist:
         return HttpResponse(json.dumps({'ErrorCode':0}))

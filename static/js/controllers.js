@@ -8,7 +8,7 @@ angular.module('act.controllers', []).
         //search access
         $scope.search = "";
         $scope.avatarUrl = "/static/images/admin.png";
-        $scope.nickname = "cc";
+        $scope.nickname = "";
         $scope.getResult = function() {
             if(!$user.isLogged()) {
                 return;
@@ -20,20 +20,25 @@ angular.module('act.controllers', []).
         //logout
         $scope.logout = function(){
 
-            $http.get(urls.api + '  /user/logout').success(function(data){
+            $http.get(urls.api + '/user/logout').success(function(data){
                 console.log(data);
+                $user.destory();
+                window.location = '/';
                 //$csrf.show_error(data.error);
-                if(data.error.code == 1){
+                if(data.ErrorCode == 1){
                     $user.destory();
                     window.location = '/';
                 }
             });
         };
+        $scope.returnHome = function(){
+            $location.url('/');
+        };
         //get message list
         $scope.messageList = function() {
             get_user_info();
             console.log($user.userId);
-            console.log("233");
+            //console.log("233");
             //window.location = urls + '/user/messages';
         };
         //get user info
@@ -55,7 +60,7 @@ angular.module('act.controllers', []).
         $scope.user_follow_num = 0;
         $scope.user_activity_num = 0;
         $scope.createActivity = function () {
-            window.location = '/user/createAct';
+            $location.url('/user/createAct');
         }
         $scope.confirmStatus = false;
         $scope.showAlert = function(isAbleToCancel, msg, ev) {
@@ -88,11 +93,15 @@ angular.module('act.controllers', []).
         $rootScope.$on('userLog', function(event, data){
             $scope.get_user_info();
         });
+        $rootScope.$on('userNameChange', function(event, data){
+            $scope.nickname = data;
+        });
         //$scope.get_user_info();
     }]).
     controller('HomepageCtrl', ['$scope', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$location', '$mdDialog', function($scope, $http, $csrf, urls, $filter, $routeParams, $user, $location, $mdDialog){
         console.log('HomepageCtrl');
         if (!$user.isLogged()) {
+            console.log($user.isLogged);
             $location.url('/user/login');
             console.log('turn to login fail');
         }
@@ -101,7 +110,7 @@ angular.module('act.controllers', []).
         $scope.user_follow_num = 0;
         $scope.user_activity_num = 0;
         $scope.createActivity = function () {
-            window.location = '/user/createAct';
+            $location.url('/act/create');
         }
         $scope.confirmStatus = false;
         $scope.showAlert = function(isAbleToCancel, msg, ev) {
@@ -238,15 +247,17 @@ angular.module('act.controllers', []).
                     $rootScope.$broadcast('userLog');
                     $('.header-container').show();
                     $('.footer-container').show();
-                    window.location = '/';
+                    $location.url('/');
                 }
                 else {
                     $scope.password = "";
                     $scope.confirm = "";
                     if(data.ErrorCode == 0) {
+                        $scope.alertError("登陆邮箱已被注册");
                         $scope.privateEmail = "";
                     }
                     else {
+                        $scope.alertError("该昵称已被注册");
                         $scope.nickname = "";
                     }
                 }
@@ -356,7 +367,7 @@ angular.module('act.controllers', []).
         };
         $scope.get_user_info();
     }]).
-    controller('UserModifyInfoCtrl', ['$scope', '$window', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$location', '$mdDialog', function($scope, $window, $http, $csrf, urls, $filter, $routeParams, $user, $location, $mdDialog){
+    controller('UserModifyInfoCtrl', ['$scope', '$rootScope','$window', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$location', '$mdDialog', function($scope, $rootScope,$window, $http, $csrf, urls, $filter, $routeParams, $user, $location, $mdDialog){
         console.log('UserModifyInfoCtrl');
         $scope.user_name = "假装有用户名";
         $scope.user_publicEmail = "django@python.css";
@@ -381,22 +392,6 @@ angular.module('act.controllers', []).
             });
         };
         $scope.modifyInfo = function () {
-            if($scope.user_pass != $scope.confirm) {
-                $scope.user_pass = "";
-                $scope.confirm = "";
-                $scope.errormessage = "两次输入密码不一致，请再次输入！";
-                console.log($scope.errormessage);
-                $scope.alertError($scope.errormessage);
-                return;
-            }
-            if($scope.user_pass.length>18 || $scope.user_pass.length<6) {
-                $scope.user_pass = "";
-                $scope.confirm = "";
-                $scope.errormessage = "请输入长度为6~18的密码！";
-                console.log($scope.errormessage);
-                $scope.alertError($scope.errormessage);
-                return;
-            }
             if ($scope.user_name.length>16 || $scope.user_name.length<6) {
                 $scope.user_name = "";
                 $scope.errormessage = "请输入长度为6~16字节的昵称！";
@@ -420,7 +415,8 @@ angular.module('act.controllers', []).
             $http.post(urls.api + "/user/modify", $.param(param)).success(function(data){
                 console.log(data);
                 //$csrf.show_error(data.error);
-                if(data.error.code == 1){
+                if(data.ErrorCode == 1){
+                    $rootScope.$broadcast('userNameChange', $scope.user_name);
                     $location.url('/');
                     //window.location = urls + '/user/homepage';
                 }
@@ -545,6 +541,24 @@ angular.module('act.controllers', []).
         $scope.act_endDate = new Date();
         $scope.act_entryDDL = new Date();
         $scope.createAct = function () {
+            var param = {
+                'Admin': $user.userId,
+                'Type':,
+                'MaxRegister':,
+
+            };
+            $http.post(urls.api + "/act/create", $.param(param)).success(function(res){
+                console.log(res);
+                if(res.ErrorCode == 1){
+                    
+                    $location.url('/');
+                }
+                else {
+                    $scope.user_orgin_pass = "";
+                    $scope.errormessage = "密码错误！";
+                    $scope.alertError($scope.errormessage);
+                }
+            });
         }
     }]).
     controller('ActivityInfoCtrl', ['$scope', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$cookies', '$location', function($scope, $http, $csrf, urls, $filter, $routeParams, $user, $cookies, $location){

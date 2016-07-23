@@ -1,6 +1,6 @@
 <div class="header-container" ng-controller="HeaderCtrl">
   <md-toolbar layout="row" class="toolbar">
-    <div flex-gt-sm="20" class="left-col">
+    <div flex-gt-sm="20" class="left-col" ng-click="returnHome()">
       <h3 class="icon">Activity On</h3>
     </div>
     <div flex-gt-sm="55" class="mid-col">
@@ -13,7 +13,7 @@
     <div flex-gt-sm="25" class="right-col">
       <img class="user-icon" ng-src="[[avatarUrl]]"  ng-click="infoDetail()">
       <div class="user-name"  ng-click="infoDetail()">[[nickname]]</div>
-      <md-button class="user-logout" title="登出" ng-click="showDialog()">
+      <md-button class="user-logout" title="登出" ng-click="logout()">
         <i id="logout-img" class="fa fa-sign-out fa-2x"></i>
       </md-button>
       <md-button class="user-msg" title="信息" ng-click="messageList()">
