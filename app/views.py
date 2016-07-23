@@ -86,8 +86,8 @@ def modifyPassword(request):
     except UserBase.DoesNotExist:
         return HttpResponse(json.dumps({'ErrorCode':0}))
     else:
-            user[UPassword] = request.POST.get('NewUPassword')
-        return HttpResponse(json.dumps({'ErrorCode':1}))
+            user.UPassword = request.POST.get('NewUPassword')
+            return HttpResponse(json.dumps({'ErrorCode':1}))
 
         
 from datetime import datetime 
@@ -102,7 +102,7 @@ def Create_Activity(request):
         act.ARegister = p.get('register')
         act.AUnregister = p.get('Unregsiter')
         act.AMaxRegister = p.get('MaxRegister')
-        act.AEntryDDL = 
+        
     else :
        re['ErrorCode']=0 
             
