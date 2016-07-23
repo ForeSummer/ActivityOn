@@ -19,7 +19,7 @@ class UserBase (models.Model):
     UPublicEmail = models.EmailField()
     UName = models.CharField(max_length = 50)
     UPassword = models.CharField(default="123456",max_length = 50)
-    UAvatar = models.ImageField(blank=True)
+    UAvatar = models.ImageField(blank=True,upload_to="avator")
     UInfo = models.CharField(blank=True,max_length = 50)
     UStatus = models.IntegerField(blank=True,default=0)
     UFollow = models.CommaSeparatedIntegerField(blank=True,max_length = 10)
