@@ -3,13 +3,13 @@
 /* Controllers */
 
 angular.module('act.controllers', []).
-    controller('HomepageCtrl', ['$scope', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$location', 'Session', '$mdDialog', function($scope, $http, $csrf, urls, $filter, $routeParams, $user, $location, session, $mdDialog){
+    controller('HomepageCtrl', ['$scope', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$location', '$mdDialog', function($scope, $http, $csrf, urls, $filter, $routeParams, $user, $location, $mdDialog){
         console.log('HomepageCtrl');
-        if (!$user.islogged) {
-            window.location = '/user/login';
+        if (!$user.isLogged()) {
+            $location.url('/user/login');
             console.log('turn to login fail');
         }
-        
+        console.log("homepage");
         //search access
         $scope.search = "";
         $scope.getResult = function() {
@@ -23,7 +23,7 @@ angular.module('act.controllers', []).
                 console.log(data);
                 //$csrf.show_error(data.error);
                 if(data.error.code == 1){
-                    session.destory();
+                    $user.destory();
                     window.location = urls + '/user/login';
                 }
             });
@@ -35,10 +35,11 @@ angular.module('act.controllers', []).
         };
         //get user info
         $scope.get_user_info = function() {
-            $http.get(urls.api + '/user/info/?UID=' + session.userId).success(function(data) {
+            $http.get(urls.api + '/user/info/?UID=' + $user.userId).success(function(data) {
                 if(data.ErrorCode == 1) {
-                    $scope.avatarUrl = data.url;
-                    $scope.nickname = data.nickname;
+                    $scope.avatarUrl = data.UAvatar;
+                    $scope.nickname = data.UName;
+                    console.log(data);
                 }
                 else {
                     console.log("get info error");
@@ -78,8 +79,9 @@ angular.module('act.controllers', []).
                 });
             }
         };
+        $scope.get_user_info();
     }]).
-    controller('UserLoginCtrl', ['$scope', '$window', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$location', 'Session', '$mdDialog', function($scope, $window, $http, $csrf, urls, $filter, $routeParams, $user, $location, session, $mdDialog){
+    controller('UserLoginCtrl', ['$scope', '$window', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$location', '$mdDialog', function($scope, $window, $http, $csrf, urls, $filter, $routeParams, $user, $location, $mdDialog){
         console.log('UserLoginCtrl');
         $('.header-container').hide();
         $('.footer-container').hide();
@@ -109,11 +111,12 @@ angular.module('act.controllers', []).
                 console.log(res);
                 if(res.ErrorCode == 1){
                     //success
-                    session.create(0, res.UID);
+                    $user.create(1, res.UID);
                     $('.header-container').show();
                     $('.footer-container').show();
-                    window.location = '/user/homepage';
-                    console.log("login succeed");
+                    //console.log($user.isLogged());
+                    $location.url('/');
+                    //console.log("login succeed");
                 }
                 else {
                     $scope.user_name = "";
@@ -122,11 +125,6 @@ angular.module('act.controllers', []).
                     $scope.alertError($scope.errormessage);
                 }
             });
-            /*session.create(0, 3);
-            console.log(!$user.islogged);
-            session.destory();
-            console.log(!$user.islogged);*/
-
         };
            
 
@@ -170,7 +168,7 @@ angular.module('act.controllers', []).
                 $scope.alertError($scope.errormessage);
                 return;
             }
-            showAlert(true, "")
+            //showAlert(true, "")
             var param = {
                 'privateemail': $scope.privateemail,
                 'password': $scope.password,
@@ -182,10 +180,11 @@ angular.module('act.controllers', []).
                 console.log(data);
                 //$csrf.show_error(data.error);
                 if(data.ErrorCode == 1){
-                    session.create(data.id,data.userid);
+                    $user.create(1,data.UID);
+                    console.log($user.isLogged());
                     $('.header-container').show();
                     $('.footer-container').show();
-                    window.location = '/user/homepage';
+                    window.location = '/';
                 }
                 else {
                     $scope.password = "";
@@ -234,7 +233,7 @@ angular.module('act.controllers', []).
             }
         };
     }]).
-    controller('UserInfoCtrl', ['$scope', '$window', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$location', 'Session', '$mdDialog', function($scope, $window, $http, $csrf, urls, $filter, $routeParams, $user, $location, session, $mdDialog){
+    controller('UserInfoCtrl', ['$scope', '$window', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$location', '$mdDialog', function($scope, $window, $http, $csrf, urls, $filter, $routeParams, $user, $location, $mdDialog){
         console.log('UserInfoCtrl');
         //defualt is false
         $scope.isMe = true;
@@ -263,7 +262,7 @@ angular.module('act.controllers', []).
             });
         };
 
-        if ($routeParams.user_id == session.id) {
+        if ($routeParams.user_id == $user.id) {
             $scope.isMe = true;
         }
 
@@ -300,7 +299,7 @@ angular.module('act.controllers', []).
             }
         };
     }]).
-    controller('UserModifyInfoCtrl', ['$scope', '$window', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$location', 'Session', '$mdDialog', function($scope, $window, $http, $csrf, urls, $filter, $routeParams, $user, $location, session, $mdDialog){
+    controller('UserModifyInfoCtrl', ['$scope', '$window', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$location', '$mdDialog', function($scope, $window, $http, $csrf, urls, $filter, $routeParams, $user, $location, $mdDialog){
         console.log('UserModifyInfoCtrl');
         $scope.user_name = "假装有用户名";
         $scope.user_pass = "123456";
@@ -350,8 +349,8 @@ angular.module('act.controllers', []).
                 console.log(data);
                 //$csrf.show_error(data.error);
                 if(data.error.code == 1){
-                    session.create(data.id,data.userid);
-                    window.location = urls + '/user/homepage';
+                    
+                    //window.location = urls + '/user/homepage';
                 }
             });
         }
