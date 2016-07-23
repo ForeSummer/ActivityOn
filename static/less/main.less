@@ -3,10 +3,11 @@
 	height: auto;
 	min-height: 100%;
 	#wrap {
-		padding-bottom: 60px;
+		padding-bottom: 100px;
 		.header-container {
 			position: fixed;
 			width: 100%;
+			z-index: 100;
 			.left-col {
 				.icon {
 					padding-left: 20px;
@@ -24,6 +25,7 @@
 					.search-input {
 						width: 250px;
 						border: 1px #f7f7f7 solid;
+						color: #f7f7f7;
 					}
 					.search-input:focus {
 						border-width: 2px;
@@ -71,19 +73,35 @@
 			.create-activity {
 				width: 750px;
 				margin: 0 auto;
+				hr {
+					margin-top: 35px;
+					margin-bottom: 50px;
+				}
 				input {
 					border-color: rgba(0, 0, 0, 0.8);
-					width: 400px;
+					width: 750px;
 				}
 				textarea {
 					border-color: rgba(0, 0, 0, 0.8);
-					width: 400px;
+					width: 750px;
 				}
 				.md-resize-handle {
 					bottom: 0px;
 				}
 				.date-picker input {
 					width: 100px;
+				}
+				md-select {
+					width: 400px;
+				}
+				#date_1, #date_2, #date_3 {
+					width: 48%;
+					text-align: center;
+				}
+				#date_1, #date_2 {
+					margin-top: 50px;
+					display: inline-block;
+					margin-bottom: 20px;
 				}
 			}
 			.activity-info {

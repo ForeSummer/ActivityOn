@@ -540,13 +540,15 @@ angular.module('act.controllers', []).
         $scope.act_startDate = new Date();
         $scope.act_endDate = new Date();
         $scope.act_entryDDL = new Date();
+        $scope.act_type = 3;
+        $scope.types = act_types;
         $scope.createAct = function () {
-            var param = {
+            /*var param = {
                 'Admin': $user.userId,
                 'Type':,
                 'MaxRegister':,
 
-            };
+            };*/
             $http.post(urls.api + "/act/create", $.param(param)).success(function(res){
                 console.log(res);
                 if(res.ErrorCode == 1){
@@ -569,6 +571,8 @@ angular.module('act.controllers', []).
         $scope.act_startDate = "2016-7-20";
         $scope.act_endDate = "2016-7-29";
         $scope.act_entryDDL = "2016-7-28";
+        $scope.types = act_types;
+        $scope.act_type = $scope.types[3].name;
         $scope.act_info = "花10天时间写一个有很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多代码的大作业";
         $scope.isAdmin = true;
         $scope.act_register = ["李俊杰", "卫国扬", "唐人杰", "某某某", "abc", "一个很长的名字作为测试", "日了狗了", "可以的很django"];

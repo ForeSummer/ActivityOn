@@ -1,0 +1,31 @@
+<div class="article-container">
+	<dir class="user-modifyinfo">
+		<h1>修改活动信息</h1>
+		<h4>请在下面表单中填写供展示的活动信息</h4>
+		<hr>
+		<md-input-container class="username-input">
+			<label>活动名称</label>
+			<input type="text" ng-model="user_name">
+		</md-input-container>
+		<md-input-container class="username-input">
+			<label>公开邮箱</label>
+			<input type="email" ng-model="user_publicEmail">
+		</md-input-container>
+		<md-input-container>
+			<label>个人简介</label>
+			<textarea name="bio" rows="4" ng-model="user_info" md-maxlength="150"></textarea>
+			<div ng-messages="userForm.bio.$error" ng-show="userForm.bio.$dirty">
+				<div ng-message="md-maxlength">That's too long!</div>
+			</div>
+		</md-input-container>
+		<md-list class="follow-enable">
+			<md-list-item>
+				<p>是否允许其他用户follow</p>
+				<md-switch class="md-secondary"></md-switch>
+			</md-list-item>
+		</md-list>
+		<br/>
+		<md-button id="register-submit-btn" class="md-raised md-primary" ng-click="modifyInfo()">Save!</md-button>
+		<md-button id="password-btn" class="md-raised md-primary" ng-click="modifyPassword()">修改密码</md-button>
+	</dir>
+</div>
