@@ -43,14 +43,14 @@ class UserTimeline(models.Model):
 class Activity(models.Model):
     AId = models.AutoField(primary_key=True)
     AType = models.IntegerField()
-    AAdmin = models.ImageField()
+    AAdmin = models.IntegerField()
     ARegister = models.CommaSeparatedIntegerField(max_length=30)
     AUnregister = models.CommaSeparatedIntegerField(max_length=30)
-    AMaxRegister = models.ImageField()
-    ACreateTime = models.DateField()
-    AEntryDDL = models.DateField()
-    AStartTime = models.DateField()
-    AEndTime = models.DateField()
+    AMaxRegister = models.IntegerField()
+    ACreateTime = models.DateTimeField(auto_now=True)
+    AEntryDDL = models.DateTimeField()
+    AStartTime = models.DateTimeField()
+    AEndTime = models.DateTimeField()
     AStatus = models.IntegerField()
     ATitle = models.CharField(max_length=30)
     ALocation = models.CharField(max_length=40)
@@ -63,7 +63,7 @@ class Message(models.Model):
     MContent = models.CharField(max_length=50)
     MFrom = models.IntegerField()
     MTo = models.ImageField()
-    MTime = models.DateField()
+    MTime = models.DateTimeField()
     
 def auth_by_info(username, password):
     url_login = 'http://www.student.tsinghua.edu.cn/practiceLogin.do'
