@@ -16,7 +16,7 @@ def index(request):
         'role': request.session.get('role', 1)
     }
     return render_to_response('index.html', RequestContext(request, context))
-
+        
 def test(request):
     return HttpResponse('test')
 
@@ -52,11 +52,10 @@ def login(request):
     except UserBase.DoesNotExist:
         return  HttpResponse(json.dumps({"ErrorCode":0}))
     else :
-        
         return  HttpResponse(json.dumps({"ErrorCode":1,"UID":user.UId}))
     
 def logout(request):
-   return  render(request,'index.html',{})
+    return  render(request,'index.html',{})
 
 def ReturnNone(request):
     return render(request,'index.html',{})
@@ -78,3 +77,20 @@ def modify(request):
         for i in request:
             user[i] = request.POST.get(i)
         return HttpResponse(json.dumps({'ErrorCode':1}))
+
+from datetime import datetime 
+
+def Create_Activity(request):
+    re = dict()
+    if request.method == 'POST':
+        act = Activity()
+        p = request.POST
+        act.AType = p.get('Type')
+        act.AAdmin = p.get('Admin')
+        act.ARegister = p.get('register')
+        act.AUnregister = p.get('Unregsiter')
+        act.AMaxRegister = p.get('MaxRegister')
+        act.AEntryDDL = 
+    else :
+       re['ErrorCode']=0 
+            
