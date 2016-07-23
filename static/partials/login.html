@@ -12,7 +12,7 @@
           <br/>
           <md-input-container class="password-input">
             <label>密码</label>
-            <input type="password" ng-model="user_password">
+            <input type="password" ng-model="user_password" onkeydown='if(event.keyCode==13){document.getElementById("login-submit-btn").click()}'>
           </md-input-container>
           <br/>
           <md-button ng-click="login_user()" id="login-submit-btn" class="md-raised md-primary">Log in!</md-button>
@@ -41,7 +41,7 @@
           <br/>
           <md-input-container class="public-email-input">
             <label>公开邮箱</label>
-            <input type="email" ng-model="openemail">
+            <input type="email" ng-model="openemail" onkeydown='if(event.keyCode==13){document.getElementById("register-submit-btn").click()}'>
           </md-input-container>
           <br/>
           <md-button id="register-submit-btn" class="md-raised md-primary" ng-click="regist_user()">Register!</md-button>
