@@ -50,7 +50,7 @@ angular.module('act.controllers', []).
             });
         };
         $scope.infoDetail = function() {
-            $location.url('/'+ $user.userId + '/info');
+            $location.url('/user/'+ $user.userId + '/info');
         };
         $scope.user_follow_num = 0;
         $scope.user_activity_num = 0;
@@ -365,7 +365,8 @@ angular.module('act.controllers', []).
         $scope.errormessage = "";
         var reg = /^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$/;
         $scope.get_user_info = function() {
-            $http.get(urls.api + '/user/info/?UID=' + $routeParams.user_id).success(function(data) {
+            $http.get(urls.api + '/user/info/?UID=' + $user.userId).success(function(data) {
+                console.log(data);
                 if(data.ErrorCode == 1) {
                     $scope.user_name = data.UName;
                     $scope.user_publicEmail = data.UPublicEmail;
@@ -412,16 +413,16 @@ angular.module('act.controllers', []).
                 return;
             }
             var param = {
-                'nickname': $scope.user_name,
-                'password': $scope.user_pass,
-                'openemail': $scope.user_publicEmail,
-                'info': $scope.user_info
+                'UID': $user.userId,
+                'UName': $scope.user_name,
+                'UPublicEmail': $scope.user_publicEmail,
+                'UInfo': $scope.user_info
             };
             $http.post(urls.api + "/user/modify", $.param(param)).success(function(data){
                 console.log(data);
                 //$csrf.show_error(data.error);
                 if(data.error.code == 1){
-                    
+                    $location.url('/');
                     //window.location = urls + '/user/homepage';
                 }
             });
@@ -458,7 +459,7 @@ angular.module('act.controllers', []).
                 });
             }
         };
-
+        $scope.get_user_info();
     }]).
     controller('ActivityCreateCtrl', ['$scope', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$cookies', '$location', function($scope, $http, $csrf, urls, $filter, $routeParams, $user, $cookies, $location){
         console.log('ActivityCreateCtrl');

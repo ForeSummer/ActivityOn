@@ -75,6 +75,7 @@ def modify(request):
     except UserBase.DoesNotExist:
         return HttpResponse(json.dumps({'ErrorCode':0}))
     else:
-        for i in request:
+        for i in request.POST:
+            print(i);
             user[i] = request.POST.get(i)
         return HttpResponse(json.dumps({'ErrorCode':1}))
