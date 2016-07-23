@@ -45,9 +45,11 @@ angular.module('act.services', []).
             this.userId = null;
         };
         this.isLogged = function() {
-            return this.userId
-        } 
-
+            if (this.userId > 1) {
+                return true;
+            }
+            return false;
+        }
         return this;
     }).
     filter('cut', function(){

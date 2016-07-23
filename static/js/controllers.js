@@ -8,7 +8,7 @@ angular.module('act.controllers', []).
         //search access
         $scope.search = "";
         $scope.avatarUrl = "/static/images/admin.png";
-        $scope.nickname = "cc";
+        $scope.nickname = "";
         $scope.getResult = function() {
             if(!$user.isLogged()) {
                 return;
@@ -20,7 +20,7 @@ angular.module('act.controllers', []).
         //logout
         $scope.logout = function(){
 
-            $http.get(urls.api + '  /user/logout').success(function(data){
+            $http.get(urls.api + '/user/logout').success(function(data){
                 console.log(data);
                 $user.destory();
                 window.location = '/';
@@ -31,11 +31,14 @@ angular.module('act.controllers', []).
                 }
             });
         };
+        $scope.returnHome = function(){
+            $location.url('/');
+        };
         //get message list
         $scope.messageList = function() {
             get_user_info();
             console.log($user.userId);
-            console.log("233");
+            //console.log("233");
             //window.location = urls + '/user/messages';
         };
         //get user info
@@ -57,7 +60,7 @@ angular.module('act.controllers', []).
         $scope.user_follow_num = 0;
         $scope.user_activity_num = 0;
         $scope.createActivity = function () {
-            window.location = '/user/createAct';
+            $location.url('/user/createAct');
         }
         $scope.confirmStatus = false;
         $scope.showAlert = function(isAbleToCancel, msg, ev) {
@@ -90,11 +93,15 @@ angular.module('act.controllers', []).
         $rootScope.$on('userLog', function(event, data){
             $scope.get_user_info();
         });
+        $rootScope.$on('userNameChange', function(event, data){
+            $scope.nickname = data;
+        });
         //$scope.get_user_info();
     }]).
     controller('HomepageCtrl', ['$scope', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$location', '$mdDialog', function($scope, $http, $csrf, urls, $filter, $routeParams, $user, $location, $mdDialog){
         console.log('HomepageCtrl');
         if (!$user.isLogged()) {
+            console.log($user.isLogged);
             $location.url('/user/login');
             console.log('turn to login fail');
         }
@@ -103,7 +110,7 @@ angular.module('act.controllers', []).
         $scope.user_follow_num = 0;
         $scope.user_activity_num = 0;
         $scope.createActivity = function () {
-            window.location = '/user/createAct';
+            $location.url('/act/create');
         }
         $scope.confirmStatus = false;
         $scope.showAlert = function(isAbleToCancel, msg, ev) {
@@ -240,7 +247,7 @@ angular.module('act.controllers', []).
                     $rootScope.$broadcast('userLog');
                     $('.header-container').show();
                     $('.footer-container').show();
-                    window.location = '/';
+                    $location.url('/');
                 }
                 else {
                     $scope.password = "";
@@ -360,7 +367,7 @@ angular.module('act.controllers', []).
         };
         $scope.get_user_info();
     }]).
-    controller('UserModifyInfoCtrl', ['$scope', '$window', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$location', '$mdDialog', function($scope, $window, $http, $csrf, urls, $filter, $routeParams, $user, $location, $mdDialog){
+    controller('UserModifyInfoCtrl', ['$scope', '$rootScope','$window', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$location', '$mdDialog', function($scope, $rootScope,$window, $http, $csrf, urls, $filter, $routeParams, $user, $location, $mdDialog){
         console.log('UserModifyInfoCtrl');
         $scope.user_name = "假装有用户名";
         $scope.user_publicEmail = "django@python.css";
@@ -409,6 +416,7 @@ angular.module('act.controllers', []).
                 console.log(data);
                 //$csrf.show_error(data.error);
                 if(data.ErrorCode == 1){
+                    $rootScope.$broadcast('userNameChange', $scope.user_name);
                     $location.url('/');
                     //window.location = urls + '/user/homepage';
                 }
@@ -533,6 +541,24 @@ angular.module('act.controllers', []).
         $scope.act_endDate = new Date();
         $scope.act_entryDDL = new Date();
         $scope.createAct = function () {
+            var param = {
+                'Admin': $user.userId,
+                'Type':,
+                'MaxRegister':,
+
+            };
+            $http.post(urls.api + "/act/create", $.param(param)).success(function(res){
+                console.log(res);
+                if(res.ErrorCode == 1){
+                    
+                    $location.url('/');
+                }
+                else {
+                    $scope.user_orgin_pass = "";
+                    $scope.errormessage = "密码错误！";
+                    $scope.alertError($scope.errormessage);
+                }
+            });
         }
     }]).
     controller('ActivityInfoCtrl', ['$scope', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$cookies', '$location', function($scope, $http, $csrf, urls, $filter, $routeParams, $user, $cookies, $location){
