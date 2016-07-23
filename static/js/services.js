@@ -30,44 +30,24 @@ angular.module('act.services', []).
             }
         };
     }]).
-    factory('UserService', function ($http, Session) {
-        var userService = {};
-        var islogin = Session.id && Session.userId  >= 2;
-        userService.login = function(user_id, user_password) {
-            var param = {
-                'user_name': user_id,
-                'user_password': user_password
-            };
-            $http.post(urls.api + "/user/login", $.param(param)).success(function(res){
-                if(data.error.code == 1){
-                    //success
-                    Session.create(res.data.id, res.data.user_id);
-                    return 1;
-                }
-                else {
-                    //error
-                    return 0;
-                }
-            });
-        }
-
-        userService.isLogged = function() {
-            return islogin;
-        }
-
-        return userService;
-    }).
-    service('Session', function () {
+    service('UserService', function () {
         this.id = null;
         this.userId = null;
+        console.log("init");
         this.create = function (sessionId, userId) {
+            console.log("Session create");
             this.id = sessionId;
             this.userId = userId;
         };
-        this.destroy = function () {
+        this.destory = function () {
+            console.log("Session destory");
             this.id = null;
             this.userId = null;
         };
+        this.isLogged = function() {
+            return this.userId
+        } 
+
         return this;
     }).
     filter('cut', function(){
