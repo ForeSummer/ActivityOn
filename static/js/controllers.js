@@ -246,9 +246,11 @@ angular.module('act.controllers', []).
                     $scope.password = "";
                     $scope.confirm = "";
                     if(data.ErrorCode == 0) {
+                        $scope.alertError("登陆邮箱已被注册");
                         $scope.privateEmail = "";
                     }
                     else {
+                        $scope.alertError("该昵称已被注册");
                         $scope.nickname = "";
                     }
                 }
@@ -383,22 +385,6 @@ angular.module('act.controllers', []).
             });
         };
         $scope.modifyInfo = function () {
-            if($scope.user_pass != $scope.confirm) {
-                $scope.user_pass = "";
-                $scope.confirm = "";
-                $scope.errormessage = "两次输入密码不一致，请再次输入！";
-                console.log($scope.errormessage);
-                $scope.alertError($scope.errormessage);
-                return;
-            }
-            if($scope.user_pass.length>18 || $scope.user_pass.length<6) {
-                $scope.user_pass = "";
-                $scope.confirm = "";
-                $scope.errormessage = "请输入长度为6~18的密码！";
-                console.log($scope.errormessage);
-                $scope.alertError($scope.errormessage);
-                return;
-            }
             if ($scope.user_name.length>16 || $scope.user_name.length<6) {
                 $scope.user_name = "";
                 $scope.errormessage = "请输入长度为6~16字节的昵称！";
@@ -422,7 +408,7 @@ angular.module('act.controllers', []).
             $http.post(urls.api + "/user/modify", $.param(param)).success(function(data){
                 console.log(data);
                 //$csrf.show_error(data.error);
-                if(data.error.code == 1){
+                if(data.ErrorCode == 1){
                     $location.url('/');
                     //window.location = urls + '/user/homepage';
                 }
