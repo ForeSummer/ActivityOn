@@ -205,8 +205,8 @@ angular.module('act.controllers', []).
 
         }
 
-        $scope.confirmStatus = false;
-        $scope.showAlert = function(isAbleToCancel, msg, ev) {
+        //$scope.confirmStatus = false;
+        $scope.showAlert = function(isAbleToCancel, msg, yesFunc, noFunc, ev) {
             if (!isAbleToCancel) {
                 $mdDialog.show(
                     $mdDialog.alert()
@@ -227,9 +227,11 @@ angular.module('act.controllers', []).
                 .ok('我确定')
                 .cancel('取消');
                 $mdDialog.show(confirm).then(function() {
-                    $scope.confirmStatus = true;
+                    //$scope.confirmStatus = true;
+                    yesFunc();
                 }, function() {
-                    $scope.confirmStatus = false;
+                    //$scope.confirmStatus = false;
+                    noFunc();
                 });
             }
         };
@@ -387,6 +389,36 @@ angular.module('act.controllers', []).
                 });
             }
         };
+    }]).
+    controller('ActivityCreateCtrl', ['$scope', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$cookies', '$location', function($scope, $http, $csrf, urls, $filter, $routeParams, $user, $cookies, $location){
+        console.log('ActivityCreateCtrl');
+        $scope.act_title = "写大作业";
+        $scope.act_location = "宿舍";
+        $scope.act_maxRegister = 3;
+        $scope.act_summary = "花10天时间写一个有很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多代码的大作业";
+        $scope.act_info = "花10天时间写一个有很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多代码的大作业";
+        $scope.act_startDate = new Date();
+        $scope.act_endDate = new Date();
+        $scope.act_entryDDL = new Date();
+        $scope.createAct = function () {
+        }
+    }]).
+    controller('ActivityInfoCtrl', ['$scope', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$cookies', '$location', function($scope, $http, $csrf, urls, $filter, $routeParams, $user, $cookies, $location){
+        console.log('ActivityInfoCtrl');
+        $scope.act_admin = "老师";
+        $scope.act_title = "写大作业";
+        $scope.act_location = "宿舍";
+        $scope.act_startDate = "2016-7-20";
+        $scope.act_endDate = "2016-7-29";
+        $scope.act_entryDDL = "2016-7-28";
+        $scope.act_info = "花10天时间写一个有很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多代码的大作业";
+        $scope.isAdmin = true;
+        $scope.act_register = ["李俊杰", "卫国扬", "唐人杰", "某某某", "abc", "一个很长的名字作为测试", "日了狗了", "可以的很django"];
+        $scope.act_unregister = ["你一点都不django", "django强无敌", "毕竟django", "python"];
+    }]).
+    controller('ActivityManageCtrl', ['$scope', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$cookies', '$location', function($scope, $http, $csrf, urls, $filter, $routeParams, $user, $cookies, $location){
+        console.log('ActivityManageCtrl');
+        
     }]).
     controller('ActivityLoginCtrl', ['$scope', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$cookies', '$location', function($scope, $http, $csrf, urls, $filter, $routeParams, $user, $cookies, $location){
         console.log('ActivityLoginCtrl');
