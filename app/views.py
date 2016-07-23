@@ -78,6 +78,17 @@ def modify(request):
             user[i] = request.POST.get(i)
         return HttpResponse(json.dumps({'ErrorCode':1}))
 
+
+def modifyPassword(request):
+    try:
+        user = UserBase.objects.get(UId = request.POST.get('UID'),UPassword = request.POST.get('UPassword'))
+    except UserBase.DoesNotExist:
+        return HttpResponse(json.dumps({'ErrorCode':0}))
+    else:
+            user[UPassword] = request.POST.get('NewUPassword')
+        return HttpResponse(json.dumps({'ErrorCode':1}))
+
+        
 from datetime import datetime 
 
 def Create_Activity(request):
