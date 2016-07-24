@@ -159,7 +159,6 @@ angular.module('act.controllers', []).
         //error use
         $scope.errormessage = "";
         //use for check form of emails
-        var reg = /^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$/;
 
         $scope.login_user = function(){
             var param = {
@@ -373,7 +372,6 @@ angular.module('act.controllers', []).
         $scope.user_publicEmail = "django@python.css";
         $scope.user_info = "假装有一个非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常长的个人信息介绍";
         $scope.errormessage = "";
-        var reg = /^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$/;
         $scope.get_user_info = function() {
             $http.get(urls.api + '/user/info/?UID=' + $user.userId).success(function(data) {
                 console.log(data);
@@ -541,24 +539,25 @@ angular.module('act.controllers', []).
         $scope.act_endDate = new Date();
         $scope.act_entryDDL = new Date();
         $scope.createAct = function () {
-            var param = {
+            /*var param = {
                 'Admin': $user.userId,
                 'Type':,
                 'MaxRegister':,
 
-            };
+            };*/
             $http.post(urls.api + "/act/create", $.param(param)).success(function(res){
                 console.log(res);
                 if(res.ErrorCode == 1){
-                    
+                    //success message
+                    //1 button back to home page
+                    //2 button come to show it page
                     $location.url('/');
                 }
                 else {
-                    $scope.user_orgin_pass = "";
-                    $scope.errormessage = "密码错误！";
-                    $scope.alertError($scope.errormessage);
+                    //error message
                 }
             });
+            console.log($scope.act_startDate);
         }
     }]).
     controller('ActivityInfoCtrl', ['$scope', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$cookies', '$location', function($scope, $http, $csrf, urls, $filter, $routeParams, $user, $cookies, $location){
@@ -571,12 +570,61 @@ angular.module('act.controllers', []).
         $scope.act_entryDDL = "2016-7-28";
         $scope.act_info = "花10天时间写一个有很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多代码的大作业";
         $scope.isAdmin = true;
+        //default false
         $scope.act_register = ["李俊杰", "卫国扬", "唐人杰", "某某某", "abc", "一个很长的名字作为测试", "日了狗了", "可以的很django"];
         $scope.act_unregister = ["你一点都不django", "django强无敌", "毕竟django", "python"];
+        $scope.get_act_info = function() {
+            $http.get(urls.api + '/act/info/?AId=' + $routeParams.act_id).success(function(data) {
+                if(data.ErrorCode == 1) {
+                    //update values
+                    /*$scope.act_admin = data.;
+                    $scope.act_title = data.;
+                    $scope.act_location = data.;
+                    $scope.act_startDate = data.;
+                    $scope.act_endDate = data.;
+                    $scope.act_entryDDL = data.;
+                    $scope.act_info = data.;
+                    $scope.act_register = data.;
+                    $scope.act_unregister = data.;
+                    if(data.Admin == $user.userId) {
+                        $scope.isAdmin = true;
+                    }*/
+                }
+                else {
+                    console.log("get act info error");
+                }
+            });
+        };
+        $scope.modifyInfo = function() {
+            if(!$scope.isAdmin) {
+                return;
+            }
+            $location.url('/act/' + $routeParams.act_id + '/modify');
+        };
+        $scope.verifyUser = function() {
+            //turn to verify page
+            $location.url();
+        };
+        $scope.joinIn = function() {
+            var param = {
+                //user id act id
+            };
+            //http post
+
+            //if 1 success message
+            //if 0 error message
+            //if -1 you have already join the act
+        };
     }]).
     controller('ActivityManageCtrl', ['$scope', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$cookies', '$location', function($scope, $http, $csrf, urls, $filter, $routeParams, $user, $cookies, $location){
         console.log('ActivityManageCtrl');
-        
+        //check user admin
+
+        //get act info
+
+        //show act info 
+
+        //post act info
     }]).
     controller('ActivityLoginCtrl', ['$scope', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$cookies', '$location', function($scope, $http, $csrf, urls, $filter, $routeParams, $user, $cookies, $location){
         console.log('ActivityLoginCtrl');
