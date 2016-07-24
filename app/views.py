@@ -262,21 +262,25 @@ def Get_Register(request):
 def Delete_Activity(request):
     re = dict()
     act = Activity.objects.get(AId = request.GET.get('AID'))
-    if act.Register != '':
-        RegisterList = list(map(int,act.Register[1:].split(',')))
+    if act.ARegister != '':
+        RegisterList = list(map(int,act.ARegister[1:].split(',')))
         for i in RegisterList:
             uact = UserActivity.objects.get(UId = i)
             uact.UInAct.replace(','+str(request.GET.get('AID')),'')
             uact.UInActNum -=1
-    if act.Unregister != '':
-        UnregisterList = list(map(int,act.Unregister[1:].split(',')))
+            uact.save()
+    if act.AUnregister != '':
+        UnregisterList = list(map(int,act.AUnregister[1:].split(',')))
         for i in UnregisterList:
-            uact = UserAvtivity.objects.get(UId = i)
+            uact = UserActivity.objects.get(UId = i)
             uact.UInAct.replace(','+str(request.GET.get('AID')),'')
             uact.UInActNum -=1
-    uact = UserAvtivity.objects.get(UId = act.AAdmin)
+            uact.save()
+    uact = UserActivity.objects.get(UId = act.AAdmin)
     uact.UOrganizedAct.replace(','+str(request.GET.get('AID')),'')
     uact.UOrganizedNum -=1
+    uact.save()
     act.delete()
     re['ErrorCode']=1
+    return HttpResponse(json.dumps(re))
    

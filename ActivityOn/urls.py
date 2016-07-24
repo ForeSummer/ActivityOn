@@ -36,7 +36,8 @@ urlpatterns = [
     url(r'^api/act/UAinfo/$',app.views.Get_UserActivity),
     url(r'^api/act/ReInfo/$',app.views.Get_Register),
     url(r'^api/act/accept',app.views.Accept),
-    url(r'^api/act/reject',app.views.Reject)
+    url(r'^api/act/reject',app.views.Reject),
+    url(r'^api/act/delete/$',app.views.Delete_Activity)
 ]
 
 

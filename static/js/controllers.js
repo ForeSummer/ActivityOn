@@ -617,11 +617,7 @@ angular.module('act.controllers', []).
             var message = "你确定要删除这个活动吗？！";
             console.log(message);
             $alert.showAlert(true, message, function() {
-                var param = {
-                    'UID': $user.userId,
-                    'AID': parseInt($routeParams.act_id)
-                };
-                $http.post(urls.api + '/act/delete', $.param(param)).success(function(res) {
+                $http.get(urls.api + '/act/delete/?AID=' + $routeParams.act_id).success(function(res) {
                     if(res.ErrorCode == 1) {
                         $alert.showAlert(false, "删除活动成功！", function() {
                             $location.url('/');
@@ -634,14 +630,14 @@ angular.module('act.controllers', []).
             });
         };
         $scope.joinIn = function() {
-            /*if($user.userId == null || $user.userId < 2) {
+            if($user.userId == null || $user.userId < 2) {
                 $alert.showAlert(false, "您还没有登陆，请登陆后再加入心仪的活动！", function() {
                     $location.url('/');
                     return;
                 });
                 return;
-            }*/
-            $user.userId = 19;
+            }
+            //$user.userId = 19;
             var param = {
                 'UID': $user.userId,
                 'AID': parseInt($routeParams.act_id)
