@@ -402,6 +402,9 @@ angular.module('act.controllers', []).
     }]).
     controller('UserActListCtrl', ['$scope', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$cookies', '$location', 'AlertService',function($scope, $http, $csrf, urls, $filter, $routeParams, $user, $cookies, $location, $alert){
         console.log('UserActListCtrl');
+        if (!$user.isLogged()) {
+            $location.url('/user/login');
+        }
         $scope.init = function () {
             $scope.user_inact = [
                 {"act_title": "写后端", "act_location": "宿舍", "act_startTime": "2016-7-20", "act_endTime": "2016-7-28", "act_summary": "用django@python.shit写一大堆无聊冗长毫无意义的后端代码并把它们强行放到工程里冒充自己有很多代码量"},
@@ -413,31 +416,35 @@ angular.module('act.controllers', []).
             ];
         };
         $scope.init();
-        /*$scope.getActList = function() {
+        $scope.getActList = function() {
             //get in act 
-            $http.get(urls.api + ).success(function(data) {
+            var param = {
+                'UID': $user.userId
+            };
+            $http.get(urls.api + '/act/UAinfo', $.param(param)).success(function(data) {
+                console.log(data);
                 if(data.ErrorCode == 1) {
-                    //show data
+                    console.log('succeed');
                 }
                 else {
                     console.log("get act list error");
                 }
             });
             //get organized act 
-            $http.get(urls.api + ).success(function(data) {
+            /*$http.get(urls.api + ).success(function(data) {
                 if(data.ErrorCode == 1) {
                     //show data
                 }
                 else {
                     console.log("get act list error");
                 }
-            });
-        };*/
+            });*/
+        };
         $scope.getActInfo = function (index) {
             //$location.url('/act/' + + '/info');
             console.log(index);
         };
-        
+        $scope.getActList();
     }]).
     controller('ActivityCreateCtrl', ['$scope', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$cookies', '$location', 'AlertService',function($scope, $http, $csrf, urls, $filter, $routeParams, $user, $cookies, $location, $alert){
         console.log('ActivityCreateCtrl');
@@ -700,16 +707,30 @@ angular.module('act.controllers', []).
             //var chooseId = list data
             var param = {
                 'UID' = ,
-                'value' = value
+                'AID' = $$routeParams.act_id
             };
-            $http.post(urls.api + '').success(function(data) {
-                if (data.ErrorCode == 1) {
+            if(value == 1) {
+                //accept
+                $http.post(urls.api + '/act/accept').success(function(data) {
+                    if (data.ErrorCode == 1) {
 
-                }
-                else {
-                    console.log("change user status error");
-                }
-            });
+                    }
+                    else {
+                        console.log("change user status error");
+                    }
+                });
+            }
+            else {
+                //reject
+                $http.post(urls.api + '/act/reject').success(function(data) {
+                    if (data.ErrorCode == 1) {
+
+                    }
+                    else {
+                        console.log("change user status error");
+                    }
+                });
+            }
 
         };*/
 
