@@ -35,7 +35,7 @@ urlpatterns = [
     url(r'^api/act/part',app.views.participate),
     url(r'^api/act/UAinfo',app.views.Get_UserActivity),
     url(r'^api/act/accept',app.views.Accept),
-    url(r'^api/act/Reject',app.views.Reject)
+    url(r'^api/act/reject',app.views.Reject)
 ]
 
 

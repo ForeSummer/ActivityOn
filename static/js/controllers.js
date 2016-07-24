@@ -73,6 +73,10 @@ angular.module('act.controllers', []).
         $rootScope.$on('userNameChange', function(event, data){
             $scope.nickname = data;
         });
+
+        $scope.messageList = function () {
+            $location.url('user/message');
+        }
         //$scope.get_user_info();
     }]).
     controller('HomepageCtrl', ['$scope', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$location', 'AlertService', function($scope, $http, $csrf, urls, $filter, $routeParams, $user, $location, $alert){
@@ -402,6 +406,9 @@ angular.module('act.controllers', []).
     }]).
     controller('UserActListCtrl', ['$scope', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$cookies', '$location', 'AlertService',function($scope, $http, $csrf, urls, $filter, $routeParams, $user, $cookies, $location, $alert){
         console.log('UserActListCtrl');
+        if (!$user.isLogged()) {
+            $location.url('/user/login');
+        }
         $scope.init = function () {
             $scope.user_inact = [
                 {"act_title": "写后端", "act_location": "宿舍", "act_startTime": "2016-7-20", "act_endTime": "2016-7-28", "act_summary": "用django@python.shit写一大堆无聊冗长毫无意义的后端代码并把它们强行放到工程里冒充自己有很多代码量"},
@@ -415,29 +422,33 @@ angular.module('act.controllers', []).
         $scope.init();
         $scope.getActList = function() {
             //get in act 
-            $http.get(urls.api + ).success(function(data) {
+            var param = {
+                'UID': $user.userId
+            };
+            $http.get(urls.api + '/act/UAinfo', $.param(param)).success(function(data) {
+                console.log(data);
                 if(data.ErrorCode == 1) {
-                    //show data
+                    console.log('succeed');
                 }
                 else {
                     console.log("get act list error");
                 }
             });
             //get organized act 
-            $http.get(urls.api + ).success(function(data) {
+            /*$http.get(urls.api + ).success(function(data) {
                 if(data.ErrorCode == 1) {
                     //show data
                 }
                 else {
                     console.log("get act list error");
                 }
-            });
+            });*/
         };
         $scope.getActInfo = function (index) {
             //$location.url('/act/' + + '/info');
             console.log(index);
         };
-        
+        $scope.getActList();
     }]).
     controller('ActivityCreateCtrl', ['$scope', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$cookies', '$location', 'AlertService',function($scope, $http, $csrf, urls, $filter, $routeParams, $user, $cookies, $location, $alert){
         console.log('ActivityCreateCtrl');
@@ -681,10 +692,10 @@ angular.module('act.controllers', []).
         $scope.get_act_info();
     }]).
     controller('ActivityUserCtrl', ['$scope', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$cookies', '$location', 'AlertService', function($scope, $http, $csrf, urls, $filter, $routeParams, $user, $cookies, $location, $alert){
-        console.log('verifyActivityUser');
+        console.log('ActivityUserCtrl');
         $scope.act_unregister = ["你一点都不django", "django强无敌", "毕竟django", "python"];
 
-        $scope.getActUserList = function() {
+        /*$scope.getActUserList = function() {
             $http.get().success(function(data) {
                 if(data.ErrorCode == 1) {
 
@@ -693,14 +704,53 @@ angular.module('act.controllers', []).
 
                 }
             });
-        };
-        //$scope.getActUserlist();
-        $scope.checkMember = function(index, value) {
+        };*/
 
-        };
+        //$scope.getActUserlist();
+        /*$scope.checkMember = function(index, value) {
+            //var chooseId = list data
+            var param = {
+                'UID' = ,
+                'AID' = $$routeParams.act_id
+            };
+            if(value == 1) {
+                //accept
+                $http.post(urls.api + '/act/accept').success(function(data) {
+                    if (data.ErrorCode == 1) {
+
+                    }
+                    else {
+                        console.log("change user status error");
+                    }
+                });
+            }
+            else {
+                //reject
+                $http.post(urls.api + '/act/reject').success(function(data) {
+                    if (data.ErrorCode == 1) {
+
+                    }
+                    else {
+                        console.log("change user status error");
+                    }
+                });
+            }
+
+        };*/
 
         $scope.act_register = ["Orz"];
 
+    }]).
+    controller('UserMsgCtrl', ['$scope', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$cookies', '$location', 'AlertService', function($scope, $http, $csrf, urls, $filter, $routeParams, $user, $cookies, $location, $alert){
+        console.log('UserMsgCtrl');
+        $scope.user_sys_msg = [
+            {"from": "系统", "date": "2016-7-20", "content": "你看到"},
+            {"from": "系统", "date": "2016-7-20", "content": "这些消息"},
+            {"from": "系统", "date": "2016-7-20", "content": "就说明"},
+            {"from": "系统", "date": "2016-7-20", "content": "你的代码"},
+            {"from": "系统", "date": "2016-7-20", "content": "还tm没写完"}
+        ];
+        $scope.user_user_msg = [{"from": "django", "date": "2016-7-20", "content": "你能看到就说明用户间通信还tm没写"}];
     }]).
     //
     //
