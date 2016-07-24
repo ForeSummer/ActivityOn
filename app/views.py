@@ -37,6 +37,8 @@ def register(request):
             p = request.POST
             base = UserBase(UPrivateEmail = p.get('privateemail'),UPublicEmail = p.get('openemail'),UName = p.get('nickname'),UPassword = p.get('password'))
             base.save()
+            ac = UserActivity(UId = base.UId, UInAct = '',UInActNum = 0,UOrganizedAct = '', UOrganizedNum = 0, UTags = '')
+            ac.save()
             return HttpResponse(json.dumps({"ErrorCode":1,"UID":base.UId}))
             pass
         else :
@@ -93,7 +95,6 @@ def modifyPassword(request):
         return HttpResponse(json.dumps({'ErrorCode':0}))
     else:
         user.UPassword = request.POST.get('NewUPassword')
-        print(user.UPassword)
         user.save()
         return HttpResponse(json.dumps({'ErrorCode':1}))
 
@@ -105,12 +106,62 @@ def Create_Activity(request):
     if request.method == 'POST':
         act = Activity()
         p = request.POST
+        act.AStatus = 0
         act.AType = p.get('Type')
         act.AAdmin = p.get('Admin')
-        act.ARegister = p.get('register')
-        act.AUnregister = p.get('Unregsiter')
+        act.ARegister = p.get('Register')
+        act.AUnregister = p.get('Unregister')
         act.AMaxRegister = p.get('MaxRegister')
-        
+        act.AEntryDDL = p.get('EntryDDL')
+        act.AStartTime = p.get('StartTime')
+        act.AEndTime = p.get('EndTime')
+        act.ATitle = p.get('Title')
+        act.ALocation = p.get('Location')
+        act.AInfo = p.get('Info')
+        act.ASummary = p.get('Summary')
+        act.save()
+        UActivity = UserActivity.objects.get(UId = p.get('Admin'))
+        UActivity.UOrganizedAct += ','+str(act.AId)
+        UActivity.UOrganizedNum +=1
+        UActivity.save()
+        re['ErrorCode'] = 1
+        re["AID"] = act.AId
     else :
-       re['ErrorCode']=0 
-            
+        re['ErrorCode']=0 
+    return HttpResponse(json.dumps(re))
+
+def modify_Activity(request):
+    re = dict()
+    print(request.method) 
+    if request.method == 'POST':
+        act = Activity.objects.get(AId = request.POST.get('AID'))
+        if 'Type' in request.POST:
+            act.AType = request.POST.get('Type')    
+        if 'EntryDDL' in request.POST:
+            act.AEntryDDL = request.POST.get('EntryDDL')       
+        if 'StartTime' in request.POST:
+            act.AStartTime = request.POST.get('StartTime')   
+        if 'EndTime' in request.POST:
+            act.AEndTime = request.POST.get('EndTime')   
+        if 'Title' in request.POST:
+            act.ATitle = request.POST.get('Title')   
+        if 'Location' in request.POST:
+            act.ALocation = request.POST.get('Location')   
+        if 'Info' in request.POST:
+            act.AInfo = request.POST.get('Info')
+        if 'Summary' in request.POST:
+            act.ASummary = request.POST.get('Summary')
+        act.save()
+        re['ErrorCode'] = 1
+        return HttpResponse(json.dumps(re))
+    else :
+        re['ErrorCode'] = 0
+        return HttpResponse(json.dumps(re))
+
+def Get_Activity(request):
+    try:
+        act = Activity.objects.get(AId = request.GET.get('AID'))
+    except Activity.DoesNotExist:
+        return HttpResponse(json.dumps({'ErrorCode':0}))
+    else:
+        return HttpResponse(json.dumps({'Type':act.AType,'Register':act.ARegister,'Unregister':act.AUnregister, 'MaxRegister':act.AMaxRegister,'startTime':act.AStartTime, 'EntryDDL':act.AEntryDDL,'EndTime':act.AEndTime,'Title':act.ATitle, 'Location':act.ALocation, 'Info':act.AInfo, 'Summary':act.ASummary})) 

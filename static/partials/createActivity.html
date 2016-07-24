@@ -29,9 +29,13 @@
 				<div ng-message="md-maxlength">That's too long!</div>
 			</div>
 		</md-input-container><br/>
-		<md-datepicker class="date-picker" ng-model="act_startDate" md-placeholder="活动起始时间"></md-datepicker>
-		<md-datepicker class="date-picker" ng-model="act_endDate" md-placeholder="活动结束时间"></md-datepicker>
-		<md-datepicker class="date-picker" ng-model="act_entryDDL" md-placeholder="截止报名时间"></md-datepicker>
+		<label>活动类型</label>
+		<md-select ng-model="act_type">
+			<md-option ng-repeat="type in types" value="[[type.id]]">[[type.name]]</md-option>
+		</md-select>
+		<div id="date_1">活动起始时间:<md-datepicker class="date-picker" ng-model="act_startDate" md-placeholder="活动起始时间"></md-datepicker></div>
+		<div id="date_2">活动结束时间:<md-datepicker class="date-picker" ng-model="act_endDate" md-placeholder="活动结束时间"></md-datepicker></div>
+		<div id="date_3">截止报名时间:<md-datepicker class="date-picker" ng-model="act_entryDDL" md-placeholder="截止报名时间"></md-datepicker></div>
 		<hr><br>
 		<md-button id="register-submit-btn" class="md-raised md-primary" ng-click="createAct()">Create!</md-button>
 	</div>

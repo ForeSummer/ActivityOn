@@ -28,7 +28,10 @@ urlpatterns = [
     url(r'^api/user/logout',app.views.logout),
     url(r'^api/user/modify$',app.views.modify),
     url(r'^api/user/modifyPassword',app.views.modifyPassword),
-    url(r'^api/user/info/$',app.views.info)
+    url(r'^api/user/info/$',app.views.info),
+    url(r'^api/user/create_activity',app.views.Create_Activity),
+    url(r'^api/act/info/$',app.views.Get_Activity),
+    url(r'^api/act/modifyActivity',app.views.modify_Activity)
 ]
 
 
