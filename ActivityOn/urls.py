@@ -32,9 +32,9 @@ urlpatterns = [
     url(r'^api/act/create',app.views.Create_Activity),
     url(r'^api/act/info/$',app.views.Get_Activity),
     url(r'^api/act/modify',app.views.modify_Activity),
-    url(r'^api/act/part',app.views.participate),
-    url(r'^api/act/UAinfo$',app.views.Get_UserActivity),
-    url(r'^api/act/ReInfo$',app.views.Get_Register)
+    url(r'^api/act/join',app.views.participate),
+    url(r'^api/act/UAinfo/$',app.views.Get_UserActivity),
+    url(r'^api/act/ReInfo/$',app.views.Get_Register),
     url(r'^api/act/accept',app.views.Accept),
     url(r'^api/act/reject',app.views.Reject)
 ]

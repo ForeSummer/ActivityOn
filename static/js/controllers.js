@@ -549,7 +549,7 @@ angular.module('act.controllers', []).
             $scope.types = act_types;
             $scope.act_type = $scope.types[3].name;
             $scope.act_info = "花10天时间写一个有很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多代码的大作业";
-            $scope.isAdmin = true;
+            $scope.isAdmin = false;
             $scope.act_maxRegister = 3;
             $scope.act_register = ["李俊杰", "卫国扬", "唐人杰", "某某某", "abc", "一个很长的名字作为测试", "日了狗了", "可以的很django"];
             $scope.act_unregister = ["你一点都不django", "django强无敌", "毕竟django", "python"];
@@ -557,7 +557,7 @@ angular.module('act.controllers', []).
         $scope.init();
         $scope.get_act_info = function() {
             $http.get(urls.api + '/act/info/?AID=' + $routeParams.act_id).success(function(data) {
-                console.log(data);
+                //console.log(data);
                 if(data.ErrorCode == 1) {
                     //update values
                     $scope.act_admin = data.Admin;
@@ -567,8 +567,6 @@ angular.module('act.controllers', []).
                     $scope.act_endDate = new Date(data.EndTime);
                     $scope.act_entryDDL = new Date(data.EntryDDL);
                     $scope.act_info = data.Info;
-                    $scope.act_register = data.Register;
-                    $scope.act_unregister = data.Unregister;
                     $scope.act_maxRegister = data.MaxRegister;
                     $scope.act_type = data.Type;
                     if(data.Admin == $user.userId) {
@@ -578,6 +576,23 @@ angular.module('act.controllers', []).
                 }
                 else {
                     console.log("get act info error");
+                }
+            });
+            $http.get(urls.api + '/act/ReInfo/?AID=' + $routeParams.act_id).success(function(data) {
+                console.log(data);
+                if(data.ErrorCode == 1) {
+                    $scope.act_register = [];
+                    $scope.act_unregister = [];
+                    for(var i = 0; i < data.Register.length; i ++) {
+                        $scope.act_register.push(data.Register[i].Name);
+                    }
+                    for(var i = 0; i < data.Unregister.length; i ++) {
+                        $scope.act_unregister.push(data.Unregister[i].Name);
+                    }
+                    //console.log($scope.act_unregister);
+                }
+                else {
+                    console.log('get register failed');
                 }
             });
         };
@@ -593,7 +608,7 @@ angular.module('act.controllers', []).
                 return;
             }
             //turn to verify page
-            $location.url();
+            $location.url('/act/' + $routeParams.act_id + '/user');
         };
         $scope.deleteAct = function() {
             if(!$scope.isAdmin) {
@@ -604,7 +619,7 @@ angular.module('act.controllers', []).
             $alert.showAlert(true, message, function() {
                 var param = {
                     'UID': $user.userId,
-                    'AID': $routeParams.act_id
+                    'AID': parseInt($routeParams.act_id)
                 };
                 $http.post(urls.api + '/act/delete', $.param(param)).success(function(res) {
                     if(res.ErrorCode == 1) {
@@ -619,18 +634,24 @@ angular.module('act.controllers', []).
             });
         };
         $scope.joinIn = function() {
-            if(! $user.userId >= 2) {
+            if($user.userId == null || $user.userId < 2) {
                 $alert.showAlert(false, "您还没有登陆，请登陆后再加入心仪的活动！", function() {
                     $location.url('/');
+                    return;
                 });
+                return;
             }
+            //$user.userId = 19;
             var param = {
                 'UID': $user.userId,
-                'AID': $routeParams.act_id
+                'AID': parseInt($routeParams.act_id)
                 //user id act id
             };
             //http post
             $http.post(urls.api + '/act/join', $.param(param)).success(function(res){
+                console.log(res);
+                console.log(param);
+                var message;
                 if(res.ErrorCode == 1){
                     message = "成功申请加入活动！请等待创建者审核，审核成功后会通过站内信和邮件通知，敬请查收～\n 要去活动主页看看嘛？～";
                     $alert.showAlert(true, message, function(){
@@ -639,9 +660,12 @@ angular.module('act.controllers', []).
                         $location.url('/');
                     });
                 }
+                else if(res.ErrorCode == -1)  {
+                    //重复报名！
+                }
                 else {
                     message = "加入活动失败！请重试";
-                    $alert.showAlert(false, message);
+                    $alert.showAlert(false, message, function(){});
                     $scope.init();
                 }
             });
@@ -731,31 +755,48 @@ angular.module('act.controllers', []).
     }]).
     controller('ActivityUserCtrl', ['$scope', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$cookies', '$location', 'AlertService', function($scope, $http, $csrf, urls, $filter, $routeParams, $user, $cookies, $location, $alert){
         console.log('ActivityUserCtrl');
-        $scope.act_unregister = ["你一点都不django", "django强无敌", "毕竟django", "python"];
+        //$scope.act_unregister = ["你一点都不django", "django强无敌", "毕竟django", "python"];
+        $scope.act_register = [];
+        $scope.act_unregister = [];
+        $scope.act_register_id = [];
+        $scope.act_unregister_id = [];
 
-        /*$scope.getActUserList = function() {
-            $http.get().success(function(data) {
+        $scope.getActUserList = function() {
+            $http.get(urls.api + '/act/ReInfo/?AID=' + $routeParams.act_id).success(function(data) {
+                console.log(data);
                 if(data.ErrorCode == 1) {
-
+                    $scope.act_register = [];
+                    $scope.act_unregister = [];
+                    for(var i = 0; i < data.Register.length; i ++) {
+                        $scope.act_register.push(data.Register[i].Name);
+                        $scope.act_register_id.push(data.Register[i].UID);
+                    }
+                    for(var i = 0; i < data.Unregister.length; i ++) {
+                        $scope.act_unregister.push(data.Unregister[i].Name);
+                        $scope.act_unregister_id.push(data.Unregister[i].UID);
+                    }
+                    //console.log($scope.act_unregister);
                 }
                 else {
-
+                    console.log('get register failed');
                 }
             });
-        };*/
+        };
 
-        //$scope.getActUserlist();
-        /*$scope.checkMember = function(index, value) {
+        $scope.getActUserList();
+
+        $scope.checkMember = function(index, value) {
             //var chooseId = list data
             var param = {
-                'UID' = ,
-                'AID' = $$routeParams.act_id
+                'UID': $scope.act_unregister_id[index],
+                'AID': parseInt($routeParams.act_id)
             };
+            console.log(param);
             if(value == 1) {
                 //accept
-                $http.post(urls.api + '/act/accept').success(function(data) {
+                $http.post(urls.api + '/act/accept', $.param(param)).success(function(data) {
                     if (data.ErrorCode == 1) {
-
+                        console.log("accept success");
                     }
                     else {
                         console.log("change user status error");
@@ -764,9 +805,9 @@ angular.module('act.controllers', []).
             }
             else {
                 //reject
-                $http.post(urls.api + '/act/reject').success(function(data) {
+                $http.post(urls.api + '/act/reject', $.param(param)).success(function(data) {
                     if (data.ErrorCode == 1) {
-
+                        console.log("reject success");
                     }
                     else {
                         console.log("change user status error");
@@ -774,9 +815,9 @@ angular.module('act.controllers', []).
                 });
             }
 
-        };*/
+        };
 
-        $scope.act_register = ["Orz"];
+        //$scope.act_register = ["Orz"];
 
     }]).
     controller('UserMsgCtrl', ['$scope', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$cookies', '$location', 'AlertService', function($scope, $http, $csrf, urls, $filter, $routeParams, $user, $cookies, $location, $alert){

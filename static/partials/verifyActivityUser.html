@@ -4,7 +4,7 @@
 		<h4>请在下面表单中接纳或拒绝报名人员</h4>
 		<hr>
 		<md-list>
-			<md-list-item ng-repeat="x in act_unregister" class="noright">
+			<md-list-item ng-repeat="x in act_unregister track by $index" class="noright">
 				<img src="/static/images/admin.png" class="icon">
 				<p>[[x]]</p>
 				<md-button class="md-raised md-primary" ng-click="checkMember($index, 1)">Accept</md-button>
@@ -13,7 +13,7 @@
 		</md-list>
 		<h4>已通过报名用户名单:</h4>
 		<md-list>
-			<md-list-item ng-repeat="x in act_register" class="noright">
+			<md-list-item ng-repeat="x in act_register track by $index" class="noright">
 				<img src="/static/images/admin.png" class="icon">
 				<p>[[x]]</p>
 			</md-list-item>
