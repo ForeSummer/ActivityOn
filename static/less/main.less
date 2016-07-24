@@ -207,12 +207,32 @@
 			.activity-verifyUser {
 				width: 750px;
 				margin: 0 auto;
+				md-list {
+					margin-bottom: 50px;
+					md-list-item {
+						padding-top: 10px;
+						padding-bottom: 10px;
+						border-bottom: 1px solid #aaa;
+						.icon {
+							width: 35px;
+							height: 35px;
+							margin-right: 20px;
+						}
+					}
+				}
 			}
 			.homepage {
 				#content {
 					padding-top: 30px;
 					padding-left: 70px;
 					padding-right: 70px;
+					.notice {
+						background-color: #fe0;
+						padding: 20px;
+						.jumpLink:hover {
+							cursor: pointer;
+						}
+					}
 					.tags {
 						padding-top: 10px;
 						padding-bottom: 20px;
