@@ -280,4 +280,3 @@ def Delete_Activity(request):
     act.delete()
     re['ErrorCode']=1
    
-def 
