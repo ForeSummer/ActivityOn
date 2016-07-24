@@ -217,7 +217,6 @@ def Reject(request):
 def Get_UserActivity(request):
     re = dict()
     uact = UserActivity.objects.get(UId = request.GET.get('UID'))
-    print(request.GET)
     print(list(map(int,(uact.UOrganizedAct[1:]).split(',')) ))
     OAct = []
     if uact.UOrganizedAct!='':
@@ -234,4 +233,23 @@ def Get_UserActivity(request):
     re['ErrorCode']=1
     re['InActivity'] = IAct 
     re['OrganizedActivity'] = OAct 
+    return HttpResponse(json.dumps(re))
+def Get_Rigister(request):
+    re =dict()
+    act = Activity.objects.get(AId = request.GET.get('AID'))
+    Register = []
+    if act.Register != '':
+        RegisterList = list(map(int,act.Register[1:].split(',')))
+        for i in RegisterList:
+            user = UserBase.objects.get(UId = i)
+            Register.append({'UID':user.UId,'Name':user.UName,'Avator':user.UAvator})
+    Unregister = []
+    if act.Unregister != '':
+        UnregisterList = list(map(int,act.Unregister[1:].split(',')))
+        for i in Unregister:
+            user = UserBase.objects.get(UId = i)
+            Unregister.append({'UID':user.UId,'Name':user.UName,'Avator':user.UAvator})
+    re['ErroeCode']=1
+    re['Register'] = Register 
+    re['Unregister'] = Unregister 
     return HttpResponse(json.dumps(re))
