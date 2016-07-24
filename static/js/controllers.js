@@ -634,14 +634,14 @@ angular.module('act.controllers', []).
             });
         };
         $scope.joinIn = function() {
-            if($user.userId == null || $user.userId < 2) {
+            /*if($user.userId == null || $user.userId < 2) {
                 $alert.showAlert(false, "您还没有登陆，请登陆后再加入心仪的活动！", function() {
                     $location.url('/');
                     return;
                 });
                 return;
-            }
-            //$user.userId = 19;
+            }*/
+            $user.userId = 19;
             var param = {
                 'UID': $user.userId,
                 'AID': parseInt($routeParams.act_id)
@@ -661,7 +661,9 @@ angular.module('act.controllers', []).
                     });
                 }
                 else if(res.ErrorCode == -1)  {
-                    //重复报名！
+                    message = "您已经参加了这个活动！";
+                    $alert.showAlert(false, message, function(){});
+                    $scope.init();
                 }
                 else {
                     message = "加入活动失败！请重试";
