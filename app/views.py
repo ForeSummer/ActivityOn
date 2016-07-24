@@ -173,7 +173,6 @@ def participate(request):
         except :
             re['ErrorCode']=0
         else:
-<<<<<<< HEAD
             if useractivity.UInAct.find(','+str(activity.AId)) == -1:
                 useravtivity.UInAct+=','+str(activity.AId)
                 useractivity.UInActNum+=1
@@ -183,14 +182,6 @@ def participate(request):
                 re['ErrorCode']=1
             else:
                 re['ErrorCode'] = -1
-=======
-            useractivity.UInAct+=','+str(activity.AId)
-            useractivity.UInActNum+=1
-            activity.AUnregister+= ','+str(useractivity.UId)
-            useractivity.save()
-            activity.save()
-            re['ErrorCode']=1
->>>>>>> eef2045f1f02445019a4ea766b1ceb0595e89d54
     else :
         re['ErrorCode']=0
     return HttpResponse(json.dumps(re))
@@ -289,3 +280,4 @@ def Delete_Activity(request):
     act.delete()
     re['ErrorCode']=1
    
+def 
