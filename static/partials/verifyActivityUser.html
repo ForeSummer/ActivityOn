@@ -1,0 +1,14 @@
+<div class="article-container">
+	<dir class="activity-verifyUser">
+		<h1>管理活动报名人员</h1>
+		<h4>请在下面表单中接纳或拒绝报名人员</h4>
+		<hr>
+		<md-list>
+			<md-list-item ng-repeat="x in act_unregister" class="noright">
+				<p>[[x]]</p>
+				<md-button>Accept</md-button>
+				<md-button>Deny</md-button>
+			</md-list-item>
+		</md-list>
+	</dir>
+</div>

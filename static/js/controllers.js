@@ -112,6 +112,8 @@ angular.module('act.controllers', []).
         $scope.createActivity = function () {
             $location.url('/act/create');
         }
+        $scope.user_timeline = [{"user": "李俊杰", "act": "写后端", "isAdmin": true, "date": "2016-7-20"}, {"user": "卫国扬", "act": "写前端逻辑", "isAdmin": true, "date": "2016-7-21"}, {"user": "唐人杰", "act": "写前端样式", "isAdmin": false, "date": "2016-7-22"}]
+
         $scope.confirmStatus = false;
         $scope.showAlert = function(isAbleToCancel, msg, ev) {
             if (!isAbleToCancel) {
@@ -530,7 +532,7 @@ angular.module('act.controllers', []).
             }
         };
     }]).
-    controller('ActivityCreateCtrl', ['$scope', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$cookies', '$location', function($scope, $http, $csrf, urls, $filter, $routeParams, $user, $cookies, $location){
+    controller('ActivityCreateCtrl', ['$scope', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$cookies', '$location', '$mdDialog', function($scope, $http, $csrf, urls, $filter, $routeParams, $user, $cookies, $location, $mdDialog){
         console.log('ActivityCreateCtrl');
         $scope.act_title = "写大作业";
         $scope.act_location = "宿舍";
@@ -563,7 +565,7 @@ angular.module('act.controllers', []).
             });
         }
     }]).
-    controller('ActivityInfoCtrl', ['$scope', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$cookies', '$location', function($scope, $http, $csrf, urls, $filter, $routeParams, $user, $cookies, $location){
+    controller('ActivityInfoCtrl', ['$scope', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$cookies', '$location', '$mdDialog', function($scope, $http, $csrf, urls, $filter, $routeParams, $user, $cookies, $location, $mdDialog){
         console.log('ActivityInfoCtrl');
         $scope.act_admin = "老师";
         $scope.act_title = "写大作业";
@@ -578,18 +580,28 @@ angular.module('act.controllers', []).
         $scope.act_register = ["李俊杰", "卫国扬", "唐人杰", "某某某", "abc", "一个很长的名字作为测试", "日了狗了", "可以的很django"];
         $scope.act_unregister = ["你一点都不django", "django强无敌", "毕竟django", "python"];
     }]).
-    controller('ActivityManageCtrl', ['$scope', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$cookies', '$location', function($scope, $http, $csrf, urls, $filter, $routeParams, $user, $cookies, $location){
+    controller('ActivityManageCtrl', ['$scope', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$cookies', '$location', '$mdDialog', function($scope, $http, $csrf, urls, $filter, $routeParams, $user, $cookies, $location, $mdDialog){
         console.log('ActivityManageCtrl');
-        
+        $scope.act_name = "写大作业";
+        $scope.act_location = "宿舍";
+        $scope.act_maxRegister = 3;
+        $scope.act_startDate = new Date();
+        $scope.act_endDate = new Date();
+        $scope.act_entryDDL = new Date();
+        $scope.act_summary = "花10天时间写一个有很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多代码的大作业";
+        $scope.act_info = "花10天时间写一个有很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多代码的大作业";
     }]).
+    controller('ActivityUserCtrl', ['$scope', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$cookies', '$location', '$mdDialog', function($scope, $http, $csrf, urls, $filter, $routeParams, $user, $cookies, $location, $mdDialog){
+        console.log('verifyActivityUser');
+        $scope.act_unregister = ["你一点都不django", "django强无敌", "毕竟django", "python"];
+    }]).
+    //
+    //
+    //
+    //
     controller('ActivityLoginCtrl', ['$scope', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$cookies', '$location', function($scope, $http, $csrf, urls, $filter, $routeParams, $user, $cookies, $location){
         console.log('ActivityLoginCtrl');
 
-    }]).
-    controller('ActivityManageCtrl', ['$scope', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$cookies', '$location', function($scope, $http, $csrf, urls, $filter, $routeParams, $user, $cookies, $location){
-        console.log('ActivityManageCtrl');
-        
-       
     }]).
     controller('RegStatisticCtrl', ['$scope', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', function($scope, $http, $csrf, urls, $filter, $routeParams, $user){
         console.log('RegStatisticCtrl');

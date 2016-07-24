@@ -2,7 +2,17 @@
 	<div class="homepage">
 		<div flex layout="row" class="tmp">
 			<md-content flex-gt-sm="70" id="content" layout="column">
-				<h3>您还未报名任何活动>_<</h3>
+				<h3>动态:</h3>
+				<md-list>
+					<md-list-item ng-repeat="x in user_timeline" class="noright">
+						<img src="/static/images/admin.png" class="icon_img">
+						<p>
+							<span>[[x.user]]<span ng-if="!x.isAdmin">参加</span><span ng-if="x.isAdmin">报名</span>了活动&nbsp;</span>
+							<a href="#">[[x.act]]</a>
+						</p>
+						[[x.date]]
+					</md-list-item>
+				</md-list>
 			</md-content>
 			<md-sidenav flex-gt-sm="30" md-is-locked-open="true" class="md-whiteframe-z2" id="side">
 				<md-button class="md-raised md-primary" ng-click="createActivity()">创建一个活动!</md-button>

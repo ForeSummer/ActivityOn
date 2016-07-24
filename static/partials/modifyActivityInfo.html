@@ -1,31 +1,38 @@
 <div class="article-container">
-	<dir class="user-modifyinfo">
+	<dir class="activity-modifyinfo">
 		<h1>修改活动信息</h1>
 		<h4>请在下面表单中填写供展示的活动信息</h4>
 		<hr>
 		<md-input-container class="username-input">
 			<label>活动名称</label>
-			<input type="text" ng-model="user_name">
+			<input type="text" ng-model="act_name">
+		</md-input-container>
+		<div id="date_1">活动起始时间:<md-datepicker class="date-picker" ng-model="act_startDate" md-placeholder="活动起始时间"></md-datepicker></div>
+		<div id="date_2">活动结束时间:<md-datepicker class="date-picker" ng-model="act_endDate" md-placeholder="活动结束时间"></md-datepicker></div>
+		<div id="date_3">截止报名时间:<md-datepicker class="date-picker" ng-model="act_entryDDL" md-placeholder="截止报名时间"></md-datepicker></div>
+		<md-input-container class="username-input">
+			<label>活动地点</label>
+			<input type="text" ng-model="act_location">
 		</md-input-container>
 		<md-input-container class="username-input">
-			<label>公开邮箱</label>
-			<input type="email" ng-model="user_publicEmail">
+			<label>最大接纳人数</label>
+			<input type="text" ng-model="act_maxRegister">
 		</md-input-container>
 		<md-input-container>
-			<label>个人简介</label>
-			<textarea name="bio" rows="4" ng-model="user_info" md-maxlength="150"></textarea>
+			<label>活动简介(将显示在简介页面上)</label>
+			<textarea name="bio" rows="3" ng-model="act_summary" md-maxlength="50"></textarea>
 			<div ng-messages="userForm.bio.$error" ng-show="userForm.bio.$dirty">
 				<div ng-message="md-maxlength">That's too long!</div>
 			</div>
 		</md-input-container>
-		<md-list class="follow-enable">
-			<md-list-item>
-				<p>是否允许其他用户follow</p>
-				<md-switch class="md-secondary"></md-switch>
-			</md-list-item>
-		</md-list>
+		<md-input-container>
+			<label>活动信息(将显示在详细介绍页面上)</label>
+			<textarea name="bio" rows="5" ng-model="act_info" md-maxlength="150"></textarea>
+			<div ng-messages="userForm.bio.$error" ng-show="userForm.bio.$dirty">
+				<div ng-message="md-maxlength">That's too long!</div>
+			</div>
+		</md-input-container><br/>
 		<br/>
 		<md-button id="register-submit-btn" class="md-raised md-primary" ng-click="modifyInfo()">Save!</md-button>
-		<md-button id="password-btn" class="md-raised md-primary" ng-click="modifyPassword()">修改密码</md-button>
 	</dir>
 </div>
