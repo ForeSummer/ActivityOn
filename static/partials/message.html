@@ -1,0 +1,35 @@
+<div class="article-container">
+	<div class="user-message">
+		<h3>您的信息:</h3>
+		<md-tabs md-center-tabs md-dynamic-height md-border-bottom class="login-tab">
+			<md-tab label="系统通知" class="first-tab">
+				<md-list>
+					<div ng-repeat="x in user_sys_msg" class="noright">
+						<md-list-item>
+							<p class="from">[[x.from]]:</p>
+							<span class="date">[[x.date]]</span>
+						</md-list-item>
+						<md-list-item>
+							<p>[[x.content]]</p>
+						</md-list-item>
+						<hr>
+					</div>
+				</md-list>
+			</md-tab>
+			<md-tab label="用户私信">
+				<md-list>
+					<div ng-repeat="x in user_user_msg" class="noright">
+						<md-list-item>
+							<p class="from">[[x.from]]:</p>
+							<span class="date">[[x.date]]</span>
+						</md-list-item>
+						<md-list-item>
+							<p>[[x.content]]</p>
+						</md-list-item>
+						<hr>
+					</div>
+				</md-list>
+			</md-tab>
+		<md-tabs>
+	</div>
+</div>
