@@ -30,6 +30,40 @@ angular.module('act.services', []).
             }
         };
     }]).
+    service('AlertService', ['$mdDialog', function($mdDialog) {
+        this.showAlert = function(isAbleToCancel, msg, yesFunc, noFunc, ev) {
+            if (!isAbleToCancel) {
+                $mdDialog.show(
+                    $mdDialog.alert()
+                    .parent(angular.element(document.querySelector('#popupContainer')))
+                    .clickOutsideToClose(true)
+                    .title('注意!')
+                    .textContent(msg)
+                    .ariaLabel('Alert Dialog')
+                    .ok('确定')
+                    .targetEvent(ev)
+                ).then(function() {
+                    yesFunc();
+                });
+            } else {
+                var confirm = $mdDialog.confirm()
+                .title('请确认:')
+                .textContent(msg)
+                .ariaLabel('Confirm Dialog')
+                .targetEvent(ev)
+                .ok('我确定')
+                .cancel('取消');
+                $mdDialog.show(confirm).then(function() {
+                    //$scope.confirmStatus = true;
+                    yesFunc();
+                }, function() {
+                    //$scope.confirmStatus = false;
+                    noFunc();
+                });
+            }
+        };
+        return this;
+    }]).
     service('UserService', function () {
         this.id = null;
         this.userId = null;
