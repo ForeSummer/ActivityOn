@@ -90,13 +90,16 @@ angular.module('act.controllers', []).
             $location.url('/act/create');
         }
         $scope.user_timeline = [
-        {"user": "李俊杰", "act": "写后端", "isAdmin": true, "ago": "10分钟", "summary": "用django@python.shit写一大堆无聊冗长毫无意义的后端代码并把它们强行放到工程里冒充自己有很多代码量"},
-        {"user": "卫国扬", "act": "写前端逻辑", "isAdmin": true, "ago": "10分钟", "summary": "用angularJS写一大堆无聊冗长毫无意义的前段逻辑代码并把它们强行放到工程里冒充自己有很多代码量"},
-        {"user": "唐人杰", "act": "写前端样式", "isAdmin": false, "ago": "10分钟", "summary": "用HTML和less写一大堆无聊冗长毫无意义而且难看的前段样式代码并把它们强行放到工程里冒充自己有很多代码量"}];
+        {"user": "李俊杰", "act": "写后端", "isAdmin": true, "ago": "10分钟前", "summary": "用django@python.shit写一大堆无聊冗长毫无意义的后端代码并把它们强行放到工程里冒充自己有很多代码量"},
+        {"user": "卫国扬", "act": "写前端逻辑", "isAdmin": true, "ago": "10分钟前", "summary": "用angularJS写一大堆无聊冗长毫无意义的前段逻辑代码并把它们强行放到工程里冒充自己有很多代码量"},
+        {"user": "唐人杰", "act": "写前端样式", "isAdmin": false, "ago": "10分钟前", "summary": "用HTML和less写一大堆无聊冗长毫无意义而且难看的前段样式代码并把它们强行放到工程里冒充自己有很多代码量"}];
         $scope.jump = function (index, type) {
             console.log("Jump to " + index + "," + type);
         }
         $scope.user_suggest = ["写代码", "写大作业", "发呆"];
+        $scope.search = function (content) {
+            console.log(content);
+        }
 
         $scope.confirmStatus = false;
         
@@ -386,6 +389,23 @@ angular.module('act.controllers', []).
         $scope.alertError = function(msg) {
             $scope.showAlert(false, msg);
         }
+    }]).
+    controller('UserActListCtrl', ['$scope', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$cookies', '$location', 'AlertService',function($scope, $http, $csrf, urls, $filter, $routeParams, $user, $cookies, $location, $alert){
+        console.log('UserActListCtrl');
+        $scope.init = function () {
+            $scope.user_inact = [
+                {"act_title": "写后端", "act_location": "宿舍", "act_startTime": "2016-7-20", "act_endTime": "2016-7-28", "act_summary": "用django@python.shit写一大堆无聊冗长毫无意义的后端代码并把它们强行放到工程里冒充自己有很多代码量"},
+                {"act_title": "写前端逻辑", "act_location": "宿舍", "act_startTime": "2016-7-20", "act_endTime": "2016-7-28", "act_summary": "用angularJS写一大堆无聊冗长毫无意义的前段逻辑代码并把它们强行放到工程里冒充自己有很多代码量"},
+                {"act_title": "写前端样式", "act_location": "宿舍", "act_startTime": "2016-7-20", "act_endTime": "2016-7-28", "act_summary": "用HTML和less写一大堆无聊冗长毫无意义而且难看的前段样式代码并把它们强行放到工程里冒充自己有很多代码量"}
+            ];
+            $scope.user_organizedact = [
+                {"act_title": "写后端", "act_location": "宿舍", "act_startTime": "2016-7-20", "act_endTime": "2016-7-28", "act_summary": "用django@python.shit写一大堆无聊冗长毫无意义的后端代码并把它们强行放到工程里冒充自己有很多代码量"}
+            ];
+        }
+        $scope.getActInfo = function (index) {
+            console.log(index);
+        }
+        $scope.init();
     }]).
     controller('ActivityCreateCtrl', ['$scope', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$cookies', '$location', 'AlertService',function($scope, $http, $csrf, urls, $filter, $routeParams, $user, $cookies, $location, $alert){
         console.log('ActivityCreateCtrl');
