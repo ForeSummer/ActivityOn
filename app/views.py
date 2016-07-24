@@ -191,9 +191,46 @@ def Accept(request):
             re['ErroeCode']=0
         else:
             activity.Register+=','+ str(request.POST.get('UID'))
-            activity.Unregister.lstrip(','+ str(request.POST.get('UID')))
+            activity.Unregister.replace(','+ str(request.POST.get('UID')),'')
             activity.save()
             re['ErroeCode']=1
     else:
         re['ErroeCode']=0
+    return HttpResponse(json.dumps(re))
+
+def Reject(request):
+    re = dict()
+    if request.method == 'POST':
+        try:
+            activity = Activity.objects.get(AId = request.POST.get('AID'))
+        except:
+            re['ErroeCode']=0
+        else:
+            activity.Unregister.replace(','+ str(request.POST.get('UID')),'')
+            activity.save()
+            re['ErroeCode']=1
+    else:
+        re['ErroeCode']=0
+    return HttpResponse(json.dumps(re))
+
+
+def Get_UserActivity(request):
+    re = dict()
+    uact = UserActivity.objects.get(UId = request.POST.get('UID'))
+    print(list(map(int,(uact.UOrganizedAct[1:]).split(',')) ))
+    OAct = []
+    if uact.UOrganizedAct!='':
+        OActList = list(map(int,(uact.UOrganizedAct[1:]).split(',')))
+        for i in OActList:
+            act = Activity.objects.get(AId = i)
+            OAct.append({'Admin':act.AAdmin,'Title':act.ATitle,'StartTime':act.AStartTime,'EndTime':act.AEndTime, 'Location':act.ALocation, 'Summary':act.ASummary})
+    IAct = []
+    if uact.UInAct != '':
+        IActList = list(map(int,uact.UInAct[1:].split(',')))
+        for i in IActList:
+            act = Activity.objects.get(AId = i)
+            IAct.append({'Admin':act.AAdmin,'Title':act.ATitle,'StartTime':act.AStartTime,'EndTime':act.AEndTime, 'Location':act.ALocation, 'Summary':act.ASummary})
+    re['ErrorCode']=1
+    re['InActivity'] = IAct 
+    re['OrganizedActivity'] = OAct 
     return HttpResponse(json.dumps(re))

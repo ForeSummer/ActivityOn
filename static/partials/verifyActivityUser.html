@@ -7,8 +7,8 @@
 			<md-list-item ng-repeat="x in act_unregister" class="noright">
 				<img src="/static/images/admin.png" class="icon">
 				<p>[[x]]</p>
-				<md-button class="md-raised md-primary">Accept</md-button>
-				<md-button class="md-raised md-warn">Deny</md-button>
+				<md-button class="md-raised md-primary" ng-click="checkMember($index, 1)">Accept</md-button>
+				<md-button class="md-raised md-warn" ng-click="checkMember($index, 0)">Deny</md-button>
 			</md-list-item>
 		</md-list>
 		<h4>已通过报名用户名单:</h4>

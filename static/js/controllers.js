@@ -688,7 +688,7 @@ angular.module('act.controllers', []).
         console.log('ActivityUserCtrl');
         $scope.act_unregister = ["你一点都不django", "django强无敌", "毕竟django", "python"];
 
-        $scope.getActUserList = function() {
+        /*$scope.getActUserList = function() {
             $http.get().success(function(data) {
                 if(data.ErrorCode == 1) {
 
@@ -697,11 +697,25 @@ angular.module('act.controllers', []).
 
                 }
             });
-        };
-        //$scope.getActUserlist();
-        $scope.checkMember = function(index, value) {
+        };*/
 
-        };
+        //$scope.getActUserlist();
+        /*$scope.checkMember = function(index, value) {
+            //var chooseId = list data
+            var param = {
+                'UID' = ,
+                'value' = value
+            };
+            $http.post(urls.api + '').success(function(data) {
+                if (data.ErrorCode == 1) {
+
+                }
+                else {
+                    console.log("change user status error");
+                }
+            });
+
+        };*/
 
         $scope.act_register = ["Orz"];
 
