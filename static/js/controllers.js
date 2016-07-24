@@ -411,41 +411,79 @@ angular.module('act.controllers', []).
         }
         $scope.init = function () {
             $scope.user_inact = [
-                {"act_title": "写后端", "act_location": "宿舍", "act_startTime": "2016-7-20", "act_endTime": "2016-7-28", "act_summary": "用django@python.shit写一大堆无聊冗长毫无意义的后端代码并把它们强行放到工程里冒充自己有很多代码量"},
-                {"act_title": "写前端逻辑", "act_location": "宿舍", "act_startTime": "2016-7-20", "act_endTime": "2016-7-28", "act_summary": "用angularJS写一大堆无聊冗长毫无意义的前段逻辑代码并把它们强行放到工程里冒充自己有很多代码量"},
-                {"act_title": "写前端样式", "act_location": "宿舍", "act_startTime": "2016-7-20", "act_endTime": "2016-7-28", "act_summary": "用HTML和less写一大堆无聊冗长毫无意义而且难看的前段样式代码并把它们强行放到工程里冒充自己有很多代码量"}
+                {"Title": "写后端", "Location": "宿舍", "StartTime": "2016-7-20", "EndTime": "2016-7-28", "Summary": "用django@python.shit写一大堆无聊冗长毫无意义的后端代码并把它们强行放到工程里冒充自己有很多代码量"},
+                {"Title": "写前端逻辑", "Location": "宿舍", "StartTime": "2016-7-20", "EndTime": "2016-7-28", "Summary": "用angularJS写一大堆无聊冗长毫无意义的前段逻辑代码并把它们强行放到工程里冒充自己有很多代码量"},
+                {"Title": "写前端样式", "Location": "宿舍", "StartTime": "2016-7-20", "EndTime": "2016-7-28", "Summary": "用HTML和less写一大堆无聊冗长毫无意义而且难看的前段样式代码并把它们强行放到工程里冒充自己有很多代码量"}
             ];
             $scope.user_organizedact = [
-                {"act_title": "写后端", "act_location": "宿舍", "act_startTime": "2016-7-20", "act_endTime": "2016-7-28", "act_summary": "用django@python.shit写一大堆无聊冗长毫无意义的后端代码并把它们强行放到工程里冒充自己有很多代码量"}
+                {"Title": "写后端", "Location": "宿舍", "StartTime": "2016-7-20", "EndTime": "2016-7-28", "Summary": "用django@python.shit写一大堆无聊冗长毫无意义的后端代码并把它们强行放到工程里冒充自己有很多代码量"}
             ];
         };
         $scope.init();
         $scope.getActList = function() {
             //get in act 
-            var param = {
-                'UID': $user.userId
-            };
-            $http.get(urls.api + '/act/UAinfo', $.param(param)).success(function(data) {
+        
+            $http.get(urls.api + '/act/UAinfo/?UID=' + $user.userId).success(function(data) {
                 console.log(data);
                 if(data.ErrorCode == 1) {
                     console.log('succeed');
+                    $scope.user_inact = data.InActivity;
+                    $scope.user_organizedact = data.OrganizedActivity;
+                    var str = '';
+                    var date = '';
+                    for(var i = 0; i < data.InActivity.length; i ++) {
+                        str = '';
+                        date = new Date($scope.user_inact[i].StartTime);
+                        str += date.getFullYear();
+                        str += '-';
+                        str += date.getMonth();
+                        str += '-';
+                        str += date.getDate();
+                        $scope.user_inact[i].StartTime = str;
+
+                        str = '';
+                        date = new Date($scope.user_inact[i].EndTime);
+                        str += date.getFullYear();
+                        str += '-';
+                        str += date.getMonth();
+                        str += '-';
+                        str += date.getDate();
+                        $scope.user_inact[i].EndTime = str;
+                    }
+                    for(var i = 0; i < data.OrganizedActivity.length; i ++) {
+                        str = '';
+                        date = new Date($scope.user_organizedact[i].StartTime);
+                        str += date.getFullYear();
+                        str += '-';
+                        str += date.getMonth();
+                        str += '-';
+                        str += date.getDate();
+                        $scope.user_organizedact[i].StartTime = str;
+
+                        str = '';
+                        date = new Date($scope.user_organizedact[i].EndTime);
+                        str += date.getFullYear();
+                        str += '-';
+                        str += date.getMonth();
+                        str += '-';
+                        str += date.getDate();
+                        $scope.user_organizedact[i].EndTime = str;
+                    }
                 }
                 else {
                     console.log("get act list error");
                 }
             });
-            //get organized act 
-            /*$http.get(urls.api + ).success(function(data) {
-                if(data.ErrorCode == 1) {
-                    //show data
-                }
-                else {
-                    console.log("get act list error");
-                }
-            });*/
         };
-        $scope.getActInfo = function (index) {
-            //$location.url('/act/' + + '/info');
+        $scope.getActInfo = function (index, value) {
+            var id = -1;
+            if(value == 0) {
+                id = $scope.user_inact[index].AID;
+            }
+            else {
+                id = $scope.user_organizedact[index].AID;
+            }
+            $location.url('/act/' + id + '/info');
             console.log(index);
         };
         $scope.getActList();
@@ -663,9 +701,9 @@ angular.module('act.controllers', []).
                 'AID': $routeParams.act_id,
                 'Type': $scope.act_type,
                 'MaxRegister': $scope.act_maxRegister,
-                'EntryDDL': $scope.act_entryDDL,
-                'StartTime': $scope.act_startDate,
-                'EndTime': $scope.act_endDate,
+                'EntryDDL': $scope.act_entryDDL.toISOString(),
+                'StartTime': $scope.act_startDate.toISOString(),
+                'EndTime': $scope.act_endDate.toISOString(),
                 'Title': $scope.act_title,
                 'Location': $scope.act_location,
                 'Summary': $scope.act_summary,
