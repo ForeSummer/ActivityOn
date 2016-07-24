@@ -34,9 +34,11 @@ angular.module('act', [
         $routeProvider.when('/user/:user_id/info', {templateUrl: urls.part + '/userInfo.html', controller: 'UserInfoCtrl', title: '个人信息'});
         $routeProvider.when('/user/modify', {templateUrl: urls.part + '/userModifyInfo.html', controller: 'UserModifyInfoCtrl', title: '修改个人信息'});
         $routeProvider.when('/user/password', {templateUrl: urls.part + '/userModifyPass.html', controller: 'UserModifyPassCtrl', title: '修改密码'});
+        $routeProvider.when('/user/actlist', {templateUrl: urls.part + '/activityList.html', controller: 'UserActListCtrl', title: '活动列表'});
         $routeProvider.when('/act/create', {templateUrl: urls.part + '/createActivity.html', controller: 'ActivityCreateCtrl', title: '创建活动'});
         $routeProvider.when('/act/:act_id/info', {templateUrl: urls.part + '/activityInfo.html', controller: 'ActivityInfoCtrl', title: '活动信息'});
         $routeProvider.when('/act/:act_id/manage', {templateUrl: urls.part + '/modifyActivityInfo.html', controller: 'ActivityManageCtrl', title: "活动管理"});
+        $routeProvider.when('/act/:act_id/user', {templateUrl: urls.part + '/verifyActivityUser.html', controller: 'ActivityUserCtrl', title: "人员管理"});
         //
         $routeProvider.when('/act/:act_id/login', {templateUrl: urls.part + '/act_login.html', controller: 'ActivityLoginCtrl', title: "活动登录"});
         $routeProvider.when('/act/:act_id/regist', {templateUrl: urls.part + '/act_regist.html', controller: 'ActivityRegistCtrl', title: "活动报名"});
@@ -54,6 +56,6 @@ angular.module('act', [
         //Configure header title of the page
         $rootScope.urls = urls;
         $rootScope.$on('$routeChangeSuccess', function(event, current, previous){
-            //$rootScope.title = current.$$route.title;
+            $rootScope.title = current.$$route.title;
         });
     }]);

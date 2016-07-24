@@ -1,0 +1,36 @@
+<div class="article-container">
+	<div class="activity-list">
+		<h3>您的活动:</h3>
+		<md-tabs md-center-tabs md-dynamic-height md-border-bottom class="login-tab">
+			<md-tab label="您参加的活动" class="first-tab">
+				<md-list>
+					<div ng-repeat="x in user_inact" class="noright">
+						<md-list-item ng-click="getActInfo($index)">
+							<p><span class="title">[[x.act_title]]</span></p>
+							<span class="location">[[x.act_location]]</span>
+							<span>[[x.act_startTime]] - [[x.act_endTime]]</span>
+						</md-list-item>
+						<md-list-item ng-click="getActInfo($index)">
+							[[x.act_summary]]
+						</md-list-item>
+						<hr>
+					</div>
+				</md-list>
+			</md-tab>
+			<md-tab label="您创建的活动">
+				<md-list>
+					<div ng-repeat="x in user_organizedact" class="noright">
+						<md-list-item ng-click="getActInfo($index)">
+							<p><span class="title">[[x.act_title]]</span></p>
+							<span class="location">[[x.act_location]]</span>
+							<span>[[x.act_startTime]] - [[x.act_endTime]]</span>
+						</md-list-item>
+						<md-list-item ng-click="getActInfo($index)">
+							[[x.act_summary]]
+						</md-list-item>
+						<hr>
+					</div>
+				</md-list>
+			</md-tab>
+	</div>
+</div>
