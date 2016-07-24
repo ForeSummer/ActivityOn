@@ -19,16 +19,19 @@ angular.module('act.controllers', []).
         };
         //logout
         $scope.logout = function(){
-
-            $http.get(urls.api + '/user/logout').success(function(data){
-                console.log(data);
-                $user.destory();
-                window.location = '/';
-                //$csrf.show_error(data.error);
-                if(data.ErrorCode == 1){
+            var message = "你确定要登出嘛？～";
+            console.log(message);
+            $scope.showAlert(true, message, function() {
+                $http.get(urls.api + '/user/logout').success(function(data){
+                    console.log(data);
                     $user.destory();
                     window.location = '/';
-                }
+                    //$csrf.show_error(data.error);
+                    if(data.ErrorCode == 1){
+                        $user.destory();
+                        window.location = '/';
+                    }
+                });
             });
         };
         $scope.returnHome = function(){
@@ -540,13 +543,20 @@ angular.module('act.controllers', []).
         $scope.act_entryDDL = new Date();
         $scope.act_type = 3;
         $scope.types = act_types;
-        $scope.createAct = function () {
-            /*var param = {
-                'Admin': $user.userId,
-                'Type':,
-                'MaxRegister':,
 
-            };*/
+        $scope.createAct = function () {
+            var param = {
+                'Admin': $user.userId,
+                'Type': $scope.act_type,
+                'MaxRegister': $scope.act_maxRegister,
+                'EntryDDL': $scope.act_entryDDL,
+                'StartTime': $scope.act_startDate,
+                'EndTime': $scope.act_endDate,
+                'Title': $scope.act_title,
+                'Location': $scope.act_location,
+                'Summary': $scope.act_summary,
+                'Info': $scope.act_info
+            };
             $http.post(urls.api + "/act/create", $.param(param)).success(function(res){
                 console.log(res);
                 if(res.ErrorCode == 1){
@@ -574,6 +584,8 @@ angular.module('act.controllers', []).
         $scope.act_type = $scope.types[3].name;
         $scope.act_info = "花10天时间写一个有很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多代码的大作业";
         $scope.isAdmin = true;
+        $scope.act_maxRegister = 3;
+        //max regester
         //default false
         $scope.act_register = ["李俊杰", "卫国扬", "唐人杰", "某某某", "abc", "一个很长的名字作为测试", "日了狗了", "可以的很django"];
         $scope.act_unregister = ["你一点都不django", "django强无敌", "毕竟django", "python"];
@@ -581,24 +593,27 @@ angular.module('act.controllers', []).
             $http.get(urls.api + '/act/info/?AId=' + $routeParams.act_id).success(function(data) {
                 if(data.ErrorCode == 1) {
                     //update values
-                    /*$scope.act_admin = data.;
-                    $scope.act_title = data.;
-                    $scope.act_location = data.;
-                    $scope.act_startDate = data.;
-                    $scope.act_endDate = data.;
-                    $scope.act_entryDDL = data.;
-                    $scope.act_info = data.;
-                    $scope.act_register = data.;
-                    $scope.act_unregister = data.;
+                    $scope.act_admin = data.Admin;
+                    $scope.act_title = data.Title;
+                    $scope.act_location = data.Location;
+                    $scope.act_startDate = data.StartTime;
+                    $scope.act_endDate = data.EndTime;
+                    $scope.act_entryDDL = data.EntryDDL;
+                    $scope.act_info = data.Info;
+                    $scope.act_register = data.Register;
+                    $scope.act_unregister = data.Unregister;
+                    $scope.act_maxRegister = data.MaxRegister;
+                    $scope.act_type = data.Type;
                     if(data.Admin == $user.userId) {
                         $scope.isAdmin = true;
-                    }*/
+                    }
                 }
                 else {
                     console.log("get act info error");
                 }
             });
         };
+
         $scope.modifyInfo = function() {
             if(!$scope.isAdmin) {
                 return;
@@ -606,6 +621,9 @@ angular.module('act.controllers', []).
             $location.url('/act/' + $routeParams.act_id + '/modify');
         };
         $scope.verifyUser = function() {
+            if(!$scope.isAdmin) {
+                return;
+            }
             //turn to verify page
             $location.url();
         };
@@ -622,13 +640,90 @@ angular.module('act.controllers', []).
     }]).
     controller('ActivityManageCtrl', ['$scope', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$cookies', '$location', function($scope, $http, $csrf, urls, $filter, $routeParams, $user, $cookies, $location){
         console.log('ActivityManageCtrl');
-        //check user admin
+        //data
+        $scope.act_title = "写大作业";
+        $scope.act_location = "宿舍";
+        $scope.act_maxRegister = 3;
+        $scope.act_summary = "花10天时间写一个有很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多代码的大作业";
+        $scope.act_info = "花10天时间写一个有很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多代码的大作业";
+        $scope.act_startDate = new Date();
+        $scope.act_endDate = new Date();
+        $scope.act_entryDDL = new Date();
+        $scope.act_type = 3;
+        $scope.types = act_types;
+        //function
+        $scope.get_act_info = function() {
+            $http.get(urls.api + '/act/info/?AID=' + $routeParams.act_id).success(function(data) {
+                if(data.ErrorCode == 1) {
+                    //update values
+                    $scope.act_admin = data.Admin;
+                    $scope.act_title = data.Title;
+                    $scope.act_location = data.Location;
+                    $scope.act_startDate = data.StartTime;
+                    $scope.act_endDate = data.EndTime;
+                    $scope.act_entryDDL = data.EntryDDL;
+                    $scope.act_info = data.Info;
+                    $scope.act_register = data.Register;
+                    $scope.act_unregister = data.Unregister;
+                    $scope.act_maxRegister = data.MaxRegister;
+                    $scope.act_type = data.Type;
+                    if(data.Admin == $user.userId) {
+                        $scope.isAdmin = true;
+                    }
+                }
+                else {
+                    console.log("get act info error");
+                }
+            });
+        };
 
-        //get act info
+        $scope.modifyInfo = function() {
+            var param = {
+                'Admin': $user.userId,
+                'AID': $routeParams.act_id,
+                'Type': $scope.act_type,
+                'MaxRegister': $scope.act_maxRegister,
+                'EntryDDL': $scope.act_entryDDL,
+                'StartTime': $scope.act_startDate,
+                'EndTime': $scope.act_endDate,
+                'Title': $scope.act_title,
+                'Location': $scope.act_location,
+                'Summary': $scope.act_summary,
+                'Info': $scope.act_info
+            };
+            $http.post(urls.api + '/act/modify', $.param(param)).success(function(res){
+                console.log(res);
+                if(res.ErrorCode == 1){
+                    //success message
+                    //1 button back to home page
+                    //2 button come to show it page
+                    $location.url('/');
+                }
+                else {
+                    //error message
+                }
+            });
+        };
 
-        //show act info 
+        $scope.deleteAct = function() {
+            var param = {
+                'UID': $user.userId,
+                'AID': $routeParams.act_id
+            };
+            $http.post(urls.api + 'act/delete', $.param(param)).success(function(res) {
+                if(res.ErrorCode == 1) {
 
-        //post act info
+                }
+                else {
+
+                }
+            })
+        };
+        
+        $scope.get_user_info();
+        if($scope.act_admin != $user.userId) {
+            $location.url('/');
+        }
     }]).
     controller('ActivityLoginCtrl', ['$scope', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$cookies', '$location', function($scope, $http, $csrf, urls, $filter, $routeParams, $user, $cookies, $location){
         console.log('ActivityLoginCtrl');

@@ -54,6 +54,6 @@ angular.module('act', [
         //Configure header title of the page
         $rootScope.urls = urls;
         $rootScope.$on('$routeChangeSuccess', function(event, current, previous){
-            //$rootScope.title = current.$$route.title;
+            $rootScope.title = current.$$route.title;
         });
     }]);
