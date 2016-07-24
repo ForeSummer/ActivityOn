@@ -3,7 +3,7 @@
 /* Controllers */
 
 angular.module('act.controllers', []).
-    controller('HeaderCtrl', ['$scope', '$rootScope','$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$location', '$mdDialog', function($scope, $rootScope, $http, $csrf, urls, $filter, $routeParams, $user, $location, $mdDialog){
+    controller('HeaderCtrl', ['$scope', '$rootScope','$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$location', 'AlertService', function($scope, $rootScope, $http, $csrf, urls, $filter, $routeParams, $user, $location, $alert){
         console.log("homepage");
         //search access
         $scope.search = "";
@@ -21,7 +21,7 @@ angular.module('act.controllers', []).
         $scope.logout = function(){
             var message = "你确定要登出嘛？～";
             console.log(message);
-            $scope.showAlert(true, message, function() {
+            $alert.showAlert(true, message, function() {
                 $http.get(urls.api + '/user/logout').success(function(data){
                     console.log(data);
                     $user.destory();
@@ -66,33 +66,7 @@ angular.module('act.controllers', []).
             $location.url('/user/createAct');
         }
         $scope.confirmStatus = false;
-        $scope.showAlert = function(isAbleToCancel, msg, ev) {
-            if (!isAbleToCancel) {
-                $mdDialog.show(
-                    $mdDialog.alert()
-                    .parent(angular.element(document.querySelector('#popupContainer')))
-                    .clickOutsideToClose(true)
-                    .title('注意!')
-                    .textContent(msg)
-                    .ariaLabel('Alert Dialog')
-                    .ok('确定')
-                    .targetEvent(ev)
-                );
-            } else {
-                var confirm = $mdDialog.confirm()
-                .title('请确认:')
-                .textContent(msg)
-                .ariaLabel('Confirm Dialog')
-                .targetEvent(ev)
-                .ok('我确定')
-                .cancel('取消');
-                $mdDialog.show(confirm).then(function() {
-                    $scope.confirmStatus = true;
-                }, function() {
-                    $scope.confirmStatus = false;
-                });
-            }
-        };
+
         $rootScope.$on('userLog', function(event, data){
             $scope.get_user_info();
         });
@@ -101,7 +75,7 @@ angular.module('act.controllers', []).
         });
         //$scope.get_user_info();
     }]).
-    controller('HomepageCtrl', ['$scope', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$location', '$mdDialog', function($scope, $http, $csrf, urls, $filter, $routeParams, $user, $location, $mdDialog){
+    controller('HomepageCtrl', ['$scope', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$location', 'AlertService', function($scope, $http, $csrf, urls, $filter, $routeParams, $user, $location, $alert){
         console.log('HomepageCtrl');
         if (!$user.isLogged()) {
             console.log($user.isLogged);
@@ -125,35 +99,9 @@ angular.module('act.controllers', []).
         $scope.user_suggest = ["写代码", "写大作业", "发呆"];
 
         $scope.confirmStatus = false;
-        $scope.showAlert = function(isAbleToCancel, msg, ev) {
-            if (!isAbleToCancel) {
-                $mdDialog.show(
-                    $mdDialog.alert()
-                    .parent(angular.element(document.querySelector('#popupContainer')))
-                    .clickOutsideToClose(true)
-                    .title('注意!')
-                    .textContent(msg)
-                    .ariaLabel('Alert Dialog')
-                    .ok('确定')
-                    .targetEvent(ev)
-                );
-            } else {
-                var confirm = $mdDialog.confirm()
-                .title('请确认:')
-                .textContent(msg)
-                .ariaLabel('Confirm Dialog')
-                .targetEvent(ev)
-                .ok('我确定')
-                .cancel('取消');
-                $mdDialog.show(confirm).then(function() {
-                    $scope.confirmStatus = true;
-                }, function() {
-                    $scope.confirmStatus = false;
-                });
-            }
-        };
+        
     }]).
-    controller('UserLoginCtrl', ['$scope', '$rootScope', '$window', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$location', '$mdDialog', function($scope, $rootScope, $window, $http, $csrf, urls, $filter, $routeParams, $user, $location, $mdDialog){
+    controller('UserLoginCtrl', ['$scope', '$rootScope', '$window', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$location', 'AlertService', function($scope, $rootScope, $window, $http, $csrf, urls, $filter, $routeParams, $user, $location, $alert){
         console.log('UserLoginCtrl');
         $('.header-container').hide();
         $('.footer-container').hide();
@@ -184,11 +132,13 @@ angular.module('act.controllers', []).
                     //success
                     console.log($user);
                     $user.create(1, res.UID);
-                    $rootScope.$broadcast('userLog');
-                    $('.header-container').show();
-                    $('.footer-container').show();
-                    //console.log($user.isLogged());
-                    $location.url('/');
+                    $alert.showAlert(false, "登陆成功！", function(){
+                        $rootScope.$broadcast('userLog');
+                        $('.header-container').show();
+                        $('.footer-container').show();
+                        //console.log($user.isLogged());
+                        $location.url('/');
+                    });
                     //console.log("login succeed");
                 }
                 else {
@@ -241,7 +191,7 @@ angular.module('act.controllers', []).
                 $scope.alertError($scope.errormessage);
                 return;
             }
-            //showAlert(true, "")
+            //ToDo: if public email == private email
             var param = {
                 'privateemail': $scope.privateemail,
                 'password': $scope.password,
@@ -254,11 +204,13 @@ angular.module('act.controllers', []).
                 //$csrf.show_error(data.error);
                 if(data.ErrorCode == 1){
                     $user.create(1,data.UID);
-                    console.log($user.isLogged());
-                    $rootScope.$broadcast('userLog');
-                    $('.header-container').show();
-                    $('.footer-container').show();
-                    $location.url('/');
+                    $alert.showAlert(false, "注册成功！", function() {
+                        console.log($user.isLogged());
+                        $rootScope.$broadcast('userLog');
+                        $('.header-container').show();
+                        $('.footer-container').show();
+                        $location.url('/');
+                    });
                 }
                 else {
                     $scope.password = "";
@@ -276,42 +228,12 @@ angular.module('act.controllers', []).
         };
 
         $scope.alertError = function(msg) {
-            $scope.showAlert(false, msg);
+            $alert.showAlert(false, msg);
 
         }
-
         //$scope.confirmStatus = false;
-        $scope.showAlert = function(isAbleToCancel, msg, yesFunc, noFunc, ev) {
-            if (!isAbleToCancel) {
-                $mdDialog.show(
-                    $mdDialog.alert()
-                    .parent(angular.element(document.querySelector('#popupContainer')))
-                    .clickOutsideToClose(true)
-                    .title('注意!')
-                    .textContent(msg)
-                    .ariaLabel('Alert Dialog')
-                    .ok('确定')
-                    .targetEvent(ev)
-                );
-            } else {
-                var confirm = $mdDialog.confirm()
-                .title('请确认:')
-                .textContent(msg)
-                .ariaLabel('Confirm Dialog')
-                .targetEvent(ev)
-                .ok('我确定')
-                .cancel('取消');
-                $mdDialog.show(confirm).then(function() {
-                    //$scope.confirmStatus = true;
-                    yesFunc();
-                }, function() {
-                    //$scope.confirmStatus = false;
-                    noFunc();
-                });
-            }
-        };
     }]).
-    controller('UserInfoCtrl', ['$scope', '$window', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$location', '$mdDialog', function($scope, $window, $http, $csrf, urls, $filter, $routeParams, $user, $location, $mdDialog){
+    controller('UserInfoCtrl', ['$scope', '$window', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$location', 'AlertService', function($scope, $window, $http, $csrf, urls, $filter, $routeParams, $user, $location, $alert){
         console.log('UserInfoCtrl');
         //defualt is false
         $scope.isMe = true;
@@ -349,41 +271,17 @@ angular.module('act.controllers', []).
         }
 
         $scope.confirmStatus = false;
-        $scope.showAlert = function(isAbleToCancel, msg, ev) {
-            if (!isAbleToCancel) {
-                $mdDialog.show(
-                    $mdDialog.alert()
-                    .parent(angular.element(document.querySelector('#popupContainer')))
-                    .clickOutsideToClose(true)
-                    .title('注意!')
-                    .textContent(msg)
-                    .ariaLabel('Alert Dialog')
-                    .ok('确定')
-                    .targetEvent(ev)
-                );
-            } else {
-                var confirm = $mdDialog.confirm()
-                .title('请确认:')
-                .textContent(msg)
-                .ariaLabel('Confirm Dialog')
-                .targetEvent(ev)
-                .ok('我确定')
-                .cancel('取消');
-                $mdDialog.show(confirm).then(function() {
-                    $scope.confirmStatus = true;
-                }, function() {
-                    $scope.confirmStatus = false;
-                });
-            }
-        };
         $scope.get_user_info();
     }]).
-    controller('UserModifyInfoCtrl', ['$scope', '$rootScope','$window', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$location', '$mdDialog', function($scope, $rootScope,$window, $http, $csrf, urls, $filter, $routeParams, $user, $location, $mdDialog){
+    controller('UserModifyInfoCtrl', ['$scope', '$rootScope','$window', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$location', 'AlertService', function($scope, $rootScope,$window, $http, $csrf, urls, $filter, $routeParams, $user, $location, $alert){
         console.log('UserModifyInfoCtrl');
-        $scope.user_name = "假装有用户名";
-        $scope.user_publicEmail = "django@python.css";
-        $scope.user_info = "假装有一个非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常长的个人信息介绍";
-        $scope.errormessage = "";
+        $scope.init = function() {
+            $scope.user_name = "假装有用户名";
+            $scope.user_publicEmail = "django@python.css";
+            $scope.user_info = "假装有一个非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常非常长的个人信息介绍";
+            $scope.errormessage = "";
+        };
+        $scope.init();
         $scope.get_user_info = function() {
             $http.get(urls.api + '/user/info/?UID=' + $user.userId).success(function(data) {
                 console.log(data);
@@ -426,51 +324,25 @@ angular.module('act.controllers', []).
                 console.log(data);
                 //$csrf.show_error(data.error);
                 if(data.ErrorCode == 1){
-                    $rootScope.$broadcast('userNameChange', $scope.user_name);
-                    $location.url('/');
-                    //window.location = urls + '/user/homepage';
+                    $alert.showAlert(false, "修改成功！", function() {
+                        $rootScope.$broadcast('userNameChange', $scope.user_name);
+                        $location.url('/');
+                    });
+                }
+                else {
+                    $alert.showAlert(false, "修改失败！");
+                    $scope.init();
                 }
             });
         }
 
         $scope.confirmStatus = false;
-        $scope.alertError = function(msg) {
-            $scope.showAlert(false, msg);
-        }
-        $scope.showAlert = function(isAbleToCancel, msg, ev) {
-            if (!isAbleToCancel) {
-                $mdDialog.show(
-                    $mdDialog.alert()
-                    .parent(angular.element(document.querySelector('#popupContainer')))
-                    .clickOutsideToClose(true)
-                    .title('注意!')
-                    .textContent(msg)
-                    .ariaLabel('Alert Dialog')
-                    .ok('确定')
-                    .targetEvent(ev)
-                );
-            } else {
-                var confirm = $mdDialog.confirm()
-                .title('请确认:')
-                .textContent(msg)
-                .ariaLabel('Confirm Dialog')
-                .targetEvent(ev)
-                .ok('我确定')
-                .cancel('取消');
-                $mdDialog.show(confirm).then(function() {
-                    $scope.confirmStatus = true;
-                }, function() {
-                    $scope.confirmStatus = false;
-                });
-            }
-        };
-
         $scope.get_user_info();
         $scope.modifyPassword = function () {
             $location.url('/user/password');
         }
     }]).
-    controller('UserModifyPassCtrl', ['$scope', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$cookies', '$location', '$mdDialog', function($scope, $http, $csrf, urls, $filter, $routeParams, $user, $cookies, $location, $mdDialog){
+    controller('UserModifyPassCtrl', ['$scope', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$cookies', '$location', 'AlertService', function($scope, $http, $csrf, urls, $filter, $routeParams, $user, $cookies, $location, $alert){
         $scope.user_orgin_pass = "";
         $scope.user_pass = "";
         $scope.confirm = "";
@@ -500,7 +372,9 @@ angular.module('act.controllers', []).
             $http.post(urls.api + "/user/password/modify", $.param(param)).success(function(res){
                 console.log(res);
                 if(res.ErrorCode == 1){
-                    $location.url('/');
+                    $alert.showAlert(false, "修改成功！", function() {
+                        $location.url('/');
+                    });
                 }
                 else {
                     $scope.user_orgin_pass = "";
@@ -512,46 +386,22 @@ angular.module('act.controllers', []).
         $scope.alertError = function(msg) {
             $scope.showAlert(false, msg);
         }
-        $scope.showAlert = function(isAbleToCancel, msg, ev) {
-            if (!isAbleToCancel) {
-                $mdDialog.show(
-                    $mdDialog.alert()
-                    .parent(angular.element(document.querySelector('#popupContainer')))
-                    .clickOutsideToClose(true)
-                    .title('注意!')
-                    .textContent(msg)
-                    .ariaLabel('Alert Dialog')
-                    .ok('确定')
-                    .targetEvent(ev)
-                );
-            } else {
-                var confirm = $mdDialog.confirm()
-                .title('请确认:')
-                .textContent(msg)
-                .ariaLabel('Confirm Dialog')
-                .targetEvent(ev)
-                .ok('我确定')
-                .cancel('取消');
-                $mdDialog.show(confirm).then(function() {
-                    $scope.confirmStatus = true;
-                }, function() {
-                    $scope.confirmStatus = false;
-                });
-            }
-        };
     }]).
-    controller('ActivityCreateCtrl', ['$scope', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$cookies', '$location', '$mdDialog', function($scope, $http, $csrf, urls, $filter, $routeParams, $user, $cookies, $location, $mdDialog){
+    controller('ActivityCreateCtrl', ['$scope', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$cookies', '$location', 'AlertService',function($scope, $http, $csrf, urls, $filter, $routeParams, $user, $cookies, $location, $alert){
         console.log('ActivityCreateCtrl');
-        $scope.act_title = "写大作业";
-        $scope.act_location = "宿舍";
-        $scope.act_maxRegister = 3;
-        $scope.act_summary = "花10天时间写一个有很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多代码的大作业";
-        $scope.act_info = "花10天时间写一个有很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多代码的大作业";
-        $scope.act_startDate = new Date();
-        $scope.act_endDate = new Date();
-        $scope.act_entryDDL = new Date();
-        $scope.act_type = 3;
-        $scope.types = act_types;
+        $scope.init = function() {
+            $scope.act_title = "写大作业";
+            $scope.act_location = "宿舍";
+            $scope.act_maxRegister = 3;
+            $scope.act_summary = "花10天时间写一个有很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多代码的大作业";
+            $scope.act_info = "花10天时间写一个有很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多代码的大作业";
+            $scope.act_startDate = new Date();
+            $scope.act_endDate = new Date();
+            $scope.act_entryDDL = new Date();
+            $scope.act_type = 3;
+            $scope.types = act_types;
+        };
+        $scope.init();
 
         $scope.createAct = function () {
             var param = {
@@ -568,14 +418,19 @@ angular.module('act.controllers', []).
             };
             $http.post(urls.api + "/act/create", $.param(param)).success(function(res){
                 console.log(res);
+                var message;
                 if(res.ErrorCode == 1){
-                    //success message
-                    //1 button back to home page
-                    //2 button come to show it page
-                    $location.url('/');
+                    message = "活动创建成功！\n 要去活动主页看看嘛？～";
+                    $alert.showAlert(true, message, function(){
+                        $location.url('/act/' + res.AID + '/info');
+                    }, function(){
+                        $location.url('/');
+                    });
                 }
                 else {
-                    //error message
+                    message = "活动创建失败！请重试";
+                    $alert.showAlert(false, message);
+                    $scope.init();
                 }
             });
             console.log($scope.act_startDate);
@@ -583,21 +438,22 @@ angular.module('act.controllers', []).
     }]).
     controller('ActivityInfoCtrl', ['$scope', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$cookies', '$location', '$mdDialog', function($scope, $http, $csrf, urls, $filter, $routeParams, $user, $cookies, $location, $mdDialog){
         console.log('ActivityInfoCtrl');
-        $scope.act_admin = "老师";
-        $scope.act_title = "写大作业";
-        $scope.act_location = "宿舍";
-        $scope.act_startDate = "2016-7-20";
-        $scope.act_endDate = "2016-7-29";
-        $scope.act_entryDDL = "2016-7-28";
-        $scope.types = act_types;
-        $scope.act_type = $scope.types[3].name;
-        $scope.act_info = "花10天时间写一个有很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多代码的大作业";
-        $scope.isAdmin = true;
-        $scope.act_maxRegister = 3;
-        //max regester
-        //default false
-        $scope.act_register = ["李俊杰", "卫国扬", "唐人杰", "某某某", "abc", "一个很长的名字作为测试", "日了狗了", "可以的很django"];
-        $scope.act_unregister = ["你一点都不django", "django强无敌", "毕竟django", "python"];
+        $scope.init = function() {
+            $scope.act_admin = "老师";
+            $scope.act_title = "写大作业";
+            $scope.act_location = "宿舍";
+            $scope.act_startDate = "2016-7-20";
+            $scope.act_endDate = "2016-7-29";
+            $scope.act_entryDDL = "2016-7-28";
+            $scope.types = act_types;
+            $scope.act_type = $scope.types[3].name;
+            $scope.act_info = "花10天时间写一个有很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多代码的大作业";
+            $scope.isAdmin = true;
+            $scope.act_maxRegister = 3;
+            $scope.act_register = ["李俊杰", "卫国扬", "唐人杰", "某某某", "abc", "一个很长的名字作为测试", "日了狗了", "可以的很django"];
+            $scope.act_unregister = ["你一点都不django", "django强无敌", "毕竟django", "python"];
+        };
+        $scope.init();
         $scope.get_act_info = function() {
             $http.get(urls.api + '/act/info/?AId=' + $routeParams.act_id).success(function(data) {
                 if(data.ErrorCode == 1) {
@@ -636,29 +492,76 @@ angular.module('act.controllers', []).
             //turn to verify page
             $location.url();
         };
+        $scope.deleteAct = function() {
+            if(!$scope.isAdmin) {
+                return;
+            }
+            var message = "你确定要删除这个活动吗？！";
+            console.log(message);
+            $alert.showAlert(true, message, function() {
+                var param = {
+                    'UID': $user.userId,
+                    'AID': $routeParams.act_id
+                };
+                $http.post(urls.api + '/act/delete', $.param(param)).success(function(res) {
+                    if(res.ErrorCode == 1) {
+                        $alert.showAlert(false, "删除活动成功！", function() {
+                            $location.url('/');
+                        });
+                    }
+                    else {
+                        $alert.showAlert(false, "删除活动失败！请重试", function() {});
+                    }
+                })；
+            });
+        };
         $scope.joinIn = function() {
+            if(! $user.userId >= 2) {
+                $alert.showAlert(false, "您还没有登陆，请登陆后再加入心仪的活动！", function() {
+                    $location.url('/');
+                });
+            }
             var param = {
+                'UID': $user.userId,
+                'AID': $routeParams.act_id
                 //user id act id
             };
             //http post
-
+            $http.post(urls.api + '/act/join', $.param(param)).success(function(res){
+                if(res.ErrorCode == 1){
+                    message = "成功申请加入活动！请等待创建者审核，审核成功后会通过站内信和邮件通知，敬请查收～\n 要去活动主页看看嘛？～";
+                    $alert.showAlert(true, message, function(){
+                        $location.url('/act/' + $routeParams.act_id + '/info');
+                    }, function(){
+                        $location.url('/');
+                    });
+                }
+                else {
+                    message = "加入活动失败！请重试";
+                    $alert.showAlert(false, message);
+                    $scope.init();
+                }
+            });
             //if 1 success message
             //if 0 error message
             //if -1 you have already join the act
         };
     }]).
-    controller('ActivityManageCtrl', ['$scope', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$cookies', '$location', '$mdDialog', function($scope, $http, $csrf, urls, $filter, $routeParams, $user, $cookies, $location, $mdDialog){
-        console.log('ActivityManageCtrl');//data
-        $scope.act_title = "写大作业";
-        $scope.act_location = "宿舍";
-        $scope.act_maxRegister = 3;
-        $scope.act_summary = "花10天时间写一个有很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多代码的大作业";
-        $scope.act_info = "花10天时间写一个有很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多代码的大作业";
-        $scope.act_startDate = new Date();
-        $scope.act_endDate = new Date();
-        $scope.act_entryDDL = new Date();
-        $scope.act_type = 3;
-        $scope.types = act_types;
+    controller('ActivityManageCtrl', ['$scope', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$cookies', '$location', function($scope, $http, $csrf, urls, $filter, $routeParams, $user, $cookies, $location){
+        console.log('ActivityManageCtrl');
+        //data
+        $scope.init = function() {
+            $scope.act_title = "写大作业";
+            $scope.act_location = "宿舍";
+            $scope.act_maxRegister = 3;
+            $scope.act_summary = "花10天时间写一个有很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多代码的大作业";
+            $scope.act_info = "花10天时间写一个有很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多代码的大作业";
+            $scope.act_startDate = new Date();
+            $scope.act_endDate = new Date();
+            $scope.act_entryDDL = new Date();
+            $scope.act_type = 3;
+            $scope.types = act_types;
+        };
         //function
         $scope.get_act_info = function() {
             $http.get(urls.api + '/act/info/?AID=' + $routeParams.act_id).success(function(data) {
@@ -702,32 +605,20 @@ angular.module('act.controllers', []).
             $http.post(urls.api + '/act/modify', $.param(param)).success(function(res){
                 console.log(res);
                 if(res.ErrorCode == 1){
-                    //success message
-                    //1 button back to home page
-                    //2 button come to show it page
-                    $location.url('/');
+                    message = "活动信息修改成功！\n 要去活动主页看看嘛？～";
+                    $alert.showAlert(true, message, function(){
+                        $location.url('/act/' + $routeParams.act_id + '/info');
+                    }, function(){
+                        $location.url('/');
+                    });
                 }
                 else {
-                    //error message
+                    message = "活动信息修改失败！请重试";
+                    $alert.showAlert(false, message);
+                    $scope.init();
                 }
             });
         };
-
-        $scope.deleteAct = function() {
-            var param = {
-                'UID': $user.userId,
-                'AID': $routeParams.act_id
-            };
-            $http.post(urls.api + 'act/delete', $.param(param)).success(function(res) {
-                if(res.ErrorCode == 1) {
-
-                }
-                else {
-
-                }
-            })
-        };
-
         $scope.get_act_info();
         if($scope.act_admin != $user.userId) {
             $location.url('/');
