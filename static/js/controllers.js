@@ -512,7 +512,7 @@ angular.module('act.controllers', []).
                     else {
                         $alert.showAlert(false, "删除活动失败！请重试", function() {});
                     }
-                })；
+                });
             });
         };
         $scope.joinIn = function() {
