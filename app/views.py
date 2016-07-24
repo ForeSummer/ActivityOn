@@ -165,3 +165,39 @@ def Get_Activity(request):
         return HttpResponse(json.dumps({'ErrorCode':0}))
     else:
         return HttpResponse(json.dumps({'Type':act.AType,'Register':act.ARegister,'Unregister':act.AUnregister, 'MaxRegister':act.AMaxRegister,'startTime':act.AStartTime, 'EntryDDL':act.AEntryDDL,'EndTime':act.AEndTime,'Title':act.ATitle, 'Location':act.ALocation, 'Info':act.AInfo, 'Summary':act.ASummary})) 
+
+
+def participate(request):
+    re = dict()
+    if request.method == 'POST':
+        try:
+            useravtivity = UserActivity.objects.get(UId = request.POST.get('UID'))
+            activity = Activity.objects.get(AId = request.POST.get('AID'))
+        except :
+            re['ErrorCode']=0
+        else:
+            useravtivity.UInAct+=','+str(activity.AId)
+            useractivity.UInActNum+=1
+            activity.Unregister+= ','+str(useractivity.UId)
+            useractivity.save()
+            activity.save()
+            re['ErroeCode']=1
+    else :
+        re['ErroeCode']=0
+    return HttpResponse(json.dumps(re))
+
+def Accept(request):
+    re = dict()
+    if request.method == 'POST':
+        try:
+            activity = Activity.objects.get(AId = request.POST.get('AID'))
+        except:
+            re['ErroeCode']=0
+        else:
+            activity.Register+=','+ str(request.POST.get('UID'))
+            activity.Unregister.lstrip(','+ str(request.POST.get('UID')))
+            activity.save()
+            re['ErroeCode']=1
+    else:
+        re['ErroeCode']=0
+    return HttpResponse(json.dumps(re))
