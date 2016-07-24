@@ -172,14 +172,17 @@ def participate(request):
         except :
             re['ErrorCode']=0
         else:
-            useravtivity.UInAct+=','+str(activity.AId)
-            useractivity.UInActNum+=1
-            activity.Unregister+= ','+str(useractivity.UId)
-            useractivity.save()
-            activity.save()
-            re['ErroeCode']=1
+            if useractivity.UInAct.find(','+str(activity.AId)) == -1:
+                useravtivity.UInAct+=','+str(activity.AId)
+                useractivity.UInActNum+=1
+                activity.Unregister+= ','+str(useractivity.UId)
+                useractivity.save()
+                activity.save()
+                re['ErrorCode']=1
+            else:
+                re['ErrorCode'] = -1
     else :
-        re['ErroeCode']=0
+        re['ErrorCode']=0
     return HttpResponse(json.dumps(re))
 
 def Accept(request):
@@ -188,14 +191,14 @@ def Accept(request):
         try:
             activity = Activity.objects.get(AId = request.POST.get('AID'))
         except:
-            re['ErroeCode']=0
+            re['ErrorCode']=0
         else:
             activity.Register+=','+ str(request.POST.get('UID'))
             activity.Unregister.replace(','+ str(request.POST.get('UID')),'')
             activity.save()
-            re['ErroeCode']=1
+            re['ErrorCode']=1
     else:
-        re['ErroeCode']=0
+        re['ErrorCode']=0
     return HttpResponse(json.dumps(re))
 
 def Reject(request):
@@ -204,13 +207,13 @@ def Reject(request):
         try:
             activity = Activity.objects.get(AId = request.POST.get('AID'))
         except:
-            re['ErroeCode']=0
+            re['ErrorCode']=0
         else:
             activity.Unregister.replace(','+ str(request.POST.get('UID')),'')
             activity.save()
-            re['ErroeCode']=1
+            re['ErrorCode']=1
     else:
-        re['ErroeCode']=0
+        re['ErrorCode']=0
     return HttpResponse(json.dumps(re))
 
 
@@ -234,6 +237,8 @@ def Get_UserActivity(request):
     re['InActivity'] = IAct 
     re['OrganizedActivity'] = OAct 
     return HttpResponse(json.dumps(re))
+
+
 def Get_Rigister(request):
     re =dict()
     act = Activity.objects.get(AId = request.GET.get('AID'))
@@ -246,10 +251,32 @@ def Get_Rigister(request):
     Unregister = []
     if act.Unregister != '':
         UnregisterList = list(map(int,act.Unregister[1:].split(',')))
-        for i in Unregister:
+        for i in UnregisterList:
             user = UserBase.objects.get(UId = i)
             Unregister.append({'UID':user.UId,'Name':user.UName,'Avator':user.UAvator})
-    re['ErroeCode']=1
+    re['ErrorCode']=1
     re['Register'] = Register 
     re['Unregister'] = Unregister 
     return HttpResponse(json.dumps(re))
+
+def Delete_Activity(request):
+    re = dict()
+    act = Activity.objects.get(AId = request.GET.get('AID'))
+    if act.Register != '':
+        RegisterList = list(map(int,act.Register[1:].split(',')))
+        for i in RegisterList:
+            uact = UserActivity.objects.get(UId = i)
+            uact.UInAct.replace(','+str(request.GET.get('AID')),'')
+            uact.UInActNum -=1
+    if act.Unregister != '':
+        UnregisterList = list(map(int,act.Unregister[1:].split(',')))
+        for i in UnregisterList:
+            uact = UserAvtivity.objects.get(UId = i)
+            uact.UInAct.replace(','+str(request.GET.get('AID')),'')
+            uact.UInActNum -=1
+    uact = UserAvtivity.objects.get(UId = act.AAdmin)
+    uact.UOrganizedAct.replace(','+str(request.GET.get('AID')),'')
+    uact.UOrganizedNum -=1
+    act.delete()
+    re['ErrorCode']=1
+   
