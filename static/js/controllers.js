@@ -104,7 +104,12 @@ angular.module('act.controllers', []).
         $scope.getActList = function () {
             $location.url("/user/actlist");
         }
-
+        $scope.isFirstLogin = false;
+        $scope.lastUrl = "登录前页面";
+        $scope.hasFollow = true;
+        $scope.jumpBack = function () {
+            // body...
+        }
 
         //
         
@@ -656,7 +661,7 @@ angular.module('act.controllers', []).
     controller('ActivityUserCtrl', ['$scope', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$cookies', '$location', 'AlertService', function($scope, $http, $csrf, urls, $filter, $routeParams, $user, $cookies, $location, $alert){
         console.log('verifyActivityUser');
         $scope.act_unregister = ["你一点都不django", "django强无敌", "毕竟django", "python"];
-
+        $scope.act_register = ["Orz"];
     }]).
     //
     //

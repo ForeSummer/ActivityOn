@@ -2,17 +2,20 @@
 	<div class="homepage">
 		<div flex layout="row" class="tmp">
 			<md-content flex-gt-sm="70" id="content" layout="column">
+				<div class="notice" ng-if="isFirstLogin">
+					欢迎回来，点击&nbsp;<span class="jumpLink" ng-click="jumpBack()">链接</span>&nbsp;以跳转至&nbsp;<span class="jumpLink" ng-click="jumpBack()">[[lastUrl]]</span>
+				</div>
 				<h3>您可能对以下内容感兴趣:</h3>
 				<div class="tags">
 					<span class="tag" ng-repeat="x in user_suggest"><span ng-click="search(x)">[[x]]</span></span>
 				</div>
 				<h3>动态:</h3>
-				<md-list>
+				<md-list ng-if="hasFollow">
 					<div ng-repeat="x in user_timeline" class="noright">
 						<md-list-item ng-click="jump($index, 0)">
 							<img src="/static/images/admin.png" class="icon_img">
 							<p>
-								<span>[[x.user]]<span class="right-msg" ng-if="!x.isAdmin">参加</span><span class="right-msg" ng-if="x.isAdmin">报名</span>了活动&nbsp;</span>
+								<span>[[x.user]]<span class="right-msg" ng-if="!x.isAdmin">参加</span><span class="right-msg" ng-if="x.isAdmin">创建</span>了活动&nbsp;</span>
 							</p>
 							[[x.ago]]
 						</md-list-item>
@@ -24,6 +27,9 @@
 						</md-list-item>
 					</div>
 				</md-list>
+				<div ng-if="!hasFollow">
+					<h4>关注您的朋友来获得他们的动态</h4>
+				</div>
 			</md-content>
 			<md-sidenav flex-gt-sm="30" md-is-locked-open="true" class="md-whiteframe-z2" id="side">
 				<md-button class="md-raised md-primary" ng-click="createActivity()">创建一个活动!</md-button>
