@@ -73,6 +73,10 @@ angular.module('act.controllers', []).
         $rootScope.$on('userNameChange', function(event, data){
             $scope.nickname = data;
         });
+
+        $scope.messageList = function () {
+            $location.url('user/message');
+        }
         //$scope.get_user_info();
     }]).
     controller('HomepageCtrl', ['$scope', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$location', 'AlertService', function($scope, $http, $csrf, urls, $filter, $routeParams, $user, $location, $alert){
@@ -413,7 +417,7 @@ angular.module('act.controllers', []).
             ];
         };
         $scope.init();
-        $scope.getActList = function() {
+        /*$scope.getActList = function() {
             //get in act 
             $http.get(urls.api + ).success(function(data) {
                 if(data.ErrorCode == 1) {
@@ -432,7 +436,7 @@ angular.module('act.controllers', []).
                     console.log("get act list error");
                 }
             });
-        };
+        };*/
         $scope.getActInfo = function (index) {
             //$location.url('/act/' + + '/info');
             console.log(index);
@@ -681,7 +685,7 @@ angular.module('act.controllers', []).
         $scope.get_act_info();
     }]).
     controller('ActivityUserCtrl', ['$scope', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$cookies', '$location', 'AlertService', function($scope, $http, $csrf, urls, $filter, $routeParams, $user, $cookies, $location, $alert){
-        console.log('verifyActivityUser');
+        console.log('ActivityUserCtrl');
         $scope.act_unregister = ["你一点都不django", "django强无敌", "毕竟django", "python"];
 
         $scope.getActUserList = function() {
@@ -701,6 +705,17 @@ angular.module('act.controllers', []).
 
         $scope.act_register = ["Orz"];
 
+    }]).
+    controller('UserMsgCtrl', ['$scope', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$cookies', '$location', 'AlertService', function($scope, $http, $csrf, urls, $filter, $routeParams, $user, $cookies, $location, $alert){
+        console.log('UserMsgCtrl');
+        $scope.user_sys_msg = [
+            {"from": "系统", "date": "2016-7-20", "content": "你看到"},
+            {"from": "系统", "date": "2016-7-20", "content": "这些消息"},
+            {"from": "系统", "date": "2016-7-20", "content": "就说明"},
+            {"from": "系统", "date": "2016-7-20", "content": "你的代码"},
+            {"from": "系统", "date": "2016-7-20", "content": "还tm没写完"}
+        ];
+        $scope.user_user_msg = [{"from": "django", "date": "2016-7-20", "content": "你能看到就说明用户间通信还tm没写"}];
     }]).
     //
     //
