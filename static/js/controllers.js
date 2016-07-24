@@ -406,11 +406,33 @@ angular.module('act.controllers', []).
             $scope.user_organizedact = [
                 {"act_title": "写后端", "act_location": "宿舍", "act_startTime": "2016-7-20", "act_endTime": "2016-7-28", "act_summary": "用django@python.shit写一大堆无聊冗长毫无意义的后端代码并把它们强行放到工程里冒充自己有很多代码量"}
             ];
-        }
-        $scope.getActInfo = function (index) {
-            console.log(index);
-        }
+        };
         $scope.init();
+        $scope.getActList = function() {
+            //get in act 
+            $http.get(urls.api + ).success(function(data) {
+                if(data.ErrorCode == 1) {
+                    //show data
+                }
+                else {
+                    console.log("get act list error");
+                }
+            });
+            //get organized act 
+            $http.get(urls.api + ).success(function(data) {
+                if(data.ErrorCode == 1) {
+                    //show data
+                }
+                else {
+                    console.log("get act list error");
+                }
+            });
+        };
+        $scope.getActInfo = function (index) {
+            //$location.url('/act/' + + '/info');
+            console.log(index);
+        };
+        
     }]).
     controller('ActivityCreateCtrl', ['$scope', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$cookies', '$location', 'AlertService',function($scope, $http, $csrf, urls, $filter, $routeParams, $user, $cookies, $location, $alert){
         console.log('ActivityCreateCtrl');
@@ -656,7 +678,20 @@ angular.module('act.controllers', []).
     controller('ActivityUserCtrl', ['$scope', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$cookies', '$location', 'AlertService', function($scope, $http, $csrf, urls, $filter, $routeParams, $user, $cookies, $location, $alert){
         console.log('verifyActivityUser');
         $scope.act_unregister = ["你一点都不django", "django强无敌", "毕竟django", "python"];
+        $scope.getActUserList = function() {
+            $http.get().success(function(data) {
+                if(data.ErrorCode == 1) {
 
+                }
+                else {
+
+                }
+            });
+        };
+        //$scope.getActUserlist();
+        $scope.checkMember = function(index, value) {
+
+        };
     }]).
     //
     //
