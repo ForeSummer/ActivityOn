@@ -28,11 +28,11 @@ class UserBase (models.Model):
     
 class UserActivity(models.Model):
     UId = models.AutoField(primary_key=True)
-    UInAct = models.CharField(blank=True,max_length = 20)
+    UInAct = models.CharField(blank=True,max_length = 100)
     UInActNum = models.IntegerField()
-    UOrganizedAct = models.CharField(blank=True,max_length = 20)
+    UOrganizedAct = models.CharField(blank=True,max_length = 100)
     UOrganizedNum = models.IntegerField()
-    UTags = models.CharField(blank=True,max_length = 40)
+    UTags = models.CharField(blank=True,max_length = 100)
     
 class UserTimeline(models.Model):
     UId = models.AutoField(primary_key=True)
@@ -48,14 +48,14 @@ class Activity(models.Model):
     AUnregister = models.CharField(blank=True,max_length=30)
     AMaxRegister = models.IntegerField()
     ACreateTime = models.DateTimeField(auto_now=True)
-    AEntryDDL = models.CharField(max_length=50)
-    AStartTime = models.CharField(max_length=50)
-    AEndTime = models.CharField(max_length=50)
+    AEntryDDL = models.CharField(max_length=70)
+    AStartTime = models.CharField(max_length=70)
+    AEndTime = models.CharField(max_length=70)
     AStatus = models.IntegerField()
-    ATitle = models.CharField(max_length=30)
-    ALocation = models.CharField(max_length=40)
-    AInfo = models.CharField(max_length = 50)
-    ASummary = models.CharField(max_length=100)
+    ATitle = models.CharField(max_length=300)
+    ALocation = models.CharField(max_length=400)
+    AInfo = models.CharField(max_length = 500)
+    ASummary = models.CharField(max_length=500)
     
 class Message(models.Model):
     Mid = models.AutoField(primary_key=True)

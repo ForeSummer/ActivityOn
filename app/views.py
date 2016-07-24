@@ -89,7 +89,6 @@ def modify(request):
 
 def modifyPassword(request):
     try:
-        print(request.POST.get("UID"))
         user = UserBase.objects.get(UId = request.POST.get('UID'),UPassword = request.POST.get('UPassword'))
     except UserBase.DoesNotExist:
         return HttpResponse(json.dumps({'ErrorCode':0}))
@@ -106,11 +105,9 @@ def Create_Activity(request):
     if request.method == 'POST':
         act = Activity()
         p = request.POST
-        act.AStatus = 0
-        act.AType = p.get('Type')
-        act.AAdmin = p.get('Admin')
-        act.ARegister = p.get('Register')
-        act.AUnregister = p.get('Unregister')
+        act.AStatus = int(0)
+        act.AType = int(p.get('Type'))
+        act.AAdmin = int(p.get('Admin'))
         act.AMaxRegister = p.get('MaxRegister')
         act.AEntryDDL = p.get('EntryDDL')
         act.AStartTime = p.get('StartTime')
@@ -132,7 +129,6 @@ def Create_Activity(request):
 
 def modify_Activity(request):
     re = dict()
-    print(request.method) 
     if request.method == 'POST':
         act = Activity.objects.get(AId = request.POST.get('AID'))
         if 'Type' in request.POST:
@@ -161,7 +157,8 @@ def modify_Activity(request):
 def Get_Activity(request):
     try:
         act = Activity.objects.get(AId = request.GET.get('AID'))
+
     except Activity.DoesNotExist:
         return HttpResponse(json.dumps({'ErrorCode':0}))
     else:
-        return HttpResponse(json.dumps({'Type':act.AType,'Register':act.ARegister,'Unregister':act.AUnregister, 'MaxRegister':act.AMaxRegister,'startTime':act.AStartTime, 'EntryDDL':act.AEntryDDL,'EndTime':act.AEndTime,'Title':act.ATitle, 'Location':act.ALocation, 'Info':act.AInfo, 'Summary':act.ASummary})) 
+        return HttpResponse(json.dumps({'ErrorCode':1,'Admin':act.AAdmin,'Type':act.AType,'Register':act.ARegister,'Unregister':act.AUnregister, 'MaxRegister':act.AMaxRegister,'StartTime':act.AStartTime, 'EntryDDL':act.AEntryDDL,'EndTime':act.AEndTime,'Title':act.ATitle, 'Location':act.ALocation, 'Info':act.AInfo, 'Summary':act.ASummary})) 
