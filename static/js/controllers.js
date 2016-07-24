@@ -40,7 +40,7 @@ angular.module('act.controllers', []).
         //get message list
         $scope.messageList = function() {
             get_user_info();
-            console.log($user.userId);
+            //console.log($user.userId);
             //console.log("233");
             //window.location = urls + '/user/messages';
         };
@@ -50,7 +50,7 @@ angular.module('act.controllers', []).
                 if(data.ErrorCode == 1) {
                     $scope.avatarUrl = data.UAvatar;
                     $scope.nickname = data.UName;
-                    console.log(data);
+                    //console.log(data);
                 }
                 else {
                     console.log("get info error");
@@ -78,9 +78,9 @@ angular.module('act.controllers', []).
     controller('HomepageCtrl', ['$scope', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$location', 'AlertService', function($scope, $http, $csrf, urls, $filter, $routeParams, $user, $location, $alert){
         console.log('HomepageCtrl');
         if (!$user.isLogged()) {
-            console.log($user.isLogged);
+            //console.log($user.isLogged);
             $location.url('/user/login');
-            console.log('turn to login fail');
+            //console.log('turn to login fail');
         }
         //console.log("homepage");
         //get user info
@@ -98,7 +98,8 @@ angular.module('act.controllers', []).
         }
         $scope.user_suggest = ["写代码", "写大作业", "发呆"];
 
-        $scope.confirmStatus = false;
+
+        //
         
     }]).
     controller('UserLoginCtrl', ['$scope', '$rootScope', '$window', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$location', 'AlertService', function($scope, $rootScope, $window, $http, $csrf, urls, $filter, $routeParams, $user, $location, $alert){
@@ -125,12 +126,12 @@ angular.module('act.controllers', []).
                 'user_name': $scope.user_name,
                 'user_password': $scope.user_password
             };
-            console.log(param);
+            //console.log(param);
             $http.post(urls.api + "/user/login", $.param(param)).success(function(res){
                 console.log(res);
                 if(res.ErrorCode == 1){
                     //success
-                    console.log($user);
+                    //console.log($user);
                     $user.create(1, res.UID);
                     $alert.showAlert(false, "登陆成功！", function(){
                         $rootScope.$broadcast('userLog');
@@ -158,7 +159,7 @@ angular.module('act.controllers', []).
                 $scope.password = "";
                 $scope.confirm = "";
                 $scope.errormessage = "两次输入密码不一致，请再次输入！";
-                console.log($scope.errormessage);
+                //console.log($scope.errormessage);
                 $scope.alertError($scope.errormessage);
                 return;
             }
@@ -166,28 +167,28 @@ angular.module('act.controllers', []).
                 $scope.password = "";
                 $scope.confirm = "";
                 $scope.errormessage = "请输入长度为6~18的密码！";
-                console.log($scope.errormessage);
+                //console.log($scope.errormessage);
                 $scope.alertError($scope.errormessage);
                 return;
             }
             if ($scope.nickname.length>16 || $scope.nickname.length<6) {
                 $scope.nickname = "";
                 $scope.errormessage = "请输入长度为6~16字节的昵称！";
-                console.log($scope.errormessage);
+                //console.log($scope.errormessage);
                 $scope.alertError($scope.errormessage);
                 return;
             }
             if(!reg.test($scope.privateemail)) {
                 $scope.privateemail = "";
                 $scope.errormessage = "请输入正确的登录邮箱！";
-                console.log($scope.errormessage) ;
+                //console.log($scope.errormessage) ;
                 $scope.alertError($scope.errormessage);
                 return;
             }
             if(!reg.test($scope.openemail)) {
                 $scope.openemail = "";
                 $scope.errormessage = "请输入正确的公开邮箱！";
-                console.log($scope.errormessage);
+                //console.log($scope.errormessage);
                 $scope.alertError($scope.errormessage);
                 return;
             }
@@ -198,14 +199,14 @@ angular.module('act.controllers', []).
                 'openemail': $scope.openemail,
                 'nickname': $scope.nickname
             };
-            console.log(param);
+            //console.log(param);
             $http.post(urls.api + "/user/regist", $.param(param)).success(function(data){
-                console.log(data);
+                //console.log(data);
                 //$csrf.show_error(data.error);
                 if(data.ErrorCode == 1){
                     $user.create(1,data.UID);
                     $alert.showAlert(false, "注册成功！", function() {
-                        console.log($user.isLogged());
+                        //console.log($user.isLogged());
                         $rootScope.$broadcast('userLog');
                         $('.header-container').show();
                         $('.footer-container').show();
@@ -303,14 +304,14 @@ angular.module('act.controllers', []).
             if ($scope.user_name.length>16 || $scope.user_name.length<6) {
                 $scope.user_name = "";
                 $scope.errormessage = "请输入长度为6~16字节的昵称！";
-                console.log($scope.errormessage);
+                //console.log($scope.errormessage);
                 $scope.alertError($scope.errormessage);
                 return;
             }
             if(!reg.test($scope.user_publicEmail)) {
                 $scope.user_publicEmail = "";
                 $scope.errormessage = "请输入正确的公开邮箱！";
-                console.log($scope.errormessage);
+                //console.log($scope.errormessage);
                 $scope.alertError($scope.errormessage);
                 return;
             }
@@ -321,7 +322,7 @@ angular.module('act.controllers', []).
                 'UInfo': $scope.user_info
             };
             $http.post(urls.api + "/user/modify", $.param(param)).success(function(data){
-                console.log(data);
+                //console.log(data);
                 //$csrf.show_error(data.error);
                 if(data.ErrorCode == 1){
                     $alert.showAlert(false, "修改成功！", function() {
@@ -351,7 +352,7 @@ angular.module('act.controllers', []).
                 $scope.user_pass = "";
                 $scope.confirm = "";
                 $scope.errormessage = "两次输入密码不一致，请再次输入！";
-                console.log($scope.errormessage);
+                //console.log($scope.errormessage);
                 $scope.alertError($scope.errormessage);
                 return;
             }
@@ -359,7 +360,7 @@ angular.module('act.controllers', []).
                 $scope.user_pass = "";
                 $scope.confirm = "";
                 $scope.errormessage = "请输入长度为6~18的密码！";
-                console.log($scope.errormessage);
+                //console.log($scope.errormessage);
                 $scope.alertError($scope.errormessage);
                 return;
             }
@@ -368,9 +369,9 @@ angular.module('act.controllers', []).
                 'UPassword': $scope.user_orgin_pass,
                 'NewUPassword': $scope.user_pass
             };
-            console.log(param);
+            //console.log(param);
             $http.post(urls.api + "/user/password/modify", $.param(param)).success(function(res){
-                console.log(res);
+                //console.log(res);
                 if(res.ErrorCode == 1){
                     $alert.showAlert(false, "修改成功！", function() {
                         $location.url('/');
@@ -408,9 +409,9 @@ angular.module('act.controllers', []).
                 'Admin': $user.userId,
                 'Type': $scope.act_type,
                 'MaxRegister': $scope.act_maxRegister,
-                'EntryDDL': $scope.act_entryDDL,
-                'StartTime': $scope.act_startDate,
-                'EndTime': $scope.act_endDate,
+                'EntryDDL': $scope.act_entryDDL.toISOString(),
+                'StartTime': $scope.act_startDate.toISOString(),
+                'EndTime': $scope.act_endDate.toISOString(),
                 'Title': $scope.act_title,
                 'Location': $scope.act_location,
                 'Summary': $scope.act_summary,
@@ -436,7 +437,7 @@ angular.module('act.controllers', []).
             console.log($scope.act_startDate);
         }
     }]).
-    controller('ActivityInfoCtrl', ['$scope', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$cookies', '$location', '$mdDialog', function($scope, $http, $csrf, urls, $filter, $routeParams, $user, $cookies, $location, $mdDialog){
+    controller('ActivityInfoCtrl', ['$scope', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$cookies', '$location', 'AlertService', function($scope, $http, $csrf, urls, $filter, $routeParams, $user, $cookies, $location, $alert){
         console.log('ActivityInfoCtrl');
         $scope.init = function() {
             $scope.act_admin = "老师";
@@ -455,15 +456,16 @@ angular.module('act.controllers', []).
         };
         $scope.init();
         $scope.get_act_info = function() {
-            $http.get(urls.api + '/act/info/?AId=' + $routeParams.act_id).success(function(data) {
+            $http.get(urls.api + '/act/info/?AID=' + $routeParams.act_id).success(function(data) {
+                console.log(data);
                 if(data.ErrorCode == 1) {
                     //update values
                     $scope.act_admin = data.Admin;
                     $scope.act_title = data.Title;
                     $scope.act_location = data.Location;
-                    $scope.act_startDate = data.StartTime;
-                    $scope.act_endDate = data.EndTime;
-                    $scope.act_entryDDL = data.EntryDDL;
+                    $scope.act_startDate = new Date(data.StartTime);
+                    $scope.act_endDate = new Date(data.EndTime);
+                    $scope.act_entryDDL = new Date(data.EntryDDL);
                     $scope.act_info = data.Info;
                     $scope.act_register = data.Register;
                     $scope.act_unregister = data.Unregister;
@@ -472,18 +474,19 @@ angular.module('act.controllers', []).
                     if(data.Admin == $user.userId) {
                         $scope.isAdmin = true;
                     }
+                    console.log('get success');
                 }
                 else {
                     console.log("get act info error");
                 }
             });
         };
-
+        $scope.get_act_info();
         $scope.modifyInfo = function() {
             if(!$scope.isAdmin) {
                 return;
             }
-            $location.url('/act/' + $routeParams.act_id + '/modify');
+            $location.url('/act/' + $routeParams.act_id + '/manage');
         };
         $scope.verifyUser = function() {
             if(!$scope.isAdmin) {
@@ -547,7 +550,7 @@ angular.module('act.controllers', []).
             //if -1 you have already join the act
         };
     }]).
-    controller('ActivityManageCtrl', ['$scope', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$cookies', '$location', function($scope, $http, $csrf, urls, $filter, $routeParams, $user, $cookies, $location){
+    controller('ActivityManageCtrl', ['$scope', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$cookies', '$location', 'AlertService', function($scope, $http, $csrf, urls, $filter, $routeParams, $user, $cookies, $location, $alert){
         console.log('ActivityManageCtrl');
         //data
         $scope.init = function() {
@@ -565,14 +568,15 @@ angular.module('act.controllers', []).
         //function
         $scope.get_act_info = function() {
             $http.get(urls.api + '/act/info/?AID=' + $routeParams.act_id).success(function(data) {
+                console.log(data);
                 if(data.ErrorCode == 1) {
                     //update values
                     $scope.act_admin = data.Admin;
                     $scope.act_title = data.Title;
                     $scope.act_location = data.Location;
-                    $scope.act_startDate = data.StartTime;
-                    $scope.act_endDate = data.EndTime;
-                    $scope.act_entryDDL = data.EntryDDL;
+                    $scope.act_startDate = new Date(data.StartTime);
+                    $scope.act_endDate = new Date(data.EndTime);
+                    $scope.act_entryDDL = new Date(data.EntryDDL);
                     $scope.act_info = data.Info;
                     $scope.act_register = data.Register;
                     $scope.act_unregister = data.Unregister;
@@ -580,6 +584,9 @@ angular.module('act.controllers', []).
                     $scope.act_type = data.Type;
                     if(data.Admin == $user.userId) {
                         $scope.isAdmin = true;
+                    }
+                    else {
+                        $location.url('/');
                     }
                 }
                 else {
@@ -603,6 +610,7 @@ angular.module('act.controllers', []).
                 'Info': $scope.act_info
             };
             $http.post(urls.api + '/act/modify', $.param(param)).success(function(res){
+                var message;
                 console.log(res);
                 if(res.ErrorCode == 1){
                     message = "活动信息修改成功！\n 要去活动主页看看嘛？～";
@@ -620,13 +628,11 @@ angular.module('act.controllers', []).
             });
         };
         $scope.get_act_info();
-        if($scope.act_admin != $user.userId) {
-            $location.url('/');
-        }
     }]).
-    controller('ActivityUserCtrl', ['$scope', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$cookies', '$location', '$mdDialog', function($scope, $http, $csrf, urls, $filter, $routeParams, $user, $cookies, $location, $mdDialog){
+    controller('ActivityUserCtrl', ['$scope', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$cookies', '$location', 'AlertService', function($scope, $http, $csrf, urls, $filter, $routeParams, $user, $cookies, $location, $alert){
         console.log('verifyActivityUser');
         $scope.act_unregister = ["你一点都不django", "django强无敌", "毕竟django", "python"];
+
     }]).
     //
     //
