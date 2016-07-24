@@ -86,6 +86,7 @@ angular.module('act.controllers', []).
         //get user info
         $scope.user_follow_num = 0;
         $scope.user_activity_num = 0;
+        $scope.user_organize_num = 0;
         $scope.createActivity = function () {
             $location.url('/act/create');
         }
@@ -99,6 +100,9 @@ angular.module('act.controllers', []).
         $scope.user_suggest = ["写代码", "写大作业", "发呆"];
         $scope.search = function (content) {
             console.log(content);
+        }
+        $scope.getActList = function () {
+            $location.url("/user/actlist");
         }
 
 
