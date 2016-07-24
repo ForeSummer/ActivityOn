@@ -488,7 +488,7 @@ angular.module('act.controllers', []).
                 'NewUPassword': $scope.user_pass
             };
             console.log(param);
-            $http.post(urls.api + "/user/modifyPassword", $.param(param)).success(function(res){
+            $http.post(urls.api + "/user/password/modify", $.param(param)).success(function(res){
                 console.log(res);
                 if(res.ErrorCode == 1){
                     $location.url('/');
@@ -719,7 +719,7 @@ angular.module('act.controllers', []).
                 }
             })
         };
-        
+
         $scope.get_user_info();
         if($scope.act_admin != $user.userId) {
             $location.url('/');
