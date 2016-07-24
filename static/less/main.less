@@ -193,11 +193,17 @@
 					padding-top: 30px;
 					padding-left: 70px;
 					padding-right: 70px;
+					md-chips {
+						button {
+							display: none;
+						}
+						md-chip {
+							padding-right: 12px;
+						}
+					}
 					md-list {
 						md-list-item {
 							vertical-align: middle;
-							margin-top: 20px;
-							margin-bottom: 20px;
 							.icon_img {
 								width: 40px;
 								height: 40px;
@@ -206,6 +212,22 @@
 							a {
 								color: #555;
 								text-decoration: none;
+							}
+						}
+						md-list-item:nth-child(3n+2) {
+							padding-left: 80px;
+							min-height: 20px;
+							._md-list-item-inner {
+								font-weight: bolder;
+							}
+						}
+						md-list-item:nth-child(3n) {
+							padding-left: 80px;
+							margin-bottom: 20px;
+						}
+						md-list-item:nth-child(3n+1) {
+							.right-msg {
+								margin-left: 20px;
 							}
 						}
 					}
