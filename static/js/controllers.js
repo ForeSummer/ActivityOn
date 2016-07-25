@@ -19,6 +19,10 @@ angular.module('act.controllers', []).
         };
         //logout
         $scope.logout = function(){
+            if ($user.userId == null) {
+                $location.url('/user/login');
+                return;
+            }
             var message = "你确定要登出嘛？～";
             console.log(message);
             $alert.showAlert(true, message, function() {
@@ -69,6 +73,9 @@ angular.module('act.controllers', []).
 
         $rootScope.$on('userLog', function(event, data){
             $scope.get_user_info();
+            $('#log_btn').attr('title', '登出');
+            $('#logout-img').attr('class', 'fa fa-sign-out fa-2x');
+            $("#nickname_tmp").css('display', 'none');
         });
         $rootScope.$on('userNameChange', function(event, data){
             $scope.nickname = data;
@@ -119,8 +126,6 @@ angular.module('act.controllers', []).
             guestAID = null;
             $location.url('/act/'+ id + '/info');
         }
-
-
         //
         
     }]).
