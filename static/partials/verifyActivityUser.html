@@ -11,6 +11,7 @@
 				<md-button class="md-raised md-warn" ng-click="checkMember($index, 0)">Deny</md-button>
 			</md-list-item>
 		</md-list>
+		<div class="blank-msg" ng-if="noUnRegister">暂无用户报名</div>
 		<h4>已通过报名用户名单:</h4>
 		<md-list>
 			<md-list-item ng-repeat="x in act_register track by $index" class="noright">
@@ -18,5 +19,6 @@
 				<p>[[x]]</p>
 			</md-list-item>
 		</md-list>
+		<div class="blank-msg" ng-if="noRegister">暂无用户通过报名</div>
 	</dir>
 </div>

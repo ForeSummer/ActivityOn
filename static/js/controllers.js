@@ -253,7 +253,7 @@ angular.module('act.controllers', []).
     controller('UserInfoCtrl', ['$scope', '$window', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$location', 'AlertService', function($scope, $window, $http, $csrf, urls, $filter, $routeParams, $user, $location, $alert){
         console.log('UserInfoCtrl');
         //defualt is false
-        $scope.isMe = true;
+        $scope.isMe = false;
         $scope.user_name = "NickName";
         $scope.user_publicEmail = "email@wtf.com";
         $scope.user_info = "个人简介orz凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数";
@@ -279,7 +279,7 @@ angular.module('act.controllers', []).
             });
         };
 
-        if ($routeParams.user_id == $user.id) {
+        if ($routeParams.user_id == $user.userId) {
             $scope.isMe = true;
         }
 
@@ -289,6 +289,16 @@ angular.module('act.controllers', []).
 
         $scope.confirmStatus = false;
         $scope.get_user_info();
+
+        $scope.isFollowed = false;
+        $scope.isShowFollow = !$scope.isMe && !$scope.isFollowed;
+        $scope.isShowUnFollow = !$scope.isMe && $scope.isFollowed;
+        $scope.follow_user = function () {
+            // body...
+        };
+        $scope.unfollow_user = function () {
+            // body...
+        };
     }]).
     controller('UserModifyInfoCtrl', ['$scope', '$rootScope','$window', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$location', 'AlertService', function($scope, $rootScope,$window, $http, $csrf, urls, $filter, $routeParams, $user, $location, $alert){
         console.log('UserModifyInfoCtrl');
@@ -487,6 +497,14 @@ angular.module('act.controllers', []).
             console.log(index);
         };
         $scope.getActList();
+        $scope.noInact = false;
+        $scope.noOrganizedact = false;
+        if ($scope.user_inact.length == 0) {
+            $scope.noInact = true;
+        }
+        if ($scope.user_organizedact.length == 0) {
+            $scope.noOrganizedact = true;
+        }
     }]).
     controller('ActivityCreateCtrl', ['$scope', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$cookies', '$location', 'AlertService',function($scope, $http, $csrf, urls, $filter, $routeParams, $user, $cookies, $location, $alert){
         console.log('ActivityCreateCtrl');
@@ -814,6 +832,15 @@ angular.module('act.controllers', []).
             }
 
         };
+
+        $scope.noRegister = false;
+        $scope.noUnRegister = false;
+        if ($scope.act_register.length == 0) {
+            $scope.noRegister = true;
+        }
+        if ($scope.act_unregister.length == 0) {
+            $scope.noUnRegister = true;
+        }
 
         //$scope.act_register = ["Orz"];
 
