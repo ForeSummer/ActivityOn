@@ -327,27 +327,28 @@ angular.module('act.controllers', []).
         $scope.isFollowed = false;
         $scope.isShowFollow = !$scope.isMe && !$scope.isFollowed;
         $scope.isShowUnFollow = !$scope.isMe && $scope.isFollowed;
-        $scope.follow_user = function () {
+        /*$scope.follow_user = function () {
             var param = {
                 'UID': $user.userId,
                 'FollowID': parseInt($routeParams.user_id)
             };
-            $http.post(urls.api + /user/follow).success(function(data) {
+
+            $http.post(urls.api + '/user/follow', $.param(param)).success(function(data) {
                 if(data.ErrorCode == 1) {
-                    $alert.showAlert(false, "关注用户成功！");
+                    $alert.showAlert(false, "关注用户成功！",function(){});
                     $scope.isFollowed = true;
                 }
                 else {
                     console.log("follow error");
                 }
             });
-        };
-        $scope.unfollow_user = function () {
+        };*/
+        $scope.follow_user = function () {
             var param = {
-                'UID': $user.userId,
+                'UID': 20,
                 'UnfollowID': parseInt($routeParams.user_id)
             };
-            $http.post(urls.api + '/user/follow').success(function(data) {
+            $http.post(urls.api + '/user/unfollow', $.param(param)).success(function(data) {
                 if(data.ErrorCode == 1) {
                     $alert.showAlert(false, "取消关注用户成功！");
                     $scope.isFollowed = false;

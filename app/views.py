@@ -313,17 +313,22 @@ def Follow(request):
     re['ErrorCode'] = 1
     return HttpResponse(json.dumps(re))
 
-def Unfollow(request)
+def Unfollow(request):
     re = dict()
     user = UserBase.objects.get(UId = request.POST.get('UID'))
-    if user.UFollow.find(','+str(request.POST.get('UnfollowID')))==-1: 
-        user.UFollow.replace(','+str(request.POST.get('UnfollowID')))   
+
+    print(user.UFollow.find(','+str(request.POST.get('UnfollowID'))))
+    if user.UFollow.find(','+str(request.POST.get('UnfollowID')))!=-1: 
+        user.UFollow.replace(','+str(request.POST.get('UnfollowID')),'')   
+        print(user.UFollow)
+        user.save()
         re['ErrorCode'] = 1
     else:
         re['ErrorCode'] = 0
-    uf = UserBase.objects.get(UId = request.POST.get('UfollowID'))
+    uf = UserBase.objects.get(UId = request.POST.get('UnfollowID'))
     if uf.UFollowed.find(','+str(request.POST.get('UID'))) != -1:
-        uf.UFollowed.replace(','+str(request.POST.get('UID')))
+        uf.UFollowed.replace(','+str(request.POST.get('UID')),'')
+        uf.save()
         re['ErrorCode']=1
     else:
         re['ErrorCode']=0
