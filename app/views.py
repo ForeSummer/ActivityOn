@@ -221,7 +221,6 @@ def Reject(request):
 def Get_UserActivity(request):
     re = dict()
     uact = UserActivity.objects.get(UId = request.GET.get('UID'))
-    print(list(map(int,(uact.UOrganizedAct[1:]).split(',')) ))
     OAct = []
     if uact.UOrganizedAct!='':
         OActList = list(map(int,(uact.UOrganizedAct[1:]).split(',')))
