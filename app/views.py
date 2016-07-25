@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from django.shortcuts import render, render_to_response
+from datetime import datetime 
 from django.http import HttpResponse
 from django.template import RequestContext
 from app.models import error
@@ -97,8 +98,6 @@ def modifyPassword(request):
         user.save()
         return HttpResponse(json.dumps({'ErrorCode':1}))
 
-        
-from datetime import datetime 
 
 def Create_Activity(request):
     re = dict()
@@ -298,7 +297,7 @@ def GetFollow(request):
         followedList = list(map(int,user.UFollowed[1:].split(',')))
         for i in followedList:
             u = UserBase.objects.get(UId = i)
-            followed.append({'UID':u.UId,'Avatar':u.UAvatar,'Name':u.UName})
+            followed.append({'UID':u.UId,'Avatar':'static/images/admin.png','Name':u.UName})
     re['ErrorCode'] = 1
     re['Follow'] = follow 
     re['Followed'] = followed 
@@ -330,5 +329,8 @@ def Unfollow(request)
     else:
         re['ErrorCode']=0
     return HttpResponse(json.dumps(re))
-
-
+'''
+def GetTimeline(request):
+    timeline = UserTimeline.objects.get(UId = request.GET.get('UID'))
+    time = Datetime.now()
+'''    
