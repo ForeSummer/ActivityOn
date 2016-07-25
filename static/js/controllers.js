@@ -19,6 +19,10 @@ angular.module('act.controllers', []).
         };
         //logout
         $scope.logout = function(){
+            if ($user.userId == null) {
+                $location.url('/user/login');
+                return;
+            }
             var message = "你确定要登出嘛？～";
             console.log(message);
             $alert.showAlert(true, message, function() {
@@ -69,6 +73,9 @@ angular.module('act.controllers', []).
 
         $rootScope.$on('userLog', function(event, data){
             $scope.get_user_info();
+            $('#log_btn').attr('title', '登出');
+            $('#logout-img').attr('class', 'fa fa-sign-out fa-2x');
+            $("#nickname_tmp").css('display', 'none');
         });
         $rootScope.$on('userNameChange', function(event, data){
             $scope.nickname = data;
@@ -119,8 +126,6 @@ angular.module('act.controllers', []).
             guestAID = null;
             $location.url('/act/'+ id + '/info');
         }
-
-
         //
         
     }]).
@@ -215,52 +220,58 @@ angular.module('act.controllers', []).
                 return;
             }
             //ToDo: if public email == private email
-            $alert.showAlert(true, "登陆邮箱和公开邮箱相同，可能引发安全问题！是否继续注册？", function() {
-                var random = Math.floor(Math.random()*8+1);
-                //for random avatar
-                var param = {
-                    'privateemail': $scope.privateemail,
-                    'password': $scope.password,
-                    'openemail': $scope.openemail,
-                    'nickname': $scope.nickname
-                };
-                //console.log(param);
-                $http.post(urls.api + "/user/regist", $.param(param)).success(function(data){
-                    //console.log(data);
-                    //$csrf.show_error(data.error);
-                    if(data.ErrorCode == 1){
-                        $user.create(1,data.UID);
-                        $alert.showAlert(false, "注册成功！", function() {
-                            //console.log($user.isLogged());
-                            $rootScope.$broadcast('userLog');
-                            $('.header-container').show();
-                            $('.footer-container').show();
-                            $location.url('/');
-                        });
-                    }
-                    else {
-                        $scope.password = "";
-                        $scope.confirm = "";
-                        if(data.ErrorCode == 0) {
-                            $scope.alertError("登陆邮箱已被注册");
-                            $scope.privateEmail = "";
-                        }
-                        else {
-                            $scope.alertError("该昵称已被注册");
-                            $scope.nickname = "";
-                        }
-                    }
+            if($scope.openemail == $scope.privateemail) {
+                $alert.showAlert(true, "登陆邮箱和公开邮箱相同，可能引发安全问题！是否继续注册？", function() {
+                    $scope.registPost();
+                }, function() {
+                    $scope.privateemail = "";
+                    $scope.openemail = "";
                 });
-            }, function() {
-                $scope.privateemail = "";
-                $scope.openemail = "";
-            });
+            }
+            else {
+                $scope.registPost();
+            }
             
         };
-
+        $scope.registPost = function() {
+            var random = Math.floor(Math.random()*8+1);
+            //for random avatar
+            var param = {
+                'privateemail': $scope.privateemail,
+                'password': $scope.password,
+                'openemail': $scope.openemail,
+                'nickname': $scope.nickname
+            };
+            //console.log(param);
+            $http.post(urls.api + "/user/regist", $.param(param)).success(function(data){
+                //console.log(data);
+                //$csrf.show_error(data.error);
+                if(data.ErrorCode == 1){
+                    $user.create(1,data.UID);
+                    $alert.showAlert(false, "注册成功！", function() {
+                        //console.log($user.isLogged());
+                        $rootScope.$broadcast('userLog');
+                        $('.header-container').show();
+                        $('.footer-container').show();
+                        $location.url('/');
+                    });
+                }
+                else {
+                    $scope.password = "";
+                    $scope.confirm = "";
+                    if(data.ErrorCode == 0) {
+                        $scope.alertError("登陆邮箱已被注册");
+                        $scope.privateEmail = "";
+                    }
+                    else {
+                        $scope.alertError("该昵称已被注册");
+                        $scope.nickname = "";
+                    }
+                }
+            });
+        }
         $scope.alertError = function(msg) {
             $alert.showAlert(false, msg);
-
         }
         //$scope.confirmStatus = false;
     }]).
@@ -300,18 +311,57 @@ angular.module('act.controllers', []).
         $scope.edit_user_info = function () {
             $location.url('/user/modify');
         }
-
+        $scope.getFollowStatus = function() {
+            var param = {
+                'UID': $user.userId,
+                'FollowID': parseInt($routeParams.user_id)
+            };
+            $http.post().success(function(data) {
+                if(data.ErrorCode) {
+                    $scope,isFollowed = data.isFollowed;
+                }
+                else {
+                    console.log("get follow status error");
+                }
+            });
+        };
+        //$scope.getFollowStatus();
         $scope.confirmStatus = false;
         $scope.get_user_info();
 
         $scope.isFollowed = false;
         $scope.isShowFollow = !$scope.isMe && !$scope.isFollowed;
         $scope.isShowUnFollow = !$scope.isMe && $scope.isFollowed;
+        /*$scope.follow_user = function () {
+            var param = {
+                'UID': $user.userId,
+                'FollowID': parseInt($routeParams.user_id)
+            };
+
+            $http.post(urls.api + '/user/follow', $.param(param)).success(function(data) {
+                if(data.ErrorCode == 1) {
+                    $alert.showAlert(false, "关注用户成功！",function(){});
+                    $scope.isFollowed = true;
+                }
+                else {
+                    console.log("follow error");
+                }
+            });
+        };*/
         $scope.follow_user = function () {
-            // body...
-        };
-        $scope.unfollow_user = function () {
-            // body...
+            var param = {
+                'UID': 20,
+                'UnfollowID': parseInt($routeParams.user_id)
+            };
+            $http.post(urls.api + '/user/unfollow', $.param(param)).success(function(data) {
+                if(data.ErrorCode == 1) {
+                    $alert.showAlert(false, "取消关注用户成功！");
+                    $scope.isFollowed = false;
+                }
+                else {
+                    console.log("unfollow error");
+                }
+            });
         };
     }]).
     controller('UserModifyInfoCtrl', ['$scope', '$rootScope','$window', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$location', 'AlertService', function($scope, $rootScope,$window, $http, $csrf, urls, $filter, $routeParams, $user, $location, $alert){
@@ -840,40 +890,4 @@ angular.module('act.controllers', []).
             {"from": "系统", "date": "2016-7-20", "content": "还tm没写完"}
         ];
         $scope.user_user_msg = [{"from": "django", "date": "2016-7-20", "content": "你能看到就说明用户间通信还tm没写"}];
-    }]).
-    //
-    //
-    //
-    //
-    controller('ActivityLoginCtrl', ['$scope', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$cookies', '$location', function($scope, $http, $csrf, urls, $filter, $routeParams, $user, $cookies, $location){
-        console.log('ActivityLoginCtrl');
-
-    }]).
-    controller('RegStatisticCtrl', ['$scope', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', function($scope, $http, $csrf, urls, $filter, $routeParams, $user){
-        console.log('RegStatisticCtrl');
-        
-    }]).
-    controller('SetEmailCtrl', ['$scope', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$location',function($scope, $http, $csrf, urls, $filter, $routeParams, $user, $location){
-        console.log('SetEmailCtrl');
-       
-    }]).
-    controller('FormViewCtrl', ['$scope', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$location', function($scope, $http, $csrf, urls, $filter, $routeParams, $user, $location){
-        console.log('FormViewCtrl');
-        
-
-    }]).
-	
-    controller('ActivityStatisticCtrl', ['$scope', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$location', function($scope, $http, $csrf, urls, $filter, $routeParams, $user, $location){
-        console.log('ActivityStatisticCtrl');
-        
-    }]).
-	controller('InstructionCtrl', ['$scope', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$cookies', '$location', function($scope, $http, $csrf, urls, $filter, $routeParams, $user, $cookies, $location){
-        //console.log('InstructionCtrl');
-        
-    }]).
-    controller('ActivityRegistCtrl', ['$scope', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$location', '$timeout', function($scope, $http, $csrf, urls, $filter, $routeParams, $user, $location, $timeout){
-        
-    }]).
-    controller('FixCtrl', ['$scope', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$cookies', '$location', function($scope, $http, $csrf, urls, $filter, $routeParams, $user, $cookies, $location){
-        //console.log('FixCtrl');
     }]);
