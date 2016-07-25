@@ -67,6 +67,7 @@ angular.module('act.services', []).
     service('UserService', function () {
         this.id = null;
         this.userId = null;
+        this.guestAID = null;
         console.log("init");
         this.create = function (sessionId, userId) {
             console.log("Session create");
@@ -77,6 +78,7 @@ angular.module('act.services', []).
             console.log("Session destory");
             this.id = null;
             this.userId = null;
+            this.guestAID = null;
         };
         this.isLogged = function() {
             if (this.userId > 1) {
