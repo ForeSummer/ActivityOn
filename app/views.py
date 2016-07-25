@@ -197,17 +197,17 @@ def participate(request):
                 re['ErrorCode']=1
                 user = UserBase.objects.get(UId = useravtivity.UId)
                 if len(user.UFollowed) != 0:
-                followedList = list(map(int,user.UFollowed[1:].split(',')))
-                for i in followedList:
-                    ut = UserTimeline.objects.get(UId = i)
-                    if ut.UTimelineFrom.count(',') > 10:
-                        ut.UTimelineFrom = ut.UTimelineFrom[ut.UTimelineFrom.index(',',1):]
-                        ut.UTimelineAct = ut.UTimelineAct[ut.UTimelineAct.index(',',1):]
-                        ut.UTimelineType = ut.UTimelineType[ut.UTimelineType.index(',',1):]
-                    ut.UTimelineFrom += ',' +str(user.UId)
-                    ut.UTimelineAct += ',' + str(act.AId)
-                    ut.UTimelineType += ',0'
-                    ut.save()
+                    followedList = list(map(int,user.UFollowed[1:].split(',')))
+                    for i in followedList:
+                        ut = UserTimeline.objects.get(UId = i)
+                        if ut.UTimelineFrom.count(',') > 10:
+                            ut.UTimelineFrom = ut.UTimelineFrom[ut.UTimelineFrom.index(',',1):]
+                            ut.UTimelineAct = ut.UTimelineAct[ut.UTimelineAct.index(',',1):]
+                            ut.UTimelineType = ut.UTimelineType[ut.UTimelineType.index(',',1):]
+                        ut.UTimelineFrom += ',' +str(user.UId)
+                        ut.UTimelineAct += ',' + str(act.AId)
+                        ut.UTimelineType += ',1'
+                        ut.save()
             else:
                 re['ErrorCode'] = -1
     else :
@@ -352,8 +352,8 @@ def Follow(request):
                 ut.UTimelineAct = ut.UTimelineAct[ut.UTimelineAct.index(',',1):]
                 ut.UTimelineType = ut.UTimelineType[ut.UTimelineType.index(',',1):]
             ut.UTimelineFrom += ',' +str(user.UId)
-            ut.UTimelineAct += ',' + str(act.AId)
-            ut.UTimelineType += ',0'
+            ut.UTimelineAct += ',' + str(fo.AId)
+            ut.UTimelineType += ',2'
             ut.save()
        
     return HttpResponse(json.dumps(re))
