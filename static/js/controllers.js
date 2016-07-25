@@ -348,7 +348,7 @@ angular.module('act.controllers', []).
                 }
             });
         };*/
-        $scope.follow_user = function () {
+        /*$scope.follow_user = function () {
             var param = {
                 'UID': 20,
                 'UnfollowID': parseInt($routeParams.user_id)
@@ -362,9 +362,9 @@ angular.module('act.controllers', []).
                     console.log("unfollow error");
                 }
             });
-        };
+        };*/
     }]).
-    controller('UserModifyInfoCtrl', ['$scope', '$rootScope','$window', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$location', 'AlertService', function($scope, $rootScope,$window, $http, $csrf, urls, $filter, $routeParams, $user, $location, $alert){
+    controller('UserModifyInfoCtrl', ['$scope', '$rootScope','$window', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$location', 'AlertService', 'FileUploader', function($scope, $rootScope,$window, $http, $csrf, urls, $filter, $routeParams, $user, $location, $alert, FileUploader){
         console.log('UserModifyInfoCtrl');
         $scope.init = function() {
             $scope.user_name = "假装有用户名";
@@ -432,6 +432,10 @@ angular.module('act.controllers', []).
         $scope.modifyPassword = function () {
             $location.url('/user/password');
         }
+
+        var uploader = $scope.uploader = new FileUploader({
+            url: 'upload.php'
+        });
     }]).
     controller('UserModifyPassCtrl', ['$scope', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$cookies', '$location', 'AlertService', function($scope, $http, $csrf, urls, $filter, $routeParams, $user, $cookies, $location, $alert){
         $scope.user_orgin_pass = "";
