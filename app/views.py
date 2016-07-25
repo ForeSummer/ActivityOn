@@ -305,15 +305,17 @@ def GetFollow(request):
 def Follow(request):
     re = dict()
     user = UserBase.objects.get(UId = request.POST.get('UID'))
-    user.UFollow += ','+str(request.POST.get('FollowID'))
+    if user.UFollow.find( ','+str(request.POST.get('FollowID'))) == -1:
+        user.UFollow += ','+str(request.POST.get('FollowID'))
     fo = UserBase.objects.get(UId = request.POST.get('FollowID'))
-    fo.UFollowed += ','+str(user.UId)
+    if fo.UFollowed.find( ','+str(user.UId)) == -1:
+        fo.UFollowed += ','+str(user.UId)
     fo.save()
     user.save()
     re['ErrorCode'] = 1
     return HttpResponse(json.dumps(re))
 
-def Unfollow(request)
+def Unfollow(request):
     re = dict()
     user = UserBase.objects.get(UId = request.POST.get('UID'))
     if user.UFollow.find(','+str(request.POST.get('UnfollowID')))==-1: 
@@ -332,4 +334,5 @@ def Unfollow(request)
 def GetTimeline(request):
     timeline = UserTimeline.objects.get(UId = request.GET.get('UID'))
     time = Datetime.now()
-'''    
+    re = dict()
+   ''' 
