@@ -36,10 +36,12 @@ def register(request):
             user = UserBase.objects.get(UName = request.POST.get('nickname'))
         except UserBase.DoesNotExist:
             p = request.POST
-            base = UserBase(UPrivateEmail = p.get('privateemail'),UPublicEmail = p.get('openemail'),UName = p.get('nickname'),UPassword = p.get('password'))
+            base = UserBase(UAvatar=p.get('Avatar'),UPrivateEmail = p.get('privateemail'),UPublicEmail = p.get('openemail'),UName = p.get('nickname'),UPassword = p.get('password'))
             base.save()
             ac = UserActivity(UId = base.UId, UInAct = '',UInActNum = 0,UOrganizedAct = '', UOrganizedNum = 0, UTags = '')
             ac.save()
+            at = UserTimeline(UId = base.UId)
+            at.save()
             return HttpResponse(json.dumps({"ErrorCode":1,"UID":base.UId}))
             pass
         else :
@@ -55,7 +57,7 @@ def login(request):
     except UserBase.DoesNotExist:
         return  HttpResponse(json.dumps({"ErrorCode":0}))
     else :
-        return  HttpResponse(json.dumps({"ErrorCode":1,"UID":user.UId}))
+        return  HttpResponse(json.dumps({"ErrorCode":1,"UID":user.UId,'Avatar':user.UAvatar}))
     
 def logout(request):
     return  render(request,'index.html',{})
@@ -69,7 +71,7 @@ def info(request):
     except UserBase.DoesNotExist:
         return HttpResponse(json.dumps({'ErrorCode':0}))
     else:
-        return HttpResponse(json.dumps({'ErrorCode':1, 'UName':user.UName, 'UID':user.UId, 'UPrivateEmail':user.UPrivateEmail, 'UPublicEmail':user.UPublicEmail, 'UAvatar': "/static/images/admin.png", 'UInfo':user.UInfo, 'UStatus':user.UStatus, 'UFollow':user.UFollow, 'UFollowed':user.UFollowed, 'UMessage':user.UMessage}))
+        return HttpResponse(json.dumps({'ErrorCode':1, 'UName':user.UName, 'UID':user.UId, 'UPrivateEmail':user.UPrivateEmail, 'UPublicEmail':user.UPublicEmail, 'UAvatar': user.UAvatar, 'UInfo':user.UInfo, 'UStatus':user.UStatus, 'UFollow':user.UFollow, 'UFollowed':user.UFollowed, 'UMessage':user.UMessage}))
 
 def modify(request):
     try:
@@ -122,6 +124,20 @@ def Create_Activity(request):
         UActivity.save()
         re['ErrorCode'] = 1
         re["AID"] = act.AId
+        user = UserBase.objects.get(UId = act.AAdmin)
+        if len(user.UFollowed) != 0:
+            followedList = list(map(int,user.UFollowed[1:].split(',')))
+            for i in followedList:
+                ut = UserTimeline.objects.get(UId = i)
+                if ut.UTimelineFrom.count(',') > 10:
+                    ut.UTimelineFrom = ut.UTimelineFrom[ut.UTimelineFrom.index(',',1):]
+                    ut.UTimelineAct = ut.UTimelineAct[ut.UTimelineAct.index(',',1):]
+                    ut.UTimelineType = ut.UTimelineType[ut.UTimelineType.index(',',1):]
+                ut.UTimelineFrom += ',' +str(user.UId)
+                ut.UTimelineAct += ',' + str(act.AId)
+                ut.UTimelineType += ',0'
+                ut.save()
+                    
     else :
         re['ErrorCode']=0 
     return HttpResponse(json.dumps(re))
@@ -179,6 +195,19 @@ def participate(request):
                 useractivity.save()
                 activity.save()
                 re['ErrorCode']=1
+                user = UserBase.objects.get(UId = useravtivity.UId)
+                if len(user.UFollowed) != 0:
+                followedList = list(map(int,user.UFollowed[1:].split(',')))
+                for i in followedList:
+                    ut = UserTimeline.objects.get(UId = i)
+                    if ut.UTimelineFrom.count(',') > 10:
+                        ut.UTimelineFrom = ut.UTimelineFrom[ut.UTimelineFrom.index(',',1):]
+                        ut.UTimelineAct = ut.UTimelineAct[ut.UTimelineAct.index(',',1):]
+                        ut.UTimelineType = ut.UTimelineType[ut.UTimelineType.index(',',1):]
+                    ut.UTimelineFrom += ',' +str(user.UId)
+                    ut.UTimelineAct += ',' + str(act.AId)
+                    ut.UTimelineType += ',0'
+                    ut.save()
             else:
                 re['ErrorCode'] = -1
     else :
@@ -284,13 +313,14 @@ def Delete_Activity(request):
    
 def GetFollow(request):
     re = dict()
-    user = UserBase.objects.get(UId = request.POST.get('UID'))
+    print( request.GET.get('UID'))
+    user = UserBase.objects.get(UId = request.GET.get('UID'))
     follow = []
     if len(user.UFollow) != 0:
         followList = list(map(int,user.UFollow[1:].split(',')))
         for i in followList:
             u = UserBase.objects.get(UId = i)
-            follow.append({'UID':u.UId,'Avatar':u.UAvatar,'Name':u.UName})
+            follow.append({'UID':u.UId,'Avatar':'static/images/admin.png','Name':u.UName})
     followed = []
     if len(user.UFollowed) != 0:
         followedList = list(map(int,user.UFollowed[1:].split(',')))
@@ -307,21 +337,32 @@ def Follow(request):
     user = UserBase.objects.get(UId = request.POST.get('UID'))
     if user.UFollow.find( ','+str(request.POST.get('FollowID'))) == -1:
         user.UFollow += ','+str(request.POST.get('FollowID'))
+        user.save()
     fo = UserBase.objects.get(UId = request.POST.get('FollowID'))
     if fo.UFollowed.find( ','+str(user.UId)) == -1:
         fo.UFollowed += ','+str(user.UId)
     fo.save()
-    user.save()
     re['ErrorCode'] = 1
+    if len(user.UFollowed) != 0:
+        followedList = list(map(int,user.UFollowed[1:].split(',')))
+        for i in followedList:
+            ut = UserTimeline.objects.get(UId = i)
+            if ut.UTimelineFrom.count(',') > 10:
+                ut.UTimelineFrom = ut.UTimelineFrom[ut.UTimelineFrom.index(',',1):]
+                ut.UTimelineAct = ut.UTimelineAct[ut.UTimelineAct.index(',',1):]
+                ut.UTimelineType = ut.UTimelineType[ut.UTimelineType.index(',',1):]
+            ut.UTimelineFrom += ',' +str(user.UId)
+            ut.UTimelineAct += ',' + str(act.AId)
+            ut.UTimelineType += ',0'
+            ut.save()
+       
     return HttpResponse(json.dumps(re))
 
 def Unfollow(request):
     re = dict()
     user = UserBase.objects.get(UId = request.POST.get('UID'))
-
-    print(user.UFollow.find(','+str(request.POST.get('UnfollowID'))))
     if user.UFollow.find(','+str(request.POST.get('UnfollowID')))!=-1: 
-        user.UFollow.replace(','+str(request.POST.get('UnfollowID')),'')   
+        user.UFollow = user.UFollow.replace(','+str(request.POST.get('UnfollowID')),'')   
         print(user.UFollow)
         user.save()
         re['ErrorCode'] = 1
@@ -329,15 +370,42 @@ def Unfollow(request):
         re['ErrorCode'] = 0
     uf = UserBase.objects.get(UId = request.POST.get('UnfollowID'))
     if uf.UFollowed.find(','+str(request.POST.get('UID'))) != -1:
-        uf.UFollowed.replace(','+str(request.POST.get('UID')),'')
+        uf.UFollowed = uf.UFollowed.replace(','+str(request.POST.get('UID')),'')
         uf.save()
         re['ErrorCode']=1
     else:
         re['ErrorCode']=0
     return HttpResponse(json.dumps(re))
-'''
+
 def GetTimeline(request):
     timeline = UserTimeline.objects.get(UId = request.GET.get('UID'))
     time = Datetime.now()
     re = dict()
-   ''' 
+    if len(timeline.UTimelineFrom) != 0:
+        tl = []
+        fromList = list(map(int,timeline.UTimelineFrom[1:].split(',')))
+        actList = list(map(int,timeline.UTimelineAct[1:].split(',')))
+        typeList = list(map(int,timeline.UTimelineType[1:].split(',')))
+        for i in xrange(len(fromList)):
+            if typeList[i] != 0:
+                user = UserBase.objects.get(UId = fromList[i])
+                act = Activity.objects.get(AId = actList[i])
+                t = (time-act.ACreateTime)
+                if t.days >1:
+                    DetTime = str(t.days)+'d'
+                elif t.hours >1:
+                    DetTime = str(t.hours)+'h'
+                else :
+                    DetTime = str(t.seconds)+'s'
+                tl.append({'UID':user.UId,'Avatar':'','Name':user.UName,'AID':act.AId,'Type':typeList[i],'Title':act.ATitle,'Summary':act.ASummary,'Location':act.ALocation,'Time':DetTime})
+            else :
+                user = UserBase.objects.get(UId = fromList[i])
+                act = UserBase.objects.get(UId = actList[i])
+                t = (time-act.ACreateTime)
+                if t.days >1:
+                    DetTime = str(t.days)+'d'
+                elif t.hours >1:
+                    DetTime = str(t.hours)+'h'
+                else :
+                    DetTime = str(t.seconds)+'s'
+                tl.append({'UID':user.UId,'Avatar':'','Name':user.UName,'AID':act.UId,'Type':typeList[i],'AAvatar':'','AName':act.UName,'Time':DetTime})

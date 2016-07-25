@@ -19,7 +19,7 @@ class UserBase (models.Model):
     UPublicEmail = models.EmailField()
     UName = models.CharField(max_length = 100)
     UPassword = models.CharField(default="123456",max_length = 100)
-    UAvatar = models.ImageField(blank=True,upload_to="avator")
+    UAvatar = models.CharField(blank=True,max_length=100)
     UInfo = models.CharField(blank=True,max_length = 1000)
     UStatus = models.IntegerField(blank=True,default=0)
     UFollow = models.CharField(blank=True,max_length = 200)
@@ -36,9 +36,9 @@ class UserActivity(models.Model):
     
 class UserTimeline(models.Model):
     UId = models.AutoField(primary_key=True)
-    UTimelineFrom = models.CharField(max_length=100)
-    UTimelineAct = models.CharField(max_length=100)
-    UTimelineContent = models.CharField(max_length = 1000)
+    UTimelineFrom = models.CharField(blank=True,max_length=100)
+    UTimelineAct = models.CharField(blank=True,max_length=100)
+    UTimelineType = models.CharField(blank=True,max_length=100)
 
 class Activity(models.Model):
     AId = models.AutoField(primary_key=True)

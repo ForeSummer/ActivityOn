@@ -38,8 +38,9 @@ urlpatterns = [
     url(r'^api/act/accept',app.views.Accept),
     url(r'^api/act/reject',app.views.Reject),
     url(r'^api/act/delete/$',app.views.Delete_Activity),
-    url(r'^api/user/follow',app.views.Follow),
+    url(r'^api/user/follow$',app.views.Follow),
     url(r'^api/user/unfollow',app.views.Unfollow),
+    url(r'^api/user/followInfo/$',app.views.GetFollow),
 ]
 
 
