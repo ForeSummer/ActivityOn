@@ -109,11 +109,17 @@ angular.module('act.controllers', []).
             $location.url("/user/actlist");
         }
         $scope.isFirstLogin = false;
-        $scope.lastUrl = "登录前页面";
+        if($user.guestAID) {
+            $scope.isFirstLogin = true;
+        }
+        $scope.lastUrl = "登录前查看的活动页面";
         $scope.hasFollow = true;
         $scope.jumpBack = function () {
-            // body...
+            var id = $user.guestAID;
+            guestAID = null;
+            $location.url('/act/'+ id + '/info');
         }
+
 
         //
         
@@ -209,39 +215,47 @@ angular.module('act.controllers', []).
                 return;
             }
             //ToDo: if public email == private email
-            var param = {
-                'privateemail': $scope.privateemail,
-                'password': $scope.password,
-                'openemail': $scope.openemail,
-                'nickname': $scope.nickname
-            };
-            //console.log(param);
-            $http.post(urls.api + "/user/regist", $.param(param)).success(function(data){
-                //console.log(data);
-                //$csrf.show_error(data.error);
-                if(data.ErrorCode == 1){
-                    $user.create(1,data.UID);
-                    $alert.showAlert(false, "注册成功！", function() {
-                        //console.log($user.isLogged());
-                        $rootScope.$broadcast('userLog');
-                        $('.header-container').show();
-                        $('.footer-container').show();
-                        $location.url('/');
-                    });
-                }
-                else {
-                    $scope.password = "";
-                    $scope.confirm = "";
-                    if(data.ErrorCode == 0) {
-                        $scope.alertError("登陆邮箱已被注册");
-                        $scope.privateEmail = "";
+            $alert.showAlert(true, "登陆邮箱和公开邮箱相同，可能引发安全问题！是否继续注册？", function() {
+                var random = Math.floor(Math.random()*8+1);
+                //for random avatar
+                var param = {
+                    'privateemail': $scope.privateemail,
+                    'password': $scope.password,
+                    'openemail': $scope.openemail,
+                    'nickname': $scope.nickname
+                };
+                //console.log(param);
+                $http.post(urls.api + "/user/regist", $.param(param)).success(function(data){
+                    //console.log(data);
+                    //$csrf.show_error(data.error);
+                    if(data.ErrorCode == 1){
+                        $user.create(1,data.UID);
+                        $alert.showAlert(false, "注册成功！", function() {
+                            //console.log($user.isLogged());
+                            $rootScope.$broadcast('userLog');
+                            $('.header-container').show();
+                            $('.footer-container').show();
+                            $location.url('/');
+                        });
                     }
                     else {
-                        $scope.alertError("该昵称已被注册");
-                        $scope.nickname = "";
+                        $scope.password = "";
+                        $scope.confirm = "";
+                        if(data.ErrorCode == 0) {
+                            $scope.alertError("登陆邮箱已被注册");
+                            $scope.privateEmail = "";
+                        }
+                        else {
+                            $scope.alertError("该昵称已被注册");
+                            $scope.nickname = "";
+                        }
                     }
-                }
+                });
+            }, function() {
+                $scope.privateemail = "";
+                $scope.openemail = "";
             });
+            
         };
 
         $scope.alertError = function(msg) {
@@ -253,7 +267,7 @@ angular.module('act.controllers', []).
     controller('UserInfoCtrl', ['$scope', '$window', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$location', 'AlertService', function($scope, $window, $http, $csrf, urls, $filter, $routeParams, $user, $location, $alert){
         console.log('UserInfoCtrl');
         //defualt is false
-        $scope.isMe = true;
+        $scope.isMe = false;
         $scope.user_name = "NickName";
         $scope.user_publicEmail = "email@wtf.com";
         $scope.user_info = "个人简介orz凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数";
@@ -279,7 +293,7 @@ angular.module('act.controllers', []).
             });
         };
 
-        if ($routeParams.user_id == $user.id) {
+        if ($routeParams.user_id == $user.userId) {
             $scope.isMe = true;
         }
 
@@ -289,6 +303,16 @@ angular.module('act.controllers', []).
 
         $scope.confirmStatus = false;
         $scope.get_user_info();
+
+        $scope.isFollowed = false;
+        $scope.isShowFollow = !$scope.isMe && !$scope.isFollowed;
+        $scope.isShowUnFollow = !$scope.isMe && $scope.isFollowed;
+        $scope.follow_user = function () {
+            // body...
+        };
+        $scope.unfollow_user = function () {
+            // body...
+        };
     }]).
     controller('UserModifyInfoCtrl', ['$scope', '$rootScope','$window', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$location', 'AlertService', function($scope, $rootScope,$window, $http, $csrf, urls, $filter, $routeParams, $user, $location, $alert){
         console.log('UserModifyInfoCtrl');
@@ -429,45 +453,13 @@ angular.module('act.controllers', []).
                     console.log('succeed');
                     $scope.user_inact = data.InActivity;
                     $scope.user_organizedact = data.OrganizedActivity;
-                    var str = '';
-                    var date = '';
                     for(var i = 0; i < data.InActivity.length; i ++) {
-                        str = '';
-                        date = new Date($scope.user_inact[i].StartTime);
-                        str += date.getFullYear();
-                        str += '-';
-                        str += date.getMonth();
-                        str += '-';
-                        str += date.getDate();
-                        $scope.user_inact[i].StartTime = str;
-
-                        str = '';
-                        date = new Date($scope.user_inact[i].EndTime);
-                        str += date.getFullYear();
-                        str += '-';
-                        str += date.getMonth();
-                        str += '-';
-                        str += date.getDate();
-                        $scope.user_inact[i].EndTime = str;
+                        $scope.user_inact[i].StartTime = getDate($scope.user_inact[i].StartTime);
+                        $scope.user_inact[i].EndTime = getDate(scope.user_inact[i].EndTime);
                     }
                     for(var i = 0; i < data.OrganizedActivity.length; i ++) {
-                        str = '';
-                        date = new Date($scope.user_organizedact[i].StartTime);
-                        str += date.getFullYear();
-                        str += '-';
-                        str += date.getMonth();
-                        str += '-';
-                        str += date.getDate();
-                        $scope.user_organizedact[i].StartTime = str;
-
-                        str = '';
-                        date = new Date($scope.user_organizedact[i].EndTime);
-                        str += date.getFullYear();
-                        str += '-';
-                        str += date.getMonth();
-                        str += '-';
-                        str += date.getDate();
-                        $scope.user_organizedact[i].EndTime = str;
+                        $scope.user_organizedact[i].StartTime = getDate($scope.user_organizedact[i].StartTime);
+                        $scope.user_organizedact[i].EndTime = getDate($scope.user_organizedact[i].EndTime);
                     }
                 }
                 else {
@@ -487,6 +479,14 @@ angular.module('act.controllers', []).
             console.log(index);
         };
         $scope.getActList();
+        $scope.noInact = false;
+        $scope.noOrganizedact = false;
+        if ($scope.user_inact.length == 0) {
+            $scope.noInact = true;
+        }
+        if ($scope.user_organizedact.length == 0) {
+            $scope.noOrganizedact = true;
+        }
     }]).
     controller('ActivityCreateCtrl', ['$scope', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$cookies', '$location', 'AlertService',function($scope, $http, $csrf, urls, $filter, $routeParams, $user, $cookies, $location, $alert){
         console.log('ActivityCreateCtrl');
@@ -563,14 +563,17 @@ angular.module('act.controllers', []).
                     $scope.act_admin = data.Admin;
                     $scope.act_title = data.Title;
                     $scope.act_location = data.Location;
-                    $scope.act_startDate = new Date(data.StartTime);
-                    $scope.act_endDate = new Date(data.EndTime);
-                    $scope.act_entryDDL = new Date(data.EntryDDL);
+                    $scope.act_startDate = getDate(data.StartTime);
+                    $scope.act_endDate = getDate(data.EndTime);
+                    $scope.act_entryDDL = getDate(data.EntryDDL);
                     $scope.act_info = data.Info;
                     $scope.act_maxRegister = data.MaxRegister;
                     $scope.act_type = data.Type;
                     if(data.Admin == $user.userId) {
                         $scope.isAdmin = true;
+                    }
+                    else {
+                        $user.guestAID = $routeParams.act_id;
                     }
                     console.log('get success');
                 }
@@ -630,7 +633,7 @@ angular.module('act.controllers', []).
             });
         };
         $scope.joinIn = function() {
-            if($user.userId == null || $user.userId < 2) {
+             if($user.userId == null || $user.userId < 2) {
                 $alert.showAlert(false, "您还没有登陆，请登陆后再加入心仪的活动！", function() {
                     $location.url('/');
                     return;
@@ -814,6 +817,15 @@ angular.module('act.controllers', []).
             }
 
         };
+
+        $scope.noRegister = false;
+        $scope.noUnRegister = false;
+        if ($scope.act_register.length == 0) {
+            $scope.noRegister = true;
+        }
+        if ($scope.act_unregister.length == 0) {
+            $scope.noUnRegister = true;
+        }
 
         //$scope.act_register = ["Orz"];
 

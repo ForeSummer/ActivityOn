@@ -21,6 +21,8 @@
 							<md-list-item ng-repeat="x in user_inact"><a href="#">[[x]]</a></md-list-item>
 						</md-list>
 						<md-button class="md-raised md-primary" ng-if="isMe" ng-click="edit_user_info()">编辑信息</md-button>
+						<md-button class="md-raised md-primary" ng-if="isShowFollow" ng-click="follow_user()">Follow</md-button>
+						<md-button class="md-raised md-primary" ng-if="isShowUnFollow" ng-click="unfollow_user()">UnFollow</md-button>
 					</div>
 				</div>
 			</md-content>
