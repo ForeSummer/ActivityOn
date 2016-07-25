@@ -284,3 +284,51 @@ def Delete_Activity(request):
     re['ErrorCode']=1
     return HttpResponse(json.dumps(re))
    
+def GetFollow(request):
+    re = dict()
+    user = UserBase.objects.get(UId = request.POST.get('UID'))
+    follow = []
+    if len(user.UFollow) != 0:
+        followList = list(map(int,user.UFollow[1:].split(',')))
+        for i in followList:
+            u = UserBase.objects.get(UId = i)
+            follow.append({'UID':u.UId,'Avatar':u.UAvatar,'Name':u.UName})
+    followed = []
+    if len(user.UFollowed) != 0:
+        followedList = list(map(int,user.UFollowed[1:].split(',')))
+        for i in followedList:
+            u = UserBase.objects.get(UId = i)
+            followed.append({'UID':u.UId,'Avatar':u.UAvatar,'Name':u.UName})
+    re['ErrorCode'] = 1
+    re['Follow'] = follow 
+    re['Followed'] = followed 
+    return HttpResponse(json.dumps(re))
+
+def Follow(request):
+    re = dict()
+    user = UserBase.objects.get(UId = request.POST.get('UID'))
+    user.UFollow += ','+str(request.POST.get('FollowID'))
+    fo = UserBase.objects.get(UId = request.POST.get('FollowID'))
+    fo.UFollowed += ','+str(user.UId)
+    fo.save()
+    user.save()
+    re['ErrorCode'] = 1
+    return HttpResponse(json.dumps(re))
+
+def Unfollow(request)
+    re = dict()
+    user = UserBase.objects.get(UId = request.POST.get('UID'))
+    if user.UFollow.find(','+str(request.POST.get('UnfollowID')))==-1: 
+        user.UFollow.replace(','+str(request.POST.get('UnfollowID')))   
+        re['ErrorCode'] = 1
+    else:
+        re['ErrorCode'] = 0
+    uf = UserBase.objects.get(UId = request.POST.get('UfollowID'))
+    if uf.UFollowed.find(','+str(request.POST.get('UID'))) != -1:
+        uf.UFollowed.replace(','+str(request.POST.get('UID')))
+        re['ErrorCode']=1
+    else:
+        re['ErrorCode']=0
+    return HttpResponse(json.dumps(re))
+
+
