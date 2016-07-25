@@ -313,7 +313,7 @@ def Follow(request):
     re['ErrorCode'] = 1
     return HttpResponse(json.dumps(re))
 
-def Unfollow(request)
+def Unfollow(request):
     re = dict()
     user = UserBase.objects.get(UId = request.POST.get('UID'))
     if user.UFollow.find(','+str(request.POST.get('UnfollowID')))==-1: 
