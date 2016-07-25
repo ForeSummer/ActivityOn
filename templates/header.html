@@ -12,9 +12,10 @@
     </div>
     <div flex-gt-sm="25" class="right-col">
       <img class="user-icon" ng-src="[[avatarUrl]]"  ng-click="infoDetail()">
-      <div class="user-name"  ng-click="infoDetail()">[[nickname]]</div>
-      <md-button class="user-logout" title="登出" ng-click="logout()">
-        <i id="logout-img" class="fa fa-sign-out fa-2x"></i>
+      <div class="user-name" ng-click="infoDetail()">[[nickname]]</div>
+      <div class="user-name" id="nickname_tmp" ng-click="logout()">点击登陆</div>
+      <md-button id="log_btn" class="user-logout" title="登陆" ng-click="logout()">
+        <i id="logout-img" class="fa fa-sign-in fa-2x"></i>
       </md-button>
       <md-button class="user-msg" title="信息" ng-click="messageList()">
         <i id="msg-img" class="fa fa-envelope fa-2x"></i>
