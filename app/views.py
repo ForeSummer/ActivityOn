@@ -398,8 +398,11 @@ def GetTimeline(request):
             else :
                 user = UserBase.objects.get(UId = fromList[i])
                 act = UserBase.objects.get(UId = actList[i])
-                DetTime = '100s'
-                tl.append({'UID':user.UId,'Avatar':user.UAvatar,'Name':user.UName,'AID':act.UId,'Type':typeList[i],'AAvatar':user.UAvatar,'AName':act.UName,'Time':'100s'})
+                timeList = list(user.UFollowTime[1:].split(','))
+                followList = list(map(int,user.UFollow[1:].split(',')))
+                x = followedList.index(act.UId)
+                CTime = timeList[i]
+                tl.append({'UID':user.UId,'Avatar':user.UAvatar,'Name':user.UName,'AID':act.UId,'Type':typeList[i],'AAvatar':user.UAvatar,'AName':act.UName,'Time':CTime})
     re['ErrorCode']=1
     re['Timeline'] = tl
     re['EndTime'] = str(time)
