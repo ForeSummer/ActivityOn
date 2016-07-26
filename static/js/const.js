@@ -5,8 +5,24 @@ function String2Date(str) {
   return new Date(time.getTime() - new Date().getTimezoneOffset() * 60 * 60 * 1000);
 }
 
-function getDate(string) {
-	var str = '';
+function getDate(start, end) {
+	var year1 = parseInt(start.slice(0, 4));
+  var month1 = parseInt(start.slice(5, 7));
+  var day1 = parseInt(start.slice(8, 10));
+  var hour1 = parseInt(start.slice(11, 13)) + 8;
+  var minute1 = parseInt(start.slice(14, 16));
+
+  var year2 = parseInt(start.slice(0, 4));
+  var month2 = parseInt(start.slice(5, 7));
+  var day2 = parseInt(start.slice(8, 10));
+  var hour2 = parseInt(start.slice(11, 13));
+  var minute2 = parseInt(start.slice(14, 16));
+
+  if(hour1 >= 24) {
+    hour1 -= 24;
+    day1 ++;
+  }
+  return;
 	var date = new Date(string);
   str += date.getFullYear();
   str += '-';
