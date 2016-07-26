@@ -24,7 +24,6 @@ class UserBase (models.Model):
     UStatus = models.IntegerField(blank=True,default=0)
     UFollow = models.CharField(blank=True,max_length = 2000)
     UFollowed = models.CharField(blank=True,max_length = 2000)
-    UFollowTime = models.CharField(blank=True,max_length=10000)
     UMessage = models.CharField(blank=True,max_length = 2000)
     
 class UserActivity(models.Model):
@@ -40,6 +39,7 @@ class UserTimeline(models.Model):
     UTimelineFrom = models.CharField(blank=True,max_length=10000)
     UTimelineAct = models.CharField(blank=True,max_length=10000)
     UTimelineType = models.CharField(blank=True,max_length=10000)
+    UTimelineTime = models.CharField(blank=True,max_length=10000)
 
 class Activity(models.Model):
     AId = models.AutoField(primary_key=True)
