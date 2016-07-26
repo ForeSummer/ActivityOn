@@ -61,6 +61,7 @@ angular.module('act.controllers', []).
                 }
             });
         };
+
         $scope.infoDetail = function() {
             $location.url('/user/'+ $user.userId + '/info');
         };
@@ -115,6 +116,31 @@ angular.module('act.controllers', []).
         $scope.getActList = function () {
             $location.url("/user/actlist");
         }
+        $scope.timeLineStart = 0;
+        $scope.timeLineEnd = 9;
+        $scope.timeline = [];
+        $scope.getTimeLine = function() {
+            var param = {
+                'UID': $user.userId,
+                'start': $scope.timeLineStart,
+                'end': $scope.timeLineEnd
+            };
+            $http.post(urls.api + '/user/timeline').success(function(data) {
+                if(data.ErrorCode == 1) {
+                    for(var i = 0; i < 10; i ++) {
+                        //get timeline detail
+                        $scope.timeline.push(data);
+                        
+                    }
+                    $scope.timeLineStart += 10;
+                    $scope.timeLineEnd += 10;
+                }
+                else {
+                    console.log("get timeline error");
+                }
+            });
+        }
+        //$scope.getTimeLine();
         $scope.isFirstLogin = false;
         if($user.guestAID) {
             $scope.isFirstLogin = true;
@@ -240,7 +266,8 @@ angular.module('act.controllers', []).
                 'privateemail': $scope.privateemail,
                 'password': $scope.password,
                 'openemail': $scope.openemail,
-                'nickname': $scope.nickname
+                'nickname': $scope.nickname,
+                'Avatar': '/static/images/default_' + random + '.png'
             };
             //console.log(param);
             $http.post(urls.api + "/user/regist", $.param(param)).success(function(data){
