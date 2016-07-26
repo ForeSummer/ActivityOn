@@ -122,14 +122,15 @@ angular.module('act.controllers', []).
         $scope.getTimeLine = function() {
             var param = {
                 'UID': $user.userId,
-                'start': $scope.timeLineStart,
-                'end': $scope.timeLineEnd
+                'Start': $scope.timeLineStart,
+                'End': $scope.timeLineEnd
             };
-            $http.post(urls.api + '/user/timeline').success(function(data) {
+            $http.post(urls.api + '/user/timeline', $.param(param)).success(function(data) {
+                console.log(data);
                 if(data.ErrorCode == 1) {
                     for(var i = 0; i < 10; i ++) {
                         //get timeline detail
-                        $scope.timeline.push(data);
+                        //$scope.timeline.push(data);
                         
                     }
                     $scope.timeLineStart += 10;
@@ -140,7 +141,7 @@ angular.module('act.controllers', []).
                 }
             });
         }
-        //$scope.getTimeLine();
+        $scope.getTimeLine();
         $scope.isFirstLogin = false;
         if($user.guestAID) {
             $scope.isFirstLogin = true;
