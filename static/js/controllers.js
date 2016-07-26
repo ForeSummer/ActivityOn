@@ -918,6 +918,36 @@ angular.module('act.controllers', []).
         //$scope.act_register = ["Orz"];
 
     }]).
+    controller('TestCtrl', ['$scope', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$cookies', '$location', 'AlertService', function($scope, $http, $csrf, urls, $filter, $routeParams, $user, $cookies, $location, $alert){
+        $scope.follow_user = function (id1, id2) {
+            var param = {
+                'UID': id1,
+                'FollowID': id2
+            };
+
+            $http.post(urls.api + '/user/follow', $.param(param)).success(function(data) {
+                if(data.ErrorCode == 1) {
+                    //$alert.showAlert(false, "关注用户成功！",function(){});
+                    //$scope.isFollowed = true;
+                    console.log("succeed");
+                }
+                else {
+                    console.log("follow error");
+                }
+            });
+        };
+        $scope.follow_user(25,26);
+        setTimeout(function(){
+            $scope.follow_user(26,25);
+        },1000);
+        setTimeout(function(){
+            $scope.follow_user(26,27);
+        },1000);
+        setTimeout(function(){
+            $scope.follow_user(25,27);
+        },1000);
+        
+    }]).
     controller('UserMsgCtrl', ['$scope', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$cookies', '$location', 'AlertService', function($scope, $http, $csrf, urls, $filter, $routeParams, $user, $cookies, $location, $alert){
         console.log('UserMsgCtrl');
         $scope.user_sys_msg = [
