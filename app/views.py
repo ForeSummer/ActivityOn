@@ -374,8 +374,10 @@ def GetTimeline(request):
         fromList = list(map(int,timeline.UTimelineFrom[1:].split(',')))
         actList = list(map(int,timeline.UTimelineAct[1:].split(',')))
         typeList = list(map(int,timeline.UTimelineType[1:].split(',')))
-        for i in xrange(len(fromList)):
-            if typeList[i] != 0:
+        start = request.POST.get('Start')
+        end = request.POST.get('End')
+        for i in xrange(len(fromList)-start-1,len(fromList)-end-2 > 0 ?len(fromList)-end-1:-1,-1):
+            if typeList[i] != 2:
                 user = UserBase.objects.get(UId = fromList[i])
                 act = Activity.objects.get(AId = actList[i])
                 t = (time-act.ACreateTime)
