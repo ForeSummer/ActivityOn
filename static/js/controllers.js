@@ -94,65 +94,68 @@ angular.module('act.controllers', []).
             $location.url('/user/login');
             //console.log('turn to login fail');
         }
+        else {
+            $scope.user_follow_num = 0;
+            $scope.user_activity_num = 0;
+            $scope.user_organize_num = 0;
+            $scope.createActivity = function () {
+                $location.url('/act/create');
+            }
+            $scope.user_timeline = [
+            {"user": "李俊杰", "act": "写后端", "isAdmin": true, "ago": "10分钟前", "summary": "用django@python.shit写一大堆无聊冗长毫无意义的后端代码并把它们强行放到工程里冒充自己有很多代码量"},
+            {"user": "卫国扬", "act": "写前端逻辑", "isAdmin": true, "ago": "10分钟前", "summary": "用angularJS写一大堆无聊冗长毫无意义的前段逻辑代码并把它们强行放到工程里冒充自己有很多代码量"},
+            {"user": "唐人杰", "act": "写前端样式", "isAdmin": false, "ago": "10分钟前", "summary": "用HTML和less写一大堆无聊冗长毫无意义而且难看的前段样式代码并把它们强行放到工程里冒充自己有很多代码量"}];
+            $scope.jump = function (index, type) {
+                console.log("Jump to " + index + "," + type);
+            }
+            $scope.user_suggest = ["写代码", "写大作业", "发呆"];
+            $scope.search = function (content) {
+                console.log(content);
+            }
+            $scope.getActList = function () {
+                $location.url("/user/actlist");
+            }
+            $scope.timeLineStart = 0;
+            $scope.timeLineEnd = 9;
+            $scope.timeline = [];
+            $scope.getTimeLine = function() {
+                var param = {
+                    'UID': $user.userId,
+                    'Start': $scope.timeLineStart,
+                    'End': $scope.timeLineEnd
+                };
+                $http.post(urls.api + '/user/timeline', $.param(param)).success(function(data) {
+                    console.log(data);
+                    if(data.ErrorCode == 1) {
+                        for(var i = 0; i < 10; i ++) {
+                            //get timeline detail
+                            //$scope.timeline.push(data);
+                            
+                        }
+                        $scope.timeLineStart += 10;
+                        $scope.timeLineEnd += 10;
+                    }
+                    else {
+                        console.log("get timeline error");
+                    }
+                });
+            }
+            $scope.getTimeLine();
+            $scope.isFirstLogin = false;
+            if($user.guestAID) {
+                $scope.isFirstLogin = true;
+            }
+            $scope.lastUrl = "登录前查看的活动页面";
+            $scope.hasFollow = true;
+            $scope.jumpBack = function () {
+                var id = $user.guestAID;
+                guestAID = null;
+                $location.url('/act/'+ id + '/info');
+            }
+        }
         //console.log("homepage");
         //get user info
-        $scope.user_follow_num = 0;
-        $scope.user_activity_num = 0;
-        $scope.user_organize_num = 0;
-        $scope.createActivity = function () {
-            $location.url('/act/create');
-        }
-        $scope.user_timeline = [
-        {"user": "李俊杰", "act": "写后端", "isAdmin": true, "ago": "10分钟前", "summary": "用django@python.shit写一大堆无聊冗长毫无意义的后端代码并把它们强行放到工程里冒充自己有很多代码量"},
-        {"user": "卫国扬", "act": "写前端逻辑", "isAdmin": true, "ago": "10分钟前", "summary": "用angularJS写一大堆无聊冗长毫无意义的前段逻辑代码并把它们强行放到工程里冒充自己有很多代码量"},
-        {"user": "唐人杰", "act": "写前端样式", "isAdmin": false, "ago": "10分钟前", "summary": "用HTML和less写一大堆无聊冗长毫无意义而且难看的前段样式代码并把它们强行放到工程里冒充自己有很多代码量"}];
-        $scope.jump = function (index, type) {
-            console.log("Jump to " + index + "," + type);
-        }
-        $scope.user_suggest = ["写代码", "写大作业", "发呆"];
-        $scope.search = function (content) {
-            console.log(content);
-        }
-        $scope.getActList = function () {
-            $location.url("/user/actlist");
-        }
-        $scope.timeLineStart = 0;
-        $scope.timeLineEnd = 9;
-        $scope.timeline = [];
-        $scope.getTimeLine = function() {
-            var param = {
-                'UID': $user.userId,
-                'Start': $scope.timeLineStart,
-                'End': $scope.timeLineEnd
-            };
-            $http.post(urls.api + '/user/timeline', $.param(param)).success(function(data) {
-                console.log(data);
-                if(data.ErrorCode == 1) {
-                    for(var i = 0; i < 10; i ++) {
-                        //get timeline detail
-                        //$scope.timeline.push(data);
-                        
-                    }
-                    $scope.timeLineStart += 10;
-                    $scope.timeLineEnd += 10;
-                }
-                else {
-                    console.log("get timeline error");
-                }
-            });
-        }
-        $scope.getTimeLine();
-        $scope.isFirstLogin = false;
-        if($user.guestAID) {
-            $scope.isFirstLogin = true;
-        }
-        $scope.lastUrl = "登录前查看的活动页面";
-        $scope.hasFollow = true;
-        $scope.jumpBack = function () {
-            var id = $user.guestAID;
-            guestAID = null;
-            $location.url('/act/'+ id + '/info');
-        }
+        
         //
         
     }]).
