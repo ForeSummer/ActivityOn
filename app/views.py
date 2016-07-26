@@ -129,10 +129,6 @@ def Create_Activity(request):
             followedList = list(map(int,user.UFollowed[1:].split(',')))
             for i in followedList:
                 ut = UserTimeline.objects.get(UId = i)
-                if ut.UTimelineFrom.count(',') > 10:
-                    ut.UTimelineFrom = ut.UTimelineFrom[ut.UTimelineFrom.index(',',1):]
-                    ut.UTimelineAct = ut.UTimelineAct[ut.UTimelineAct.index(',',1):]
-                    ut.UTimelineType = ut.UTimelineType[ut.UTimelineType.index(',',1):]
                 ut.UTimelineFrom += ',' +str(user.UId)
                 ut.UTimelineAct += ',' + str(act.AId)
                 ut.UTimelineType += ',0'
@@ -200,10 +196,6 @@ def participate(request):
                     followedList = list(map(int,user.UFollowed[1:].split(',')))
                     for i in followedList:
                         ut = UserTimeline.objects.get(UId = i)
-                        if ut.UTimelineFrom.count(',') > 10:
-                            ut.UTimelineFrom = ut.UTimelineFrom[ut.UTimelineFrom.index(',',1):]
-                            ut.UTimelineAct = ut.UTimelineAct[ut.UTimelineAct.index(',',1):]
-                            ut.UTimelineType = ut.UTimelineType[ut.UTimelineType.index(',',1):]
                         ut.UTimelineFrom += ',' +str(user.UId)
                         ut.UTimelineAct += ',' + str(act.AId)
                         ut.UTimelineType += ',1'
@@ -347,10 +339,6 @@ def Follow(request):
         followedList = list(map(int,user.UFollowed[1:].split(',')))
         for i in followedList:
             ut = UserTimeline.objects.get(UId = i)
-            if ut.UTimelineFrom.count(',') > 10:
-                ut.UTimelineFrom = ut.UTimelineFrom[ut.UTimelineFrom.index(',',1):]
-                ut.UTimelineAct = ut.UTimelineAct[ut.UTimelineAct.index(',',1):]
-                ut.UTimelineType = ut.UTimelineType[ut.UTimelineType.index(',',1):]
             ut.UTimelineFrom += ',' +str(user.UId)
             ut.UTimelineAct += ',' + str(fo.AId)
             ut.UTimelineType += ',2'
@@ -378,7 +366,7 @@ def Unfollow(request):
     return HttpResponse(json.dumps(re))
 
 def GetTimeline(request):
-    timeline = UserTimeline.objects.get(UId = request.GET.get('UID'))
+    timeline = UserTimeline.objects.get(UId = request.POST.get('UID'))
     time = Datetime.now()
     re = dict()
     if len(timeline.UTimelineFrom) != 0:
@@ -386,8 +374,10 @@ def GetTimeline(request):
         fromList = list(map(int,timeline.UTimelineFrom[1:].split(',')))
         actList = list(map(int,timeline.UTimelineAct[1:].split(',')))
         typeList = list(map(int,timeline.UTimelineType[1:].split(',')))
-        for i in xrange(len(fromList)):
-            if typeList[i] != 0:
+        start = request.POST.get('Start')
+        end = request.POST.get('End')
+        for i in xrange(len(fromList)-start-1,len(fromList)-end-2 > 0 ?len(fromList)-end-2:-1,-1):
+            if typeList[i] != 2:
                 user = UserBase.objects.get(UId = fromList[i])
                 act = Activity.objects.get(AId = actList[i])
                 t = (time-act.ACreateTime)
@@ -397,7 +387,7 @@ def GetTimeline(request):
                     DetTime = str(t.hours)+'h'
                 else :
                     DetTime = str(t.seconds)+'s'
-                tl.append({'UID':user.UId,'Avatar':'','Name':user.UName,'AID':act.AId,'Type':typeList[i],'Title':act.ATitle,'Summary':act.ASummary,'Location':act.ALocation,'Time':DetTime})
+                tl.append({'UID':user.UId,'Avatar':user.UAvatar,'Name':user.UName,'AID':act.AId,'Type':typeList[i],'Title':act.ATitle,'Summary':act.ASummary,'Location':act.ALocation,'Time':DetTime})
             else :
                 user = UserBase.objects.get(UId = fromList[i])
                 act = UserBase.objects.get(UId = actList[i])
@@ -408,4 +398,4 @@ def GetTimeline(request):
                     DetTime = str(t.hours)+'h'
                 else :
                     DetTime = str(t.seconds)+'s'
-                tl.append({'UID':user.UId,'Avatar':'','Name':user.UName,'AID':act.UId,'Type':typeList[i],'AAvatar':'','AName':act.UName,'Time':DetTime})
+                tl.append({'UID':user.UId,'Avatar':user.UAvatar,'Name':user.UName,'AID':act.UId,'Type':typeList[i],'AAvatar':user.UAvatar,'AName':act.UName,'Time':DetTime})
