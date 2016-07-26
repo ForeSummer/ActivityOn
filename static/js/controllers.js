@@ -119,6 +119,28 @@ angular.module('act.controllers', []).
             $scope.timeLineStart = 0;
             $scope.timeLineEnd = 9;
             $scope.timeline = [];
+
+            //EndTime:
+            //Timeline[]
+
+            /*AID:23
+            Avatar:"/static/images/default_7.png"
+            Location:"宿舍"
+            Name:"ljjljj"
+            Summary:"花10天时间写一个有很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多代码的大作业"
+            Time:"2016-07-26 16:12:33.651706+00:00"
+            Title:"写大作业"
+            Type:0
+            UID:25*/
+
+            /*AAvatar:"/static/images/default_7.png"
+            AID:26
+            AName:"唐人杰唐人杰"
+            Avatar:"/static/images/default_7.png"
+            Name:"ljjljj"
+            Time:"2016-07-26 23:55:21.573389"
+            Type:2
+            UID:25*/
             $scope.getTimeLine = function() {
                 var param = {
                     'UID': $user.userId,
@@ -127,8 +149,17 @@ angular.module('act.controllers', []).
                 };
                 $http.post(urls.api + '/user/timeline', $.param(param)).success(function(data) {
                     console.log(data);
+                    var event = {};
                     if(data.ErrorCode == 1) {
-                        for(var i = 0; i < 10; i ++) {
+                        for(var i = 0; i < data.Timeline.length; i ++) {
+                            if(data.Timeline[i].Type == 2) {
+                                event.user = data.Timeline[i].Name;
+                                event.followedUser = data.Timeline[i].AName;
+
+                            }
+                            else {
+
+                            }
                             //get timeline detail
                             //$scope.timeline.push(data);
                             
@@ -141,7 +172,7 @@ angular.module('act.controllers', []).
                     }
                 });
             }
-            $scope.getTimeLine();
+            //$scope.getTimeLine();
             $scope.isFirstLogin = false;
             if($user.guestAID) {
                 $scope.isFirstLogin = true;
@@ -937,17 +968,17 @@ angular.module('act.controllers', []).
                 }
             });
         };
-        /*$scope.follow_user(25,26);
+        //$scope.follow_user(25,26);
         setTimeout(function(){
             $scope.follow_user(26,25);
         },1000);
         setTimeout(function(){
-            $scope.follow_user(26,27);
+            //$scope.follow_user(26,27);
         },1000);
         setTimeout(function(){
-            $scope.follow_user(25,27);
-        },1000);*/
-        $scope.init = function() {
+            //$scope.follow_user(25,27);
+        },1000);
+        /*$scope.init = function() {
             $scope.act_title = "写大作业";
             $scope.act_location = "宿舍";
             $scope.act_maxRegister = 3;
@@ -987,12 +1018,12 @@ angular.module('act.controllers', []).
                 }
             });
             //console.log($scope.act_startDate);
-        };
+        };*/
         //$scope.createAct();
-        var end = "2016-07-26 23:27:55.356013";
+        /*var end = "2016-07-26 23:27:55.356013";
         var start = "2016-07-26 15:08:22.145142+00:00";
         console.log(start);
-        getDate(start, end);
+        getDate(start, end);*/
     }]).
     controller('UserMsgCtrl', ['$scope', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$cookies', '$location', 'AlertService', function($scope, $http, $csrf, urls, $filter, $routeParams, $user, $cookies, $location, $alert){
         console.log('UserMsgCtrl');

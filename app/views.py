@@ -94,7 +94,6 @@ def modify(request):
         if 'UName' in request.POST:
             user.UName = request.POST.get('UName')
         if 'UInfo' in request.POST:
-            print(request.POST.get('UInfo'))
             user.UInfo = request.POST.get('UInfo')
         if 'UPublicEmail' in request.POST:
             user.UPublicEmail = request.POST.get('UPublicEmail')
@@ -318,7 +317,6 @@ def Delete_Activity(request):
    
 def GetFollow(request):
     re = dict()
-    print( request.GET.get('UID'))
     user = UserBase.objects.get(UId = request.GET.get('UID'))
     follow = []
     if len(user.UFollow) != 0:
@@ -365,7 +363,6 @@ def Unfollow(request):
     user = UserBase.objects.get(UId = request.POST.get('UID'))
     if user.UFollow.find(','+str(request.POST.get('UnfollowID')))!=-1: 
         user.UFollow = user.UFollow.replace(','+str(request.POST.get('UnfollowID')),'')   
-        print(user.UFollow)
         user.save()
         re['ErrorCode'] = 1
     else:
@@ -400,8 +397,13 @@ def GetTimeline(request):
                 act = UserBase.objects.get(UId = actList[i])
                 timeList = list(user.UFollowTime[1:].split(','))
                 followList = list(map(int,user.UFollow[1:].split(',')))
-                x = followedList.index(act.UId)
-                CTime = timeList[i]
+                print(act.UId)
+                print(followList)
+                print(followList.index(act.UId))
+                print(timeList)
+                x = followList.index(act.UId)
+                print(x)
+                CTime = timeList[x]
                 tl.append({'UID':user.UId,'Avatar':user.UAvatar,'Name':user.UName,'AID':act.UId,'Type':typeList[i],'AAvatar':user.UAvatar,'AName':act.UName,'Time':CTime})
     re['ErrorCode']=1
     re['Timeline'] = tl
