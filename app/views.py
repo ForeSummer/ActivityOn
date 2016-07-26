@@ -8,7 +8,7 @@ from .models import *
 from django.contrib.auth import authenticate
 from django.template import loader
 import json
-
+import os
 # Create your views here.
 
 def index(request):
@@ -20,6 +20,15 @@ def index(request):
         
 def test(request):
     return HttpResponse('test')
+
+def ChangeAvatar(request):
+    UID = request.GET.get('UID')
+    f = request.FILES['file']
+    destination = open('static/images/'+str(UID)+'.png', 'wb+')
+    for chunk in f.chunks():
+        destination.write(chunk)
+    destination.close()
+    return HttpResponse({})
 
 def server_time(request):
     import time

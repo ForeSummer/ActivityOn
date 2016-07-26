@@ -466,7 +466,7 @@ angular.module('act.controllers', []).
         }
 
         var uploader = $scope.uploader = new FileUploader({
-            url: urls.api + "/user/modify"
+            url: urls.api + "/user/changeAvatar?UID="+$user.userId
         });
     }]).
     controller('UserModifyPassCtrl', ['$scope', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$cookies', '$location', 'AlertService', function($scope, $http, $csrf, urls, $filter, $routeParams, $user, $cookies, $location, $alert){
