@@ -988,7 +988,11 @@ angular.module('act.controllers', []).
             });
             //console.log($scope.act_startDate);
         };
-        $scope.createAct();
+        //$scope.createAct();
+        var end = "2016-07-26 23:27:55.356013";
+        var start = "2016-07-26 15:08:22.145142+00:00";
+        console.log(start);
+        getDate(start, end);
     }]).
     controller('UserMsgCtrl', ['$scope', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$cookies', '$location', 'AlertService', function($scope, $http, $csrf, urls, $filter, $routeParams, $user, $cookies, $location, $alert){
         console.log('UserMsgCtrl');
