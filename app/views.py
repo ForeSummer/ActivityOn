@@ -28,7 +28,10 @@ def ChangeAvatar(request):
     for chunk in f.chunks():
         destination.write(chunk)
     destination.close()
-    return HttpResponse({})
+    user = UserBase.objects,get(UId = int(UID))
+    user.UAvatar = 'static/images/'+str(UID)+'.png'
+    user.save()
+    return HttpResponse({'Avatar':user.UAvatar})
 
 def server_time(request):
     import time
@@ -411,3 +414,4 @@ def GetTimeline(request):
     re['ErrorCode']=1
     re['Timeline'] = tl
     return HttpResponse(json.dumps(re))
+
