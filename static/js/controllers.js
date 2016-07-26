@@ -302,7 +302,7 @@ angular.module('act.controllers', []).
             });
         }
         $scope.alertError = function(msg) {
-            $alert.showAlert(false, msg);
+            $alert.showAlert(false, msg, function(){});
         }
         //$scope.confirmStatus = false;
     }]).
@@ -510,7 +510,7 @@ angular.module('act.controllers', []).
             });
         }
         $scope.alertError = function(msg) {
-            $scope.showAlert(false, msg);
+            $scope.showAlert(false, msg, function(){});
         }
     }]).
     controller('UserActListCtrl', ['$scope', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$cookies', '$location', 'AlertService',function($scope, $http, $csrf, urls, $filter, $routeParams, $user, $cookies, $location, $alert){
