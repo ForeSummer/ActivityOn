@@ -968,9 +968,10 @@ angular.module('act.controllers', []).
                 }
             });
         };
-        //$scope.follow_user(25,26);
+
+        $scope.follow_user(25,26);
         setTimeout(function(){
-            $scope.follow_user(26,25);
+            $scope.follow_user(2,1);
         },1000);
         setTimeout(function(){
             //$scope.follow_user(26,27);
@@ -979,6 +980,14 @@ angular.module('act.controllers', []).
             //$scope.follow_user(25,27);
         },1000);
         /*$scope.init = function() {
+=======
+            $scope.follow_user(2,3);
+        },1000);
+        setTimeout(function(){
+            $scope.follow_user(1,3);
+        },1000);
+        $scope.init = function() {
+>>>>>>> 28fd152e37082d0075e73857de60bb7c246fd9bc
             $scope.act_title = "写大作业";
             $scope.act_location = "宿舍";
             $scope.act_maxRegister = 3;
@@ -993,7 +1002,7 @@ angular.module('act.controllers', []).
         $scope.init();
         $scope.createAct = function () {
             var param = {
-                'Admin': 25,
+                'Admin': 1,
                 'Type': $scope.act_type,
                 'MaxRegister': $scope.act_maxRegister,
                 'EntryDDL': $scope.act_entryDDL.toISOString(),

@@ -69,6 +69,7 @@ def login(request):
     except UserBase.DoesNotExist:
         return  HttpResponse(json.dumps({"ErrorCode":0}))
     else :
+        request.session['UID']=user.UId
         return  HttpResponse(json.dumps({"ErrorCode":1,"UID":user.UId,'Avatar':user.UAvatar}))
     
 def logout(request):
@@ -144,6 +145,7 @@ def Create_Activity(request):
                 ut.UTimelineFrom += ',' +str(user.UId)
                 ut.UTimelineAct += ',' + str(act.AId)
                 ut.UTimelineType += ',0'
+                ut.UTimelineTime += ',' + str(datetime.now())
                 ut.save()
                     
     else :
@@ -211,6 +213,7 @@ def participate(request):
                         ut.UTimelineFrom += ',' +str(user.UId)
                         ut.UTimelineAct += ',' + str(act.AId)
                         ut.UTimelineType += ',1'
+                        ut.UTimelineTime += ','+str(datetime.now())
                         ut.save()
             else:
                 re['ErrorCode'] = -1
@@ -340,7 +343,6 @@ def Follow(request):
     user = UserBase.objects.get(UId = request.POST.get('UID'))
     if user.UFollow.find( ','+str(request.POST.get('FollowID'))) == -1:
         user.UFollow += ','+str(request.POST.get('FollowID'))
-        user.UFollowTime +=',' + str(datetime.now())
         user.save()
     fo = UserBase.objects.get(UId = request.POST.get('FollowID'))
     if fo.UFollowed.find( ','+str(user.UId)) == -1:
@@ -354,6 +356,7 @@ def Follow(request):
             ut.UTimelineFrom += ',' +str(user.UId)
             ut.UTimelineAct += ',' + str(fo.UId)
             ut.UTimelineType += ',2'
+            ut.UTimelineTime += ','+str(datetime.now())
             ut.save()
        
     return HttpResponse(json.dumps(re))
@@ -385,25 +388,24 @@ def GetTimeline(request):
         fromList = list(map(int,timeline.UTimelineFrom[1:].split(',')))
         actList = list(map(int,timeline.UTimelineAct[1:].split(',')))
         typeList = list(map(int,timeline.UTimelineType[1:].split(',')))
+        timeList = list(timeline.UTimelineTime[1:].split(','))
         start = int(request.POST.get('Start'))
         end = int(request.POST.get('End'))
+        print(len(fromList)-start-1)
+        print(len(fromList)-end-2 )
+        print(fromList)
+        print(actList)
+        print(typeList)
+        print(timeList)
         for i in range(len(fromList)-start-1 ,len(fromList)-end-2 if (len(fromList)-end-2 > 0 )else -1,-1):
             if typeList[i] != 2:
                 user = UserBase.objects.get(UId = fromList[i])
                 act = Activity.objects.get(AId = actList[i])
-                tl.append({'UID':user.UId,'Avatar':user.UAvatar,'Name':user.UName,'AID':act.AId,'Type':typeList[i],'Title':act.ATitle,'Summary':act.ASummary,'Location':act.ALocation,'Time':str(act.ACreateTime)})
+                tl.append({'UID':user.UId,'Avatar':user.UAvatar,'Name':user.UName,'AID':act.AId,'Type':typeList[i],'Title':act.ATitle,'Summary':act.ASummary,'Location':act.ALocation,'Time':timeList[i]})
             else :
                 user = UserBase.objects.get(UId = fromList[i])
                 act = UserBase.objects.get(UId = actList[i])
-                timeList = list(user.UFollowTime[1:].split(','))
-                followList = list(map(int,user.UFollow[1:].split(',')))
-                print(act.UId)
-                print(followList)
-                print(followList.index(act.UId))
-                print(timeList)
-                x = followList.index(act.UId)
-                print(x)
-                CTime = timeList[x]
+                CTime = timeList[i]
                 tl.append({'UID':user.UId,'Avatar':user.UAvatar,'Name':user.UName,'AID':act.UId,'Type':typeList[i],'AAvatar':user.UAvatar,'AName':act.UName,'Time':CTime})
     re['ErrorCode']=1
     re['Timeline'] = tl
