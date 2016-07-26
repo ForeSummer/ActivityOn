@@ -20,25 +20,25 @@ class UserBase (models.Model):
     UName = models.CharField(max_length = 100)
     UPassword = models.CharField(default="123456",max_length = 100)
     UAvatar = models.CharField(blank=True,max_length=100)
-    UInfo = models.CharField(blank=True,max_length = 1000)
+    UInfo = models.CharField(blank=True,max_length = 10000)
     UStatus = models.IntegerField(blank=True,default=0)
-    UFollow = models.CharField(blank=True,max_length = 200)
-    UFollowed = models.CharField(blank=True,max_length = 200)
-    UMessage = models.CharField(blank=True,max_length = 200)
+    UFollow = models.CharField(blank=True,max_length = 2000)
+    UFollowed = models.CharField(blank=True,max_length = 2000)
+    UMessage = models.CharField(blank=True,max_length = 2000)
     
 class UserActivity(models.Model):
     UId = models.AutoField(primary_key=True)
-    UInAct = models.CharField(blank=True,max_length = 200)
+    UInAct = models.CharField(blank=True,max_length = 2000)
     UInActNum = models.IntegerField()
-    UOrganizedAct = models.CharField(blank=True,max_length = 200)
+    UOrganizedAct = models.CharField(blank=True,max_length = 2000)
     UOrganizedNum = models.IntegerField()
-    UTags = models.CharField(blank=True,max_length = 200)
+    UTags = models.CharField(blank=True,max_length = 2000)
     
 class UserTimeline(models.Model):
     UId = models.AutoField(primary_key=True)
-    UTimelineFrom = models.CharField(blank=True,max_length=100)
-    UTimelineAct = models.CharField(blank=True,max_length=100)
-    UTimelineType = models.CharField(blank=True,max_length=100)
+    UTimelineFrom = models.CharField(blank=True,max_length=10000)
+    UTimelineAct = models.CharField(blank=True,max_length=10000)
+    UTimelineType = models.CharField(blank=True,max_length=10000)
 
 class Activity(models.Model):
     AId = models.AutoField(primary_key=True)
@@ -54,8 +54,8 @@ class Activity(models.Model):
     AStatus = models.IntegerField()
     ATitle = models.CharField(max_length=300)
     ALocation = models.CharField(max_length=400)
-    AInfo = models.CharField(max_length = 500)
-    ASummary = models.CharField(max_length=500)
+    AInfo = models.CharField(max_length = 5000)
+    ASummary = models.CharField(max_length=5000)
     
 class Message(models.Model):
     Mid = models.AutoField(primary_key=True)
