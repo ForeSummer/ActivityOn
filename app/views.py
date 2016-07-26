@@ -366,7 +366,7 @@ def Unfollow(request):
     return HttpResponse(json.dumps(re))
 
 def GetTimeline(request):
-    timeline = UserTimeline.objects.get(UId = request.GET.get('UID'))
+    timeline = UserTimeline.objects.get(UId = request.POST.get('UID'))
     time = Datetime.now()
     re = dict()
     if len(timeline.UTimelineFrom) != 0:
@@ -376,7 +376,7 @@ def GetTimeline(request):
         typeList = list(map(int,timeline.UTimelineType[1:].split(',')))
         start = request.POST.get('Start')
         end = request.POST.get('End')
-        for i in xrange(len(fromList)-start-1,len(fromList)-end-2 > 0 ?len(fromList)-end-1:-1,-1):
+        for i in xrange(len(fromList)-start-1,len(fromList)-end-2 > 0 ?len(fromList)-end-2:-1,-1):
             if typeList[i] != 2:
                 user = UserBase.objects.get(UId = fromList[i])
                 act = Activity.objects.get(AId = actList[i])
