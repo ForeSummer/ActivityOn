@@ -341,6 +341,7 @@ def Follow(request):
     user = UserBase.objects.get(UId = request.POST.get('UID'))
     if user.UFollow.find( ','+str(request.POST.get('FollowID'))) == -1:
         user.UFollow += ','+str(request.POST.get('FollowID'))
+        user.UFollowTime +=',' + str(datetime.now())
         user.save()
     fo = UserBase.objects.get(UId = request.POST.get('FollowID'))
     if fo.UFollowed.find( ','+str(user.UId)) == -1:

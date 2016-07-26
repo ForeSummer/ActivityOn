@@ -24,6 +24,7 @@ class UserBase (models.Model):
     UStatus = models.IntegerField(blank=True,default=0)
     UFollow = models.CharField(blank=True,max_length = 2000)
     UFollowed = models.CharField(blank=True,max_length = 2000)
+    UFollowTime = models.CharField(blank=True,max_length=10000)
     UMessage = models.CharField(blank=True,max_length = 2000)
     
 class UserActivity(models.Model):
