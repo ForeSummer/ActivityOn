@@ -41,6 +41,7 @@ urlpatterns = [
     url(r'^api/user/follow$',app.views.Follow),
     url(r'^api/user/unfollow',app.views.Unfollow),
     url(r'^api/user/followInfo/$',app.views.GetFollow),
+    url(r'^api/user/timeline',app.views.GetTimeline),
 ]
 
 
