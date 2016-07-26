@@ -340,7 +340,7 @@ def Follow(request):
         for i in followedList:
             ut = UserTimeline.objects.get(UId = i)
             ut.UTimelineFrom += ',' +str(user.UId)
-            ut.UTimelineAct += ',' + str(fo.AId)
+            ut.UTimelineAct += ',' + str(fo.UId)
             ut.UTimelineType += ',2'
             ut.save()
        
@@ -374,8 +374,8 @@ def GetTimeline(request):
         fromList = list(map(int,timeline.UTimelineFrom[1:].split(',')))
         actList = list(map(int,timeline.UTimelineAct[1:].split(',')))
         typeList = list(map(int,timeline.UTimelineType[1:].split(',')))
-        start = request.POST.get('Start')
-        end = request.POST.get('End')
+        start = int(request.POST.get('Start'))
+        end = int(request.POST.get('End'))
         for i in range(len(fromList)-start-1 ,len(fromList)-end-2 if (len(fromList)-end-2 > 0 )else -1,-1):
             if typeList[i] != 2:
                 user = UserBase.objects.get(UId = fromList[i])
@@ -391,13 +391,7 @@ def GetTimeline(request):
             else :
                 user = UserBase.objects.get(UId = fromList[i])
                 act = UserBase.objects.get(UId = actList[i])
-                t = (time-act.ACreateTime)
-                if t.days >1:
-                    DetTime = str(t.days)+'d'
-                elif t.hours >1:
-                    DetTime = str(t.hours)+'h'
-                else :
-                    DetTime = str(t.seconds)+'s'
+                DetTime = '100s'
                 tl.append({'UID':user.UId,'Avatar':user.UAvatar,'Name':user.UName,'AID':act.UId,'Type':typeList[i],'AAvatar':user.UAvatar,'AName':act.UName,'Time':DetTime})
     re['ErrorCode']=1
     re['Timeline'] = tl
