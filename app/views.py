@@ -126,6 +126,7 @@ def Create_Activity(request):
         act.ALocation = p.get('Location')
         act.AInfo = p.get('Info')
         act.ASummary = p.get('Summary')
+        act.ACreateTime = datetime.now()
         act.save()
         UActivity = UserActivity.objects.get(UId = p.get('Admin'))
         UActivity.UOrganizedAct += ','+str(act.AId)
@@ -389,19 +390,13 @@ def GetTimeline(request):
             if typeList[i] != 2:
                 user = UserBase.objects.get(UId = fromList[i])
                 act = Activity.objects.get(AId = actList[i])
-                t = (time-act.ACreateTime)
-                if t.days >1:
-                    DetTime = str(t.days)+'d'
-                elif t.hours >1:
-                    DetTime = str(t.hours)+'h'
-                else :
-                    DetTime = str(t.seconds)+'s'
-                tl.append({'UID':user.UId,'Avatar':user.UAvatar,'Name':user.UName,'AID':act.AId,'Type':typeList[i],'Title':act.ATitle,'Summary':act.ASummary,'Location':act.ALocation,'Time':DetTime})
+                tl.append({'UID':user.UId,'Avatar':user.UAvatar,'Name':user.UName,'AID':act.AId,'Type':typeList[i],'Title':act.ATitle,'Summary':act.ASummary,'Location':act.ALocation,'Time':str(act.ACreateTime)})
             else :
                 user = UserBase.objects.get(UId = fromList[i])
                 act = UserBase.objects.get(UId = actList[i])
                 DetTime = '100s'
-                tl.append({'UID':user.UId,'Avatar':user.UAvatar,'Name':user.UName,'AID':act.UId,'Type':typeList[i],'AAvatar':user.UAvatar,'AName':act.UName,'Time':DetTime})
+                tl.append({'UID':user.UId,'Avatar':user.UAvatar,'Name':user.UName,'AID':act.UId,'Type':typeList[i],'AAvatar':user.UAvatar,'AName':act.UName,'Time':'100s'})
     re['ErrorCode']=1
     re['Timeline'] = tl
+    re['EndTime'] = str(time)
     return HttpResponse(json.dumps(re))

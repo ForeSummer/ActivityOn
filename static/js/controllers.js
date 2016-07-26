@@ -936,7 +936,7 @@ angular.module('act.controllers', []).
                 }
             });
         };
-        $scope.follow_user(25,26);
+        /*$scope.follow_user(25,26);
         setTimeout(function(){
             $scope.follow_user(26,25);
         },1000);
@@ -945,8 +945,49 @@ angular.module('act.controllers', []).
         },1000);
         setTimeout(function(){
             $scope.follow_user(25,27);
-        },1000);
-        
+        },1000);*/
+        $scope.init = function() {
+            $scope.act_title = "写大作业";
+            $scope.act_location = "宿舍";
+            $scope.act_maxRegister = 3;
+            $scope.act_summary = "花10天时间写一个有很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多代码的大作业";
+            $scope.act_info = "花10天时间写一个有很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多代码的大作业";
+            $scope.act_startDate = new Date();
+            $scope.act_endDate = new Date();
+            $scope.act_entryDDL = new Date();
+            $scope.act_type = 3;
+            $scope.types = act_types;
+        };
+        $scope.init();
+        $scope.createAct = function () {
+            var param = {
+                'Admin': 25,
+                'Type': $scope.act_type,
+                'MaxRegister': $scope.act_maxRegister,
+                'EntryDDL': $scope.act_entryDDL.toISOString(),
+                'StartTime': $scope.act_startDate.toISOString(),
+                'EndTime': $scope.act_endDate.toISOString(),
+                'Title': $scope.act_title,
+                'Location': $scope.act_location,
+                'Summary': $scope.act_summary,
+                'Info': $scope.act_info
+            };
+            $http.post(urls.api + "/act/create", $.param(param)).success(function(res){
+                console.log(res);
+                var message;
+                if(res.ErrorCode == 1){
+                    console.log('creat succeed');
+                }
+                else {
+                    //message = "活动创建失败！请重试";
+                    //$alert.showAlert(false, message);
+                    //$scope.init();
+                    console.log('error');
+                }
+            });
+            //console.log($scope.act_startDate);
+        };
+        $scope.createAct();
     }]).
     controller('UserMsgCtrl', ['$scope', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$cookies', '$location', 'AlertService', function($scope, $http, $csrf, urls, $filter, $routeParams, $user, $cookies, $location, $alert){
         console.log('UserMsgCtrl');
