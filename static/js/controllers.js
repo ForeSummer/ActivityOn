@@ -456,6 +456,7 @@ angular.module('act.controllers', []).
                     $scope.init();
                 }
             });
+            uploader.uploadAll();
         }
 
         $scope.confirmStatus = false;
@@ -465,7 +466,7 @@ angular.module('act.controllers', []).
         }
 
         var uploader = $scope.uploader = new FileUploader({
-            url: 'upload.php'
+            url: urls.api + "/user/changeAvatar?UID="+$user.userId
         });
     }]).
     controller('UserModifyPassCtrl', ['$scope', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$cookies', '$location', 'AlertService', function($scope, $http, $csrf, urls, $filter, $routeParams, $user, $cookies, $location, $alert){
@@ -759,6 +760,8 @@ angular.module('act.controllers', []).
             //if 0 error message
             //if -1 you have already join the act
         };
+
+        $('#qrcode').qrcode({width: 100,height: 100,text: urls.host + '/act/' + $routeParams.act_id + '/info'});
     }]).
     controller('ActivityManageCtrl', ['$scope', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$cookies', '$location', 'AlertService', function($scope, $http, $csrf, urls, $filter, $routeParams, $user, $cookies, $location, $alert){
         console.log('ActivityManageCtrl');
