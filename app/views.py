@@ -28,7 +28,10 @@ def ChangeAvatar(request):
     for chunk in f.chunks():
         destination.write(chunk)
     destination.close()
-    return HttpResponse({})
+    user = UserBase.objects,get(UId = int(UID))
+    user.UAvatar = 'static/images/'+str(UID)+'.png'
+    user.save()
+    return HttpResponse({'Avatar':user.UAvatar})
 
 def server_time(request):
     import time
@@ -339,6 +342,7 @@ def Follow(request):
     user = UserBase.objects.get(UId = request.POST.get('UID'))
     if user.UFollow.find( ','+str(request.POST.get('FollowID'))) == -1:
         user.UFollow += ','+str(request.POST.get('FollowID'))
+        user.UFollowTime +=',' + str(datetime.now())
         user.save()
     fo = UserBase.objects.get(UId = request.POST.get('FollowID'))
     if fo.UFollowed.find( ','+str(user.UId)) == -1:
@@ -394,9 +398,13 @@ def GetTimeline(request):
             else :
                 user = UserBase.objects.get(UId = fromList[i])
                 act = UserBase.objects.get(UId = actList[i])
-                DetTime = '100s'
-                tl.append({'UID':user.UId,'Avatar':user.UAvatar,'Name':user.UName,'AID':act.UId,'Type':typeList[i],'AAvatar':user.UAvatar,'AName':act.UName,'Time':'100s'})
+                timeList = list(user.UFollowTime[1:].split(','))
+                followList = list(map(int,user.UFollow[1:].split(',')))
+                x = followedList.index(act.UId)
+                CTime = timeList[i]
+                tl.append({'UID':user.UId,'Avatar':user.UAvatar,'Name':user.UName,'AID':act.UId,'Type':typeList[i],'AAvatar':user.UAvatar,'AName':act.UName,'Time':CTime})
     re['ErrorCode']=1
     re['Timeline'] = tl
     re['EndTime'] = str(time)
     return HttpResponse(json.dumps(re))
+
