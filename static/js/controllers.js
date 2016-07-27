@@ -102,10 +102,10 @@ angular.module('act.controllers', []).
                 $location.url('/act/create');
             }
             $scope.user_timeline = [
-            {"uid": 0, "aid": 1, "user": "Riverfish", "type": 2, "followedUser": "李俊杰", "ago": "10分钟前"},
-            {"uid": 1, "aid": 1, "user": "李俊杰", "type": 0, "act": "写后端", "ago": "10分钟前", "summary": "用django@python.shit写一大堆无聊冗长毫无意义的后端代码并把它们强行放到工程里冒充自己有很多代码量"},
-            {"uid": 2, "aid": 1, "user": "卫国扬", "type": 1, "act": "写前端逻辑", "ago": "10分钟前", "summary": "用angularJS写一大堆无聊冗长毫无意义的前段逻辑代码并把它们强行放到工程里冒充自己有很多代码量"},
-            {"uid": 3, "aid": 1, "user": "唐人杰", "type": 1, "act": "写前端样式", "ago": "10分钟前", "summary": "用HTML和less写一大堆无聊冗长毫无意义而且难看的前段样式代码并把它们强行放到工程里冒充自己有很多代码量"}];
+            {"uid": 0, "aid": 1, "user": "Riverfish", "type": 2, "followedUser": "李俊杰", "ago": "10分钟前", 'UAvatar': '/static/images/admin.png', 'AAvatar': '/static/images/admin.png'},
+            {"uid": 1, "aid": 1, "user": "李俊杰", "type": 0, "act": "写后端", "ago": "10分钟前", "summary": "用django@python.shit写一大堆无聊冗长毫无意义的后端代码并把它们强行放到工程里冒充自己有很多代码量", 'UAvatar': '/static/images/admin.png'},
+            {"uid": 2, "aid": 1, "user": "卫国扬", "type": 1, "act": "写前端逻辑", "ago": "10分钟前", "summary": "用angularJS写一大堆无聊冗长毫无意义的前段逻辑代码并把它们强行放到工程里冒充自己有很多代码量", 'UAvatar': '/static/images/admin.png'},
+            {"uid": 3, "aid": 1, "user": "唐人杰", "type": 1, "act": "写前端样式", "ago": "10分钟前", "summary": "用HTML和less写一大堆无聊冗长毫无意义而且难看的前段样式代码并把它们强行放到工程里冒充自己有很多代码量", 'UAvatar': '/static/images/admin.png'}];
             $scope.user_suggest = ["写代码", "写大作业", "发呆"];
             $scope.search = function (content) {
                 console.log(content);
@@ -116,28 +116,7 @@ angular.module('act.controllers', []).
             $scope.timeLineStart = 0;
             $scope.timeLineEnd = 9;
             $scope.timeline = [];
-
-            //EndTime:
-            //Timeline[]
-
-            /*AID:23
-            Avatar:"/static/images/default_7.png"
-            Location:"宿舍"
-            Name:"ljjljj"
-            Summary:"花10天时间写一个有很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多代码的大作业"
-            Time:"2016-07-26 16:12:33.651706+00:00"
-            Title:"写大作业"
-            Type:0
-            UID:25*/
-
-            /*AAvatar:"/static/images/default_7.png"
-            AID:26
-            AName:"唐人杰唐人杰"
-            Avatar:"/static/images/default_7.png"
-            Name:"ljjljj"
-            Time:"2016-07-26 23:55:21.573389"
-            Type:2
-            UID:25*/
+            
             $scope.getTimeLine = function() {
                 var param = {
                     'UID': $user.userId,
@@ -146,20 +125,31 @@ angular.module('act.controllers', []).
                 };
                 $http.post(urls.api + '/user/timeline', $.param(param)).success(function(data) {
                     console.log(data);
-                    var event = {};
                     if(data.ErrorCode == 1) {
                         for(var i = 0; i < data.Timeline.length; i ++) {
+                            var event = {};
                             if(data.Timeline[i].Type == 2) {
                                 event.user = data.Timeline[i].Name;
                                 event.followedUser = data.Timeline[i].AName;
+                                event.uid = data.Timeline[i].UID;
+                                event.aid = data.Timeline[i].AID;
+                                event.UAvatar = data.Timeline[i].Avatar;
+                                event.AAvatar = data.Timeline[i].AAvatar;
+                                event.type = data.Timeline[i].Type;
+                                $scope.timeline.push(event);
 
                             }
                             else {
-
+                                event.uid = data.Timeline[i].UID;
+                                event.aid = data.Timeline[i].AID;
+                                event.user = data.Timeline[i].Name;
+                                event.type = data.Timeline[i].Type;
+                                event.act = data.Timeline[i].Title;
+                                event.ago = getTimeLeap(data.Timeline[i].Time,data.EndTime);
+                                event.summary = data.Timeline[i].Summary;
+                                event.UAvatar = data.Timeline[i].Avatar;
+                                $scope.timeline.push(event);
                             }
-                            //get timeline detail
-                            //$scope.timeline.push(data);
-                            
                         }
                         $scope.timeLineStart += 10;
                         $scope.timeLineEnd += 10;
@@ -169,7 +159,7 @@ angular.module('act.controllers', []).
                     }
                 });
             }
-            //$scope.getTimeLine();
+            $scope.getTimeLine();
             $scope.isFirstLogin = false;
             if($user.guestAID) {
                 $scope.isFirstLogin = true;
