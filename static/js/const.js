@@ -36,7 +36,11 @@ function getTimeLeap(start, end) {
   if(day1 == day2) {
     time = 60 * (hour2 - hour1) + minute2 - minute1;
     if(time < 60) {
-      str = time + '分钟前';
+      if(time > 3) {
+        str = time + '分钟前';
+        return str;
+      }
+      str = '刚刚';
       return str;
     }
     time = (time / 60 + 0.5).toFixed(0);

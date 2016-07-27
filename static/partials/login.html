@@ -33,17 +33,20 @@
           <br/>
           <md-input-container class="confirm-input">
             <label>确认密码</label>
-            <input type="password" ng-model="confirm">
+            <input type="password" ng-model="confirm" onfocus="$('.confirm-input #warning').css('display', 'inline')" onblur="$('.confirm-input #warning').css('display', 'none')">
+            <div id="warning">请再次输入密码确认</div>
           </md-input-container>
           <br/>
           <md-input-container class="email-input">
             <label>登录邮箱</label>
-            <input type="email" ng-model="privateemail">
+            <input type="email" ng-model="privateemail" onfocus="$('.email-input #warning').css('display', 'inline')" onblur="$('.email-input #warning').css('display', 'none')">
+            <div id="warning">请输入正确邮箱格式</div>
           </md-input-container>
           <br/>
           <md-input-container class="public-email-input">
             <label>公开邮箱</label>
-            <input type="email" ng-model="openemail" onkeydown='if(event.keyCode==13){document.getElementById("register-submit-btn").click()}'>
+            <input type="email" ng-model="openemail" onkeydown='if(event.keyCode==13){document.getElementById("register-submit-btn").click()}' onfocus="$('.public-email-input #warning').css('display', 'inline')" onblur="$('.public-email-input #warning').css('display', 'none')">
+            <div id="warning">请输入正确邮箱格式</div>
           </md-input-container>
           <br/>
           <md-button id="register-submit-btn" class="md-raised md-primary" ng-click="regist_user()">Register!</md-button>

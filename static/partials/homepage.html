@@ -12,10 +12,10 @@
 				<h3 class="h3style">动态:</h3>
 				<md-list ng-if="hasFollow">
 				<hr>
-					<div ng-repeat="x in user_timeline" class="noright">
+					<div ng-repeat="x in timeline" class="noright">
 						<div ng-if="x.type < 2">
 							<md-list-item ng-click="jumptoUser(x.uid)">
-								<img src="/static/images/admin.png" class="icon_img">
+								<img src="[[x.UAvatar]]" class="icon_img">
 								<p>
 									<span>[[x.user]]<span class="right-msg" ng-if="x.type == 1">参加</span><span class="right-msg" ng-if="x.type == 0">创建</span>了活动&nbsp;</span>
 								</p>
@@ -33,12 +33,12 @@
 								<p>
 									<span>
 										<span ng-click="jumptoUser(x.uid)" class="span-hover">
-											<img src="/static/images/admin.png" class="icon_img">[[x.user]]
+											<img src="[[x.UAvatar]]" class="icon_img">[[x.user]]
 										</span>
 										&nbsp;&nbsp;Follow了&nbsp;&nbsp;
 									</span>
 									<span ng-click="jumptoUser(x.aid)" ng-if="!isSelf(x.aid)" class="span-hover">
-										<img src="/static/images/admin.png" class="icon_img">[[x.followedUser]]
+										<img src="[[x.AAvatar]]" class="icon_img">[[x.followedUser]]
 									</span>
 									<span ng-if="isSelf(x.aid)">你</span>
 								</p>

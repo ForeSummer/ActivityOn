@@ -102,10 +102,10 @@ angular.module('act.controllers', []).
                 $location.url('/act/create');
             }
             $scope.user_timeline = [
-            {"uid": 0, "aid": 1, "user": "Riverfish", "type": 2, "followedUser": "李俊杰", "ago": "10分钟前"},
-            {"uid": 1, "aid": 1, "user": "李俊杰", "type": 0, "act": "写后端", "ago": "10分钟前", "summary": "用django@python.shit写一大堆无聊冗长毫无意义的后端代码并把它们强行放到工程里冒充自己有很多代码量"},
-            {"uid": 2, "aid": 1, "user": "卫国扬", "type": 1, "act": "写前端逻辑", "ago": "10分钟前", "summary": "用angularJS写一大堆无聊冗长毫无意义的前段逻辑代码并把它们强行放到工程里冒充自己有很多代码量"},
-            {"uid": 3, "aid": 1, "user": "唐人杰", "type": 1, "act": "写前端样式", "ago": "10分钟前", "summary": "用HTML和less写一大堆无聊冗长毫无意义而且难看的前段样式代码并把它们强行放到工程里冒充自己有很多代码量"}];
+            {"uid": 0, "aid": 1, "user": "Riverfish", "type": 2, "followedUser": "李俊杰", "ago": "10分钟前", 'UAvatar': '/static/images/admin.png', 'AAvatar': '/static/images/admin.png'},
+            {"uid": 1, "aid": 1, "user": "李俊杰", "type": 0, "act": "写后端", "ago": "10分钟前", "summary": "用django@python.shit写一大堆无聊冗长毫无意义的后端代码并把它们强行放到工程里冒充自己有很多代码量", 'UAvatar': '/static/images/admin.png'},
+            {"uid": 2, "aid": 1, "user": "卫国扬", "type": 1, "act": "写前端逻辑", "ago": "10分钟前", "summary": "用angularJS写一大堆无聊冗长毫无意义的前段逻辑代码并把它们强行放到工程里冒充自己有很多代码量", 'UAvatar': '/static/images/admin.png'},
+            {"uid": 3, "aid": 1, "user": "唐人杰", "type": 1, "act": "写前端样式", "ago": "10分钟前", "summary": "用HTML和less写一大堆无聊冗长毫无意义而且难看的前段样式代码并把它们强行放到工程里冒充自己有很多代码量", 'UAvatar': '/static/images/admin.png'}];
             $scope.user_suggest = ["写代码", "写大作业", "发呆"];
             $scope.search = function (content) {
                 console.log(content);
@@ -117,27 +117,6 @@ angular.module('act.controllers', []).
             $scope.timeLineEnd = 9;
             $scope.timeline = [];
 
-            //EndTime:
-            //Timeline[]
-
-            /*AID:23
-            Avatar:"/static/images/default_7.png"
-            Location:"宿舍"
-            Name:"ljjljj"
-            Summary:"花10天时间写一个有很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多代码的大作业"
-            Time:"2016-07-26 16:12:33.651706+00:00"
-            Title:"写大作业"
-            Type:0
-            UID:25*/
-
-            /*AAvatar:"/static/images/default_7.png"
-            AID:26
-            AName:"唐人杰唐人杰"
-            Avatar:"/static/images/default_7.png"
-            Name:"ljjljj"
-            Time:"2016-07-26 23:55:21.573389"
-            Type:2
-            UID:25*/
             $scope.getTimeLine = function() {
                 var param = {
                     'UID': $user.userId,
@@ -146,20 +125,32 @@ angular.module('act.controllers', []).
                 };
                 $http.post(urls.api + '/user/timeline', $.param(param)).success(function(data) {
                     console.log(data);
-                    var event = {};
                     if(data.ErrorCode == 1) {
                         for(var i = 0; i < data.Timeline.length; i ++) {
+                            var event = {};
                             if(data.Timeline[i].Type == 2) {
                                 event.user = data.Timeline[i].Name;
                                 event.followedUser = data.Timeline[i].AName;
+                                event.uid = data.Timeline[i].UID;
+                                event.aid = data.Timeline[i].AID;
+                                event.ago = getTimeLeap(data.Timeline[i].Time,data.EndTime);
+                                event.UAvatar = data.Timeline[i].Avatar;
+                                event.AAvatar = data.Timeline[i].AAvatar;
+                                event.type = data.Timeline[i].Type;
+                                $scope.timeline.push(event);
 
                             }
                             else {
-
+                                event.uid = data.Timeline[i].UID;
+                                event.aid = data.Timeline[i].AID;
+                                event.user = data.Timeline[i].Name;
+                                event.type = data.Timeline[i].Type;
+                                event.act = data.Timeline[i].Title;
+                                event.ago = getTimeLeap(data.Timeline[i].Time,data.EndTime);
+                                event.summary = data.Timeline[i].Summary;
+                                event.UAvatar = data.Timeline[i].Avatar;
+                                $scope.timeline.push(event);
                             }
-                            //get timeline detail
-                            //$scope.timeline.push(data);
-                            
                         }
                         $scope.timeLineStart += 10;
                         $scope.timeLineEnd += 10;
@@ -169,7 +160,7 @@ angular.module('act.controllers', []).
                     }
                 });
             }
-            //$scope.getTimeLine();
+            $scope.getTimeLine();
             $scope.isFirstLogin = false;
             if($user.guestAID) {
                 $scope.isFirstLogin = true;
@@ -192,6 +183,9 @@ angular.module('act.controllers', []).
                     return true;
                 }
                 return false;
+            }
+            if ($scope.timeline.length == 0) {
+                $scope.hasFollow = false;
             }
         }
         //console.log("homepage");
@@ -235,11 +229,11 @@ angular.module('act.controllers', []).
                         $rootScope.$broadcast('userLog');
                         $('.header-container').show();
                         $('.footer-container').show();
-                        //console.log($user.isLogged());
+                        console.log(res.UID);
                         $location.url('/');
                     });
                     //$location.url('/');
-                    //console.log("login succeed");
+                    console.log("login succeed");
                 }
                 else {
                     $scope.user_name = "";
@@ -326,10 +320,10 @@ angular.module('act.controllers', []).
                         "api_key": "1PTTvfwTzh627yVb",
                         "from": "activityon@126.com",
                         "to": $scope.privateemail,
-                        "html": "恭喜您已注册成功，祝您使用Activityon愉快",
+                        "html": "恭喜您已注册成功，祝您使用Activityon愉快!",
                         "subject": "ActivityOn注册成功通知"
                     }
-                    $http.post("http://www.sendcloud.net/webapi/mail.send.json", $.param(mail)).success(function(data){
+                    $http.post("https://sendcloud.sohu.com/webapi/mail.send.xml", $.param(mail)).success(function(data){
                     });
                     $alert.showAlert(false, "注册成功！", function() {
                         //console.log($user.isLogged());
@@ -415,7 +409,7 @@ angular.module('act.controllers', []).
         $scope.isFollowed = false;
         $scope.isShowFollow = !$scope.isMe && !$scope.isFollowed;
         $scope.isShowUnFollow = !$scope.isMe && $scope.isFollowed;
-        /*$scope.follow_user = function () {
+        $scope.follow_user = function () {
             var param = {
                 'UID': $user.userId,
                 'FollowID': parseInt($routeParams.user_id)
@@ -430,8 +424,8 @@ angular.module('act.controllers', []).
                     console.log("follow error");
                 }
             });
-        };*/
-        /*$scope.follow_user = function () {
+        };
+        $scope.unfollow_user = function () {
             var param = {
                 'UID': 20,
                 'UnfollowID': parseInt($routeParams.user_id)
@@ -445,7 +439,7 @@ angular.module('act.controllers', []).
                     console.log("unfollow error");
                 }
             });
-        };*/
+        };
     }]).
     controller('UserModifyInfoCtrl', ['$scope', '$rootScope','$window', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$location', 'AlertService', 'FileUploader', function($scope, $rootScope,$window, $http, $csrf, urls, $filter, $routeParams, $user, $location, $alert, FileUploader){
         console.log('UserModifyInfoCtrl');
@@ -971,6 +965,31 @@ angular.module('act.controllers', []).
 
     }]).
     controller('TestCtrl', ['$scope', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$cookies', '$location', 'AlertService', function($scope, $http, $csrf, urls, $filter, $routeParams, $user, $cookies, $location, $alert){
+        var testUser1 = ['ljj@a.b', '111111', 'a@a.a', '李俊杰', '1'];
+        var testUser2 = ['trj@a.b', '111111', 'a@a.a', '唐人杰', '2'];
+        var testUser3 = ['wgy@a.b', '111111', 'a@a.a', '卫国扬', '3'];
+        var userId = [1,2,3];
+        var actId = [1,2,3];
+        $scope.registUser = function(user) {
+            var param = {
+                'privateemail': user[0],
+                'password': user[1],
+                'openemail': user[2],
+                'nickname': user[3],
+                'Avatar': '/static/images/default_' + user[4] + '.png'
+            };
+            $http.post(urls.api + "/user/regist", $.param(param)).success(function(data){
+                console.log(data);
+                //$csrf.show_error(data.error);
+                if(data.ErrorCode == 1){
+                    console.log("success");
+                    userId[parseInt(user[4])] = data.UId;
+                }
+                else {
+                    console.log("regist error");
+                }
+            });
+        };
         $scope.follow_user = function (id1, id2) {
             var param = {
                 'UID': id1,
@@ -988,7 +1007,133 @@ angular.module('act.controllers', []).
                 }
             });
         };
+        //$scope.follow_user(userId[0], userId[2]);
+        /*$scope.registUser(testUser1);
+        setTimeout(function(){
+            $scope.registUser(testUser2);
+            setTimeout(function(){
+                $scope.registUser(testUser3);
+            },500);
+        },500);*/
+        
+        
+        /*$scope.follow_user(userId[0], userId[1]);
+        setTimeout(function(){
+            $scope.follow_user(userId[1], userId[0]);
+            setTimeout(function(){
+                $scope.follow_user(userId[0], userId[2]);
+                setTimeout(function(){
+                    $scope.follow_user(userId[1], userId[2]);
+                    setTimeout(function(){
+                        $scope.follow_user(userId[2], userId[1]);
+                        setTimeout(function(){
+                            $scope.follow_user(userId[2], userId[0]);
+                            
+                        },500);
+                    },500);
+                },500);
+            },500);
+        },500);*/
+        
+        
+        
+        
+        
+        $scope.init = function() {
+            $scope.act_title = "写大作业";
+            $scope.act_location = "宿舍";
+            $scope.act_maxRegister = 3;
+            $scope.act_summary = "花10天时间写一个有很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多代码的大作业";
+            $scope.act_info = "花10天时间写一个有很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多代码的大作业";
+            $scope.act_startDate = new Date();
+            $scope.act_endDate = new Date();
+            $scope.act_entryDDL = new Date();
+            $scope.act_type = 3;
+            $scope.types = act_types;
+        };
+        $scope.init();
+        var i = 0;
+        $scope.createAct = function (user) {
+            var param = {
+                'Admin': user,
+                'Type': $scope.act_type,
+                'MaxRegister': $scope.act_maxRegister,
+                'EntryDDL': $scope.act_entryDDL.toISOString(),
+                'StartTime': $scope.act_startDate.toISOString(),
+                'EndTime': $scope.act_endDate.toISOString(),
+                'Title': $scope.act_title,
+                'Location': $scope.act_location,
+                'Summary': $scope.act_summary,
+                'Info': $scope.act_info
+            };
+            $http.post(urls.api + "/act/create", $.param(param)).success(function(res){
+                console.log(res);
+                var message;
+                if(res.ErrorCode == 1){
+                    console.log('creat succeed');
+                    actId[i] = res.AID;
+                    i++;
+                }
+                else {
+                    console.log('error');
+                }
+            });
+        };
+        /*$scope.createAct(userId[0]);
+        setTimeout(function(){
+            $scope.createAct(userId[1]);
+            setTimeout(function(){
+                $scope.createAct(userId[2]);
+            },500);
+        },500);*/
+        
+        
+        //console.log(actId);
+        $scope.join = function(user, act) {
+            var param = {
+                'UID': user,
+                'AID': act
+                //user id act id
+            };
+            //http post
+            $http.post(urls.api + '/act/join', $.param(param)).success(function(res){
+                console.log(res);
+                console.log(param);
+                var message;
+                if(res.ErrorCode == 1){
+                    console.log("success");
+                }
+                else if(res.ErrorCode == -1)  {
+                    
+                }
+                else {
+                    
+                }
+            });
+        }
 
+        /*$scope.join(userId[1], actId[0]);
+        setTimeout(function(){
+            $scope.join(userId[2], actId[0]);
+            setTimeout(function(){
+                $scope.join(userId[0], actId[1]);
+                setTimeout(function(){
+                    $scope.join(userId[2], actId[1]);
+                    setTimeout(function(){
+                        $scope.join(userId[0], actId[2]);
+                        setTimeout(function(){
+                            $scope.join(userId[1], actId[2]);
+                        },500);
+                    },500);
+                },500);
+            },500);  
+        },500);*/
+        
+        
+        
+        
+        
+        setTimeout(function(){},1500);
         /*$scope.follow_user(25,26);
         setTimeout(function(){
             $scope.follow_user(2,1);
@@ -1007,7 +1152,6 @@ angular.module('act.controllers', []).
             $scope.follow_user(1,3);
         },1000);
         $scope.init = function() {
->>>>>>> 28fd152e37082d0075e73857de60bb7c246fd9bc
             $scope.act_title = "写大作业";
             $scope.act_location = "宿舍";
             $scope.act_maxRegister = 3;
@@ -1113,6 +1257,17 @@ angular.module('act.controllers', []).
         $scope.jump = function (type, id) {
             $location.url($scope.msgUrl(type, id));
         }
+        $scope.getMessage = function() {
+            var param = {
+                'UID': $user.userId,
+                'Start': 0,
+                'End': 9
+            };
+            $http.post(urls.api + '/user/message', $.param(param)).success(function(data) {
+                console.log(data);
+            });
+        };
+        $scope.getMessage();
     }]).
     controller('UserSearchCtrl', ['$scope', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$cookies', '$location', 'AlertService', function($scope, $http, $csrf, urls, $filter, $routeParams, $user, $cookies, $location, $alert){
         console.log('UserSearchCtrl');
@@ -1121,11 +1276,20 @@ angular.module('act.controllers', []).
             {"Title": "写前端逻辑", "Location": "宿舍", "StartTime": "2016-7-20", "EndTime": "2016-7-28", "Summary": "用angularJS写一大堆无聊冗长毫无意义的前段逻辑代码并把它们强行放到工程里冒充自己有很多代码量"},
             {"Title": "写前端样式", "Location": "宿舍", "StartTime": "2016-7-20", "EndTime": "2016-7-28", "Summary": "用HTML和less写一大堆无聊冗长毫无意义而且难看的前段样式代码并把它们强行放到工程里冒充自己有很多代码量"}
         ];
+        $scope.suggest = [
+            {"Title": "推荐1", "Location": "宿舍", "StartTime": "2016-7-20", "EndTime": "2016-7-28", "Summary": "用django@python.shit写一大堆无聊冗长毫无意义的后端代码并把它们强行放到工程里冒充自己有很多代码量"},
+            {"Title": "推荐2", "Location": "宿舍", "StartTime": "2016-7-20", "EndTime": "2016-7-28", "Summary": "用angularJS写一大堆无聊冗长毫无意义的前段逻辑代码并把它们强行放到工程里冒充自己有很多代码量"},
+            {"Title": "推荐3", "Location": "宿舍", "StartTime": "2016-7-20", "EndTime": "2016-7-28", "Summary": "用HTML和less写一大堆无聊冗长毫无意义而且难看的前段样式代码并把它们强行放到工程里冒充自己有很多代码量"}
+        ];
         $scope.getActInfo = function () {
             // body...
         }
         $scope.noResult = false;
+        $scope.noSuggest = false;
         if ($scope.result.length == 0) {
             $scope.noResult = true;
+        }
+        if ($scope.suggest.length == 0) {
+            $scope.noSuggest = true;
         }
     }]);
