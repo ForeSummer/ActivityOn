@@ -449,10 +449,10 @@ def GetTimeline(request):
 
 
 def GetMessage(request):
+    re = dict()
     try:
         message = UMessage.objects.get(UId = request.POST.get('UID'))
         time = datetime.now()
-        re = dict()
         me = []
         if len(message.MType) != 0:
             ToList = list(map(int,message.MTo[1:].split(',')))
@@ -472,5 +472,59 @@ def GetMessage(request):
         re['EndTime'] = str(time)
     except :
         re = {'ErrorCode':0}
+    return HttpResponse(json.dumps(re))
+
+def Search(request):
+    re = dict()
+    try:
+        actList = []
+        typeList = []
+        Type = request.GET.get('Type')
+        print(Type)
+        if Type !=-1:
+            try:
+                TypeList = Activity.objects.filter(AType= Type)
+            except:
+                TypeList=[]
+        if Type == -1 or len(TypeList) < 10:
+            print(len(Activity.objects.all()))
+            for i in range(len(Activity.objects.all())-1,len(Activity.objects.all())-11 if len(Activity.objects.all())>11 else -1,-1):
+                print(i)
+                x = Activity.objects.all()[i]
+                print(x)
+                actList.append({'AID':x.AId,'Title':x.ATitle,'Summary':x.ASummary})
+        print(Type)
+        if int(Type) != -1 :
+            print('test')
+            try:
+                TypeList = Activity.objects.filter(AType= Type)
+                print(TypeList)
+            except:
+                TypeList=[]
+            print(TypeList)
+            for i in TypeList:
+                typeList.append({'AID':i.AId,'Title':i.ATitle,'Summary':i.ASummary})
+        print('aa')
+        re['ActList'] = actList
+        re['TypeList'] = typeList
+        print('Hello')
+    except:
+        re['ErrorCode'] = 0
+    else:
+        re['ErrorCode'] = 1
+    return HttpResponse(json.dumps(re))
+
+def GetNum(request):
+    re =dict()
+    try:
+        user = UserBase.objects.get(UId = request.GET.get('UID'))
+        uact = UserActivity.objects.get(UId = request.GET.get('UID'))
+        re['Follow'] = len(list(map(int,user.UFollow[1:].split(','))))
+        re['Followed'] = len(list(map(int,user.UFollowed[1:].split(','))))
+        re['InAct'] = uact.UInActNum
+        re['OAct'] = uact.UOrganizedNum
+        re['ErrorCode'] = 1
+    except:
+        re['ErrorCode'] = 0
     return HttpResponse(json.dumps(re))
 
