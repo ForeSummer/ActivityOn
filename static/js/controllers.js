@@ -102,13 +102,10 @@ angular.module('act.controllers', []).
                 $location.url('/act/create');
             }
             $scope.user_timeline = [
-            {"user": "Riverfish", "type": 2, "followedUser": "李俊杰", "ago": "10分钟前"},
-            {"user": "李俊杰", "type": 0, "act": "写后端", "ago": "10分钟前", "summary": "用django@python.shit写一大堆无聊冗长毫无意义的后端代码并把它们强行放到工程里冒充自己有很多代码量"},
-            {"user": "卫国扬", "type": 1, "act": "写前端逻辑", "ago": "10分钟前", "summary": "用angularJS写一大堆无聊冗长毫无意义的前段逻辑代码并把它们强行放到工程里冒充自己有很多代码量"},
-            {"user": "唐人杰", "type": 1, "act": "写前端样式", "ago": "10分钟前", "summary": "用HTML和less写一大堆无聊冗长毫无意义而且难看的前段样式代码并把它们强行放到工程里冒充自己有很多代码量"}];
-            $scope.jump = function (index, type) {
-                console.log("Jump to " + index + "," + type);
-            }
+            {"uid": 0, "aid": 1, "user": "Riverfish", "type": 2, "followedUser": "李俊杰", "ago": "10分钟前"},
+            {"uid": 1, "aid": 1, "user": "李俊杰", "type": 0, "act": "写后端", "ago": "10分钟前", "summary": "用django@python.shit写一大堆无聊冗长毫无意义的后端代码并把它们强行放到工程里冒充自己有很多代码量"},
+            {"uid": 2, "aid": 1, "user": "卫国扬", "type": 1, "act": "写前端逻辑", "ago": "10分钟前", "summary": "用angularJS写一大堆无聊冗长毫无意义的前段逻辑代码并把它们强行放到工程里冒充自己有很多代码量"},
+            {"uid": 3, "aid": 1, "user": "唐人杰", "type": 1, "act": "写前端样式", "ago": "10分钟前", "summary": "用HTML和less写一大堆无聊冗长毫无意义而且难看的前段样式代码并把它们强行放到工程里冒充自己有很多代码量"}];
             $scope.user_suggest = ["写代码", "写大作业", "发呆"];
             $scope.search = function (content) {
                 console.log(content);
@@ -183,6 +180,18 @@ angular.module('act.controllers', []).
                 var id = $user.guestAID;
                 guestAID = null;
                 $location.url('/act/'+ id + '/info');
+            }
+            $scope.jumptoUser = function(id) {
+                $location.url('/user/' + id + '/info');
+            }
+            $scope.jumptoAct = function(id) {
+                $location.url('/act/' + id + '/info');
+            }
+            $scope.isSelf = function (id) {
+                if (id == $user.userId) {
+                    return true;
+                }
+                return false;
             }
         }
         //console.log("homepage");
