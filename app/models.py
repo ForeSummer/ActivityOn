@@ -59,12 +59,10 @@ class Activity(models.Model):
     ASummary = models.CharField(max_length=5000)
     
 class Message(models.Model):
-    Mid = models.AutoField(primary_key=True)
-    MisRead = models.BooleanField()
-    MContent = models.CharField(max_length=50)
-    MFrom = models.IntegerField()
-    MTo = models.ImageField()
-    MTime = models.DateTimeField()
+    UId = models.AutoField(primary_key=True)
+    MTo = models.CharField(blank=True,max_length=500)
+    MType = models.CharField(blank=True,max_length=500)
+    MTime = models.CharField(blank=True,max_length=1000)
     
 def auth_by_info(username, password):
     url_login = 'http://www.student.tsinghua.edu.cn/practiceLogin.do'
