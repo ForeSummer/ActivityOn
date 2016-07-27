@@ -44,6 +44,8 @@ urlpatterns = [
     url(r'^api/user/timeline',app.views.GetTimeline),
     url(r'^api/user/changeAvatar',app.views.ChangeAvatar),
     url(r'^api/user/message',app.views.GetMessage),
+    url(r'^api/act/search/$',app.views.Search),
+    url(r'^api/user/const/$',app.views.GetNum),
 ]
 
 

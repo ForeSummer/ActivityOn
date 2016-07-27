@@ -159,7 +159,7 @@ angular.module('act.controllers', []).
                         console.log("get timeline error");
                     }
                 });
-            }
+            };
             $scope.getTimeLine();
             $scope.isFirstLogin = false;
             if($user.guestAID) {
@@ -171,13 +171,13 @@ angular.module('act.controllers', []).
                 var id = $user.guestAID;
                 guestAID = null;
                 $location.url('/act/'+ id + '/info');
-            }
+            };
             $scope.jumptoUser = function(id) {
                 $location.url('/user/' + id + '/info');
-            }
+            };
             $scope.jumptoAct = function(id) {
                 $location.url('/act/' + id + '/info');
-            }
+            };
             $scope.isSelf = function (id) {
                 if (id == $user.userId) {
                     return true;
@@ -187,6 +187,15 @@ angular.module('act.controllers', []).
             if ($scope.timeline.length == 0) {
                 $scope.hasFollow = false;
             }
+            $scope.getConst = function() {
+                $http.get(urls.api + '/user/const/?UID=' + $user.userId).success(function(data) {
+                    console.log(data);
+                });
+                $http.get(urls.api + '/act/search/?Type=' + '3').success(function(data) {
+                    console.log(data);
+                });
+            };
+            $scope.getConst();
         }
         //console.log("homepage");
         //get user info
