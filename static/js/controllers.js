@@ -952,6 +952,31 @@ angular.module('act.controllers', []).
 
     }]).
     controller('TestCtrl', ['$scope', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$cookies', '$location', 'AlertService', function($scope, $http, $csrf, urls, $filter, $routeParams, $user, $cookies, $location, $alert){
+        var testUser1 = ['ljj@a.b', '111111', 'a@a.a', '李俊杰', '1'];
+        var testUser2 = ['trj@a.b', '111111', 'a@a.a', '唐人杰', '2'];
+        var testUser3 = ['wgy@a.b', '111111', 'a@a.a', '卫国扬', '3'];
+        var userId = [0,0,0];
+        var actId = [0,0,0];
+        $scope.registUser = function(user) {
+            var param = {
+                'privateemail': user[0],
+                'password': user[1],
+                'openemail': user[2],
+                'nickname': user[3],
+                'Avatar': '/static/images/default_' + user[4] + '.png'
+            };
+            $http.post(urls.api + "/user/regist", $.param(param)).success(function(data){
+                //console.log(data);
+                //$csrf.show_error(data.error);
+                if(data.ErrorCode == 1){
+                    console.log("success");
+                    userId[parseInt(user[4])] = data.UId;
+                }
+                else {
+                    console.log("regist error");
+                }
+            });
+        };
         $scope.follow_user = function (id1, id2) {
             var param = {
                 'UID': id1,
@@ -969,7 +994,105 @@ angular.module('act.controllers', []).
                 }
             });
         };
+        $scope.registUser(testUser1);
+        setTimeout(function(){},500);
+        $scope.registUser(testUser2);
+        setTimeout(function(){},500);
+        $scope.registUser(testUser3);
+        setTimeout(function(){},500);
+        $scope.follow_user(userId[0], userId[1]);
+        setTimeout(function(){},500);
+        $scope.follow_user(userId[1], userId[0]);
+        setTimeout(function(){},500);
+        $scope.follow_user(userId[0], userId[2]);
+        setTimeout(function(){},500);
+        $scope.follow_user(userId[1], userId[2]);
+        setTimeout(function(){},500);
+        $scope.follow_user(userId[2], userId[1]);
+        setTimeout(function(){},500);
+        $scope.follow_user(userId[2], userId[0]);
+        setTimeout(function(){},500);
+        $scope.init = function() {
+            $scope.act_title = "写大作业";
+            $scope.act_location = "宿舍";
+            $scope.act_maxRegister = 3;
+            $scope.act_summary = "花10天时间写一个有很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多代码的大作业";
+            $scope.act_info = "花10天时间写一个有很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多代码的大作业";
+            $scope.act_startDate = new Date();
+            $scope.act_endDate = new Date();
+            $scope.act_entryDDL = new Date();
+            $scope.act_type = 3;
+            $scope.types = act_types;
+        };
+        $scope.init();
+        var i = 0;
+        $scope.createAct = function (user) {
+            var param = {
+                'Admin': user,
+                'Type': $scope.act_type,
+                'MaxRegister': $scope.act_maxRegister,
+                'EntryDDL': $scope.act_entryDDL.toISOString(),
+                'StartTime': $scope.act_startDate.toISOString(),
+                'EndTime': $scope.act_endDate.toISOString(),
+                'Title': $scope.act_title,
+                'Location': $scope.act_location,
+                'Summary': $scope.act_summary,
+                'Info': $scope.act_info
+            };
+            $http.post(urls.api + "/act/create", $.param(param)).success(function(res){
+                console.log(res);
+                var message;
+                if(res.ErrorCode == 1){
+                    console.log('creat succeed');
+                    actId[i] = res.AID;
+                    i++;
+                }
+                else {
+                    console.log('error');
+                }
+            });
+        };
+        $scope.createAct(userId[0]);
+        setTimeout(function(){},500);
+        $scope.createAct(userId[1]);
+        setTimeout(function(){},500);
+        $scope.createAct(userId[2]);
+        setTimeout(function(){},500);
+        $scope.join = function(user, act) {
+            var param = {
+                'UID': user,
+                'AID': act
+                //user id act id
+            };
+            //http post
+            $http.post(urls.api + '/act/join', $.param(param)).success(function(res){
+                console.log(res);
+                console.log(param);
+                var message;
+                if(res.ErrorCode == 1){
+                    console.log("success");
+                }
+                else if(res.ErrorCode == -1)  {
+                    
+                }
+                else {
+                    
+                }
+            });
+        }
 
+        $scope.join(user[1], actId[0]);
+        setTimeout(function(){},500);
+        $scope.join(user[2], actId[0]);
+        setTimeout(function(){},500);
+        $scope.join(user[0], actId[1]);
+        setTimeout(function(){},500);
+        $scope.join(user[2], actId[1]);
+        setTimeout(function(){},500);
+        $scope.join(user[0], actId[2]);
+        setTimeout(function(){},500);
+        $scope.join(user[1], actId[2]);
+        setTimeout(function(){},500);
         /*$scope.follow_user(25,26);
         setTimeout(function(){
             $scope.follow_user(2,1);
@@ -988,7 +1111,6 @@ angular.module('act.controllers', []).
             $scope.follow_user(1,3);
         },1000);
         $scope.init = function() {
->>>>>>> 28fd152e37082d0075e73857de60bb7c246fd9bc
             $scope.act_title = "写大作业";
             $scope.act_location = "宿舍";
             $scope.act_maxRegister = 3;
