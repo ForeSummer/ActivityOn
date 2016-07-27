@@ -1090,17 +1090,17 @@ angular.module('act.controllers', []).
             });
         }
 
-        $scope.join(user[1], actId[0]);
+        $scope.join(userId[1], actId[0]);
         setTimeout(function(){},500);
-        $scope.join(user[2], actId[0]);
+        $scope.join(userId[2], actId[0]);
         setTimeout(function(){},500);
-        $scope.join(user[0], actId[1]);
+        $scope.join(userId[0], actId[1]);
         setTimeout(function(){},500);
-        $scope.join(user[2], actId[1]);
+        $scope.join(userId[2], actId[1]);
         setTimeout(function(){},500);
-        $scope.join(user[0], actId[2]);
+        $scope.join(userId[0], actId[2]);
         setTimeout(function(){},500);
-        $scope.join(user[1], actId[2]);
+        $scope.join(userId[1], actId[2]);
         setTimeout(function(){},500);
         /*$scope.follow_user(25,26);
         setTimeout(function(){

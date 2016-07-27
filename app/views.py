@@ -3,7 +3,6 @@ from django.shortcuts import render, render_to_response
 from datetime import datetime 
 from django.http import HttpResponse
 from django.template import RequestContext
-from app.models import error
 from .models import *
 from django.contrib.auth import authenticate
 from django.template import loader
@@ -33,13 +32,6 @@ def ChangeAvatar(request):
     user.save()
     return HttpResponse({'Avatar':user.UAvatar})
 
-def server_time(request):
-    import time
-    re = dict()
-    re['error'] = error(1, 'ok')
-    re['current_time'] = time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time() + 8 * 60 * 60))
-    return HttpResponse(json.dumps(re), content_type = 'application/json')
-
 def register(request):
     try :
         user = UserBase.objects.get(UPrivateEmail = request.POST.get('privateemail'))
@@ -49,7 +41,7 @@ def register(request):
         except UserBase.DoesNotExist:
             p = request.POST
             base = UserBase(UAvatar=p.get('Avatar'),UPrivateEmail = p.get('privateemail'),UPublicEmail = p.get('openemail'),UName = p.get('nickname'),UPassword = p.get('password'))
-            me = Message(UId = base.UId)
+            me = UMessage(UId = base.UId,MTo ='',MType='',MTime='')
             me.MTo += ',0'
             me.MType += ',0'
             me.MTime += ','+str(datetime.now())
@@ -142,7 +134,7 @@ def Create_Activity(request):
         UActivity.save()
         re['ErrorCode'] = 1
         re["AID"] = act.AId
-        me = Message.objects.get(UId = CT.AAdmin)
+        me = UMessage.objects.get(UId = CT.AAdmin)
         me.MTo += ','+str(act.AId)
         me.MType += ',1'
         me.MTime += ','+str(datetime.now())
@@ -215,7 +207,7 @@ def participate(request):
                 useractivity.save()
                 activity.save()
                 re['ErrorCode']=1
-                me = Message.objects.get(UId = useractivity.UId)
+                me = UMessage.objects.get(UId = useractivity.UId)
                 me.MTo += ','+str(activity.AId)
                 me.MType += ',2'
                 me.MTime += ','+str(datetime.now())
@@ -247,8 +239,8 @@ def Accept(request):
             activity.ARegister+=','+ str(request.POST.get('UID'))
             activity.AUnregister.replace(','+ str(request.POST.get('UID')),'')
             activity.save()
-            me = Message.objects.get(UId = request.objects.get('UID'))
-            me.MType+=‘，3’
+            me = UMessage.objects.get(UId = request.objects.get('UID'))
+            me.MType+= ',3'
             me.MTo += ','+str(activity.AId)
             me.MTime += ','+str(datetime.now())
             me.save()
@@ -270,7 +262,7 @@ def Reject(request):
             uact = UserActivity.objects.get(UId = request.POST.get('UID'))
             uact.UInAct.replace(','+str(activity.AId),'')
             uact.save()
-            me = Message.objects.get(request.POST.get('UID'))
+            me = UMessage.objects.get(request.POST.get('UID'))
             me.MTo += ','+str(activity.AId)
             me.MType += ',4'
             me.MTime += ','+str(datetime.now())
@@ -376,12 +368,12 @@ def Follow(request):
     if fo.UFollowed.find( ','+str(user.UId)) == -1:
         fo.UFollowed += ','+str(user.UId)
     fo.save()
-    me = Message.objects.get(UId = request.POST.get('UID'))
+    me = UMessage.objects.get(UId = request.POST.get('UID'))
     me.MTime += ','+str(datetime.now())
     me.MType += ',6'
     me.MTo += ','+str(request.POST.get('FollowID'))
     me.save()
-    m = Message.objects.get(UId = request.POST.get('FollowID'))
+    m = UMessage.objects.get(UId = request.POST.get('FollowID'))
     m.MTime += ','+str(datetime.now())
     m.MType += ',5'
     m.To += ','+str(request.POST.get('UID'))
@@ -454,7 +446,7 @@ def GetTimeline(request):
 
 def GetMessage(request):
     try:
-        message = Message.objects.get(UId = request.POST.get('UID'))
+        message = UMessage.objects.get(UId = request.POST.get('UID'))
         time = datetime.now()
         re = dict()
         me = []
@@ -470,11 +462,11 @@ def GetMessage(request):
                 elif typeList[i] < 5:
                     me.append({'UID':message.UId,'Type':typeList[i],'AId':ToList[i],'Title':Activity.objects.get(AId=ToList[i]).ATitle,'Time':timeList[i]})
                 else:
-                    me.append({'UID':message.UId,'Type':typeList[i],'FUID':ToList[i],'Name':UserBase.objects.get(UId = ToList[i]).UName,'Time':timeList[i]}
+                    me.append({'UID':message.UId,'Type':typeList[i],'FUID':ToList[i],'Name':UserBase.objects.get(UId = ToList[i]).UName,'Time':timeList[i]})
         re['ErrorCode']=1
         re['Timeline'] = me
         re['EndTime'] = str(time)
-    except:
-    re = {'ErrorCode':0}
+    except :
+        re = {'ErrorCode':0}
     return HttpResponse(json.dumps(re))
 
