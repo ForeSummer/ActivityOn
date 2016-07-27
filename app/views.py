@@ -100,7 +100,6 @@ def modify(request):
         if 'UName' in request.POST:
             user.UName = request.POST.get('UName')
         if 'UInfo' in request.POST:
-            print(request.POST.get('UInfo'))
             user.UInfo = request.POST.get('UInfo')
         if 'UPublicEmail' in request.POST:
             user.UPublicEmail = request.POST.get('UPublicEmail')
@@ -349,7 +348,6 @@ def Delete_Activity(request):
    
 def GetFollow(request):
     re = dict()
-    print( request.GET.get('UID'))
     user = UserBase.objects.get(UId = request.GET.get('UID'))
     follow = []
     if len(user.UFollow) != 0:

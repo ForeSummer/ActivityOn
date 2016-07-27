@@ -13,27 +13,33 @@
 				<md-list ng-if="hasFollow">
 					<div ng-repeat="x in user_timeline" class="noright">
 						<div ng-if="x.type < 2">
-							<md-list-item ng-click="jump($index, 0)">
+							<md-list-item ng-click="jumptoUser(x.uid)">
 								<img src="/static/images/admin.png" class="icon_img">
 								<p>
 									<span>[[x.user]]<span class="right-msg" ng-if="x.type == 1">参加</span><span class="right-msg" ng-if="x.type == 0">创建</span>了活动&nbsp;</span>
 								</p>
 								[[x.ago]]
 							</md-list-item>
-							<md-list-item ng-click="jump($index, 1)">
+							<md-list-item ng-click="jumptoAct(x.aid)">
 								[[x.act]]
 							</md-list-item>
-							<md-list-item ng-click="jump($index, 1)">
+							<md-list-item ng-click="jumptoAct(x.aid)">
 								[[x.summary]]
 							</md-list-item>
 						</div>
 						<div ng-if="x.type == 2">
-							<md-list-item class="follow-item" ng-click="jump($index, 0)" class="follow-item">
-								<img src="/static/images/admin.png" class="icon_img">
+							<md-list-item class="follow-item">
 								<p>
-									<span>[[x.user]]&nbsp;&nbsp;Follow了&nbsp;&nbsp;</span>
-									<img src="/static/images/admin.png" class="icon_img">
-									[[x.followedUser]]
+									<span>
+										<span ng-click="jumptoUser(x.uid)" class="span-hover">
+											<img src="/static/images/admin.png" class="icon_img">[[x.user]]
+										</span>
+										&nbsp;&nbsp;Follow了&nbsp;&nbsp;
+									</span>
+									<span ng-click="jumptoUser(x.aid)" ng-if="!isSelf(x.aid)" class="span-hover">
+										<img src="/static/images/admin.png" class="icon_img">[[x.followedUser]]
+									</span>
+									<span ng-if="isSelf(x.aid)">你</span>
 								</p>
 								[[x.ago]]
 							</md-list-item>

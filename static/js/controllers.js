@@ -102,13 +102,10 @@ angular.module('act.controllers', []).
                 $location.url('/act/create');
             }
             $scope.user_timeline = [
-            {"user": "Riverfish", "type": 2, "followedUser": "李俊杰", "ago": "10分钟前"},
-            {"user": "李俊杰", "type": 0, "act": "写后端", "ago": "10分钟前", "summary": "用django@python.shit写一大堆无聊冗长毫无意义的后端代码并把它们强行放到工程里冒充自己有很多代码量"},
-            {"user": "卫国扬", "type": 1, "act": "写前端逻辑", "ago": "10分钟前", "summary": "用angularJS写一大堆无聊冗长毫无意义的前段逻辑代码并把它们强行放到工程里冒充自己有很多代码量"},
-            {"user": "唐人杰", "type": 1, "act": "写前端样式", "ago": "10分钟前", "summary": "用HTML和less写一大堆无聊冗长毫无意义而且难看的前段样式代码并把它们强行放到工程里冒充自己有很多代码量"}];
-            $scope.jump = function (index, type) {
-                console.log("Jump to " + index + "," + type);
-            }
+            {"uid": 0, "aid": 1, "user": "Riverfish", "type": 2, "followedUser": "李俊杰", "ago": "10分钟前"},
+            {"uid": 1, "aid": 1, "user": "李俊杰", "type": 0, "act": "写后端", "ago": "10分钟前", "summary": "用django@python.shit写一大堆无聊冗长毫无意义的后端代码并把它们强行放到工程里冒充自己有很多代码量"},
+            {"uid": 2, "aid": 1, "user": "卫国扬", "type": 1, "act": "写前端逻辑", "ago": "10分钟前", "summary": "用angularJS写一大堆无聊冗长毫无意义的前段逻辑代码并把它们强行放到工程里冒充自己有很多代码量"},
+            {"uid": 3, "aid": 1, "user": "唐人杰", "type": 1, "act": "写前端样式", "ago": "10分钟前", "summary": "用HTML和less写一大堆无聊冗长毫无意义而且难看的前段样式代码并把它们强行放到工程里冒充自己有很多代码量"}];
             $scope.user_suggest = ["写代码", "写大作业", "发呆"];
             $scope.search = function (content) {
                 console.log(content);
@@ -119,6 +116,28 @@ angular.module('act.controllers', []).
             $scope.timeLineStart = 0;
             $scope.timeLineEnd = 9;
             $scope.timeline = [];
+
+            //EndTime:
+            //Timeline[]
+
+            /*AID:23
+            Avatar:"/static/images/default_7.png"
+            Location:"宿舍"
+            Name:"ljjljj"
+            Summary:"花10天时间写一个有很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多代码的大作业"
+            Time:"2016-07-26 16:12:33.651706+00:00"
+            Title:"写大作业"
+            Type:0
+            UID:25*/
+
+            /*AAvatar:"/static/images/default_7.png"
+            AID:26
+            AName:"唐人杰唐人杰"
+            Avatar:"/static/images/default_7.png"
+            Name:"ljjljj"
+            Time:"2016-07-26 23:55:21.573389"
+            Type:2
+            UID:25*/
             $scope.getTimeLine = function() {
                 var param = {
                     'UID': $user.userId,
@@ -127,8 +146,17 @@ angular.module('act.controllers', []).
                 };
                 $http.post(urls.api + '/user/timeline', $.param(param)).success(function(data) {
                     console.log(data);
+                    var event = {};
                     if(data.ErrorCode == 1) {
-                        for(var i = 0; i < 10; i ++) {
+                        for(var i = 0; i < data.Timeline.length; i ++) {
+                            if(data.Timeline[i].Type == 2) {
+                                event.user = data.Timeline[i].Name;
+                                event.followedUser = data.Timeline[i].AName;
+
+                            }
+                            else {
+
+                            }
                             //get timeline detail
                             //$scope.timeline.push(data);
                             
@@ -141,7 +169,7 @@ angular.module('act.controllers', []).
                     }
                 });
             }
-            $scope.getTimeLine();
+            //$scope.getTimeLine();
             $scope.isFirstLogin = false;
             if($user.guestAID) {
                 $scope.isFirstLogin = true;
@@ -152,6 +180,18 @@ angular.module('act.controllers', []).
                 var id = $user.guestAID;
                 guestAID = null;
                 $location.url('/act/'+ id + '/info');
+            }
+            $scope.jumptoUser = function(id) {
+                $location.url('/user/' + id + '/info');
+            }
+            $scope.jumptoAct = function(id) {
+                $location.url('/act/' + id + '/info');
+            }
+            $scope.isSelf = function (id) {
+                if (id == $user.userId) {
+                    return true;
+                }
+                return false;
             }
         }
         //console.log("homepage");
@@ -198,6 +238,7 @@ angular.module('act.controllers', []).
                         //console.log($user.isLogged());
                         $location.url('/');
                     });
+                    //$location.url('/');
                     //console.log("login succeed");
                 }
                 else {
@@ -920,6 +961,31 @@ angular.module('act.controllers', []).
 
     }]).
     controller('TestCtrl', ['$scope', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$cookies', '$location', 'AlertService', function($scope, $http, $csrf, urls, $filter, $routeParams, $user, $cookies, $location, $alert){
+        var testUser1 = ['ljj@a.b', '111111', 'a@a.a', '李俊杰', '1'];
+        var testUser2 = ['trj@a.b', '111111', 'a@a.a', '唐人杰', '2'];
+        var testUser3 = ['wgy@a.b', '111111', 'a@a.a', '卫国扬', '3'];
+        var userId = [0,0,0];
+        var actId = [0,0,0];
+        $scope.registUser = function(user) {
+            var param = {
+                'privateemail': user[0],
+                'password': user[1],
+                'openemail': user[2],
+                'nickname': user[3],
+                'Avatar': '/static/images/default_' + user[4] + '.png'
+            };
+            $http.post(urls.api + "/user/regist", $.param(param)).success(function(data){
+                //console.log(data);
+                //$csrf.show_error(data.error);
+                if(data.ErrorCode == 1){
+                    console.log("success");
+                    userId[parseInt(user[4])] = data.UId;
+                }
+                else {
+                    console.log("regist error");
+                }
+            });
+        };
         $scope.follow_user = function (id1, id2) {
             var param = {
                 'UID': id1,
@@ -937,11 +1003,117 @@ angular.module('act.controllers', []).
                 }
             });
         };
-        $scope.follow_user(1,2);
+        $scope.registUser(testUser1);
+        setTimeout(function(){},500);
+        $scope.registUser(testUser2);
+        setTimeout(function(){},500);
+        $scope.registUser(testUser3);
+        setTimeout(function(){},500);
+        $scope.follow_user(userId[0], userId[1]);
+        setTimeout(function(){},500);
+        $scope.follow_user(userId[1], userId[0]);
+        setTimeout(function(){},500);
+        $scope.follow_user(userId[0], userId[2]);
+        setTimeout(function(){},500);
+        $scope.follow_user(userId[1], userId[2]);
+        setTimeout(function(){},500);
+        $scope.follow_user(userId[2], userId[1]);
+        setTimeout(function(){},500);
+        $scope.follow_user(userId[2], userId[0]);
+        setTimeout(function(){},500);
+        $scope.init = function() {
+            $scope.act_title = "写大作业";
+            $scope.act_location = "宿舍";
+            $scope.act_maxRegister = 3;
+            $scope.act_summary = "花10天时间写一个有很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多代码的大作业";
+            $scope.act_info = "花10天时间写一个有很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多代码的大作业";
+            $scope.act_startDate = new Date();
+            $scope.act_endDate = new Date();
+            $scope.act_entryDDL = new Date();
+            $scope.act_type = 3;
+            $scope.types = act_types;
+        };
+        $scope.init();
+        var i = 0;
+        $scope.createAct = function (user) {
+            var param = {
+                'Admin': user,
+                'Type': $scope.act_type,
+                'MaxRegister': $scope.act_maxRegister,
+                'EntryDDL': $scope.act_entryDDL.toISOString(),
+                'StartTime': $scope.act_startDate.toISOString(),
+                'EndTime': $scope.act_endDate.toISOString(),
+                'Title': $scope.act_title,
+                'Location': $scope.act_location,
+                'Summary': $scope.act_summary,
+                'Info': $scope.act_info
+            };
+            $http.post(urls.api + "/act/create", $.param(param)).success(function(res){
+                console.log(res);
+                var message;
+                if(res.ErrorCode == 1){
+                    console.log('creat succeed');
+                    actId[i] = res.AID;
+                    i++;
+                }
+                else {
+                    console.log('error');
+                }
+            });
+        };
+        $scope.createAct(userId[0]);
+        setTimeout(function(){},500);
+        $scope.createAct(userId[1]);
+        setTimeout(function(){},500);
+        $scope.createAct(userId[2]);
+        setTimeout(function(){},500);
+        $scope.join = function(user, act) {
+            var param = {
+                'UID': user,
+                'AID': act
+                //user id act id
+            };
+            //http post
+            $http.post(urls.api + '/act/join', $.param(param)).success(function(res){
+                console.log(res);
+                console.log(param);
+                var message;
+                if(res.ErrorCode == 1){
+                    console.log("success");
+                }
+                else if(res.ErrorCode == -1)  {
+                    
+                }
+                else {
+                    
+                }
+            });
+        }
+
+        $scope.join(user[1], actId[0]);
+        setTimeout(function(){},500);
+        $scope.join(user[2], actId[0]);
+        setTimeout(function(){},500);
+        $scope.join(user[0], actId[1]);
+        setTimeout(function(){},500);
+        $scope.join(user[2], actId[1]);
+        setTimeout(function(){},500);
+        $scope.join(user[0], actId[2]);
+        setTimeout(function(){},500);
+        $scope.join(user[1], actId[2]);
+        setTimeout(function(){},500);
+        /*$scope.follow_user(25,26);
         setTimeout(function(){
             $scope.follow_user(2,1);
         },1000);
         setTimeout(function(){
+            //$scope.follow_user(26,27);
+        },1000);
+        setTimeout(function(){
+            //$scope.follow_user(25,27);
+        },1000);*/
+        /*$scope.init = function() {
+=======
             $scope.follow_user(2,3);
         },1000);
         setTimeout(function(){
@@ -987,12 +1159,13 @@ angular.module('act.controllers', []).
                 }
             });
             //console.log($scope.act_startDate);
-        };
+        };*/
         //$scope.createAct();
-        var end = "2016-07-26 23:27:55.356013";
-        var start = "2016-07-26 15:08:22.145142+00:00";
+        /*var end = "2016-07-26 23:27:55.356013";
+        var start = "2016-07-26 23:08:22.145142";
         console.log(start);
-        getDate(start, end);
+        var str = getTimeLeap(start, end);
+        console.log(str);*/
     }]).
     controller('UserMsgCtrl', ['$scope', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$cookies', '$location', 'AlertService', function($scope, $http, $csrf, urls, $filter, $routeParams, $user, $cookies, $location, $alert){
         console.log('UserMsgCtrl');
