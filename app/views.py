@@ -376,7 +376,7 @@ def Follow(request):
     m = UMessage.objects.get(UId = request.POST.get('FollowID'))
     m.MTime += ','+str(datetime.now())
     m.MType += ',5'
-    m.To += ','+str(request.POST.get('UID'))
+    m.MTo += ','+str(request.POST.get('UID'))
     m.save()
     re['ErrorCode'] = 1
     if len(user.UFollowed) != 0:

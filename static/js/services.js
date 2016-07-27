@@ -81,7 +81,7 @@ angular.module('act.services', []).
             this.guestAID = null;
         };
         this.isLogged = function() {
-            if (this.userId > 1) {
+            if (this.userId >= 1) {
                 return true;
             }
             return false;

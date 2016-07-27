@@ -43,6 +43,7 @@ urlpatterns = [
     url(r'^api/user/followInfo/$',app.views.GetFollow),
     url(r'^api/user/timeline',app.views.GetTimeline),
     url(r'^api/user/changeAvatar',app.views.ChangeAvatar),
+    url(r'^api/user/message',app.views.GetMessage),
 ]
 
 

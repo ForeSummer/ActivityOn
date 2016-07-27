@@ -225,11 +225,11 @@ angular.module('act.controllers', []).
                         $rootScope.$broadcast('userLog');
                         $('.header-container').show();
                         $('.footer-container').show();
-                        //console.log($user.isLogged());
+                        console.log(res.UID);
                         $location.url('/');
                     });
                     //$location.url('/');
-                    //console.log("login succeed");
+                    console.log("login succeed");
                 }
                 else {
                     $scope.user_name = "";
@@ -951,10 +951,10 @@ angular.module('act.controllers', []).
 
     }]).
     controller('TestCtrl', ['$scope', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$cookies', '$location', 'AlertService', function($scope, $http, $csrf, urls, $filter, $routeParams, $user, $cookies, $location, $alert){
-        var testUser1 = ['ljj@a.b', '111111', 'a@a.a', '李俊杰', '1'];
-        var testUser2 = ['trj@a.b', '111111', 'a@a.a', '唐人杰', '2'];
-        var testUser3 = ['wgy@a.b', '111111', 'a@a.a', '卫国扬', '3'];
-        var userId = [0,0,0];
+        //var testUser1 = ['ljj@a.b', '111111', 'a@a.a', '李俊杰', '1'];
+        //var testUser2 = ['trj@a.b', '111111', 'a@a.a', '唐人杰', '2'];
+        //var testUser3 = ['wgy@a.b', '111111', 'a@a.a', '卫国扬', '3'];
+        var userId = [1,2,3];
         var actId = [0,0,0];
         $scope.registUser = function(user) {
             var param = {
@@ -993,12 +993,12 @@ angular.module('act.controllers', []).
                 }
             });
         };
-        $scope.registUser(testUser1);
+        /*$scope.registUser(testUser1);
         setTimeout(function(){},500);
         $scope.registUser(testUser2);
         setTimeout(function(){},500);
         $scope.registUser(testUser3);
-        setTimeout(function(){},500);
+        setTimeout(function(){},500);*/
         $scope.follow_user(userId[0], userId[1]);
         setTimeout(function(){},500);
         $scope.follow_user(userId[1], userId[0]);
@@ -1011,7 +1011,7 @@ angular.module('act.controllers', []).
         setTimeout(function(){},500);
         $scope.follow_user(userId[2], userId[0]);
         setTimeout(function(){},500);
-        $scope.init = function() {
+        /*$scope.init = function() {
             $scope.act_title = "写大作业";
             $scope.act_location = "宿舍";
             $scope.act_maxRegister = 3;
@@ -1167,6 +1167,17 @@ angular.module('act.controllers', []).
             {"from": "系统", "date": "2016-7-20", "content": "还tm没写完"}
         ];
         $scope.user_user_msg = [{"from": "django", "date": "2016-7-20", "content": "你能看到就说明用户间通信还tm没写"}];
+        $scope.getMessage = function() {
+            var param = {
+                'UID': $user.userId,
+                'Start': 0,
+                'End': 9
+            };
+            $http.post(urls.api + '/user/message', $.param(param)).success(function(data) {
+                console.log(data);
+            });
+        };
+        $scope.getMessage();
     }]).
     controller('UserSearchCtrl', ['$scope', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$cookies', '$location', 'AlertService', function($scope, $http, $csrf, urls, $filter, $routeParams, $user, $cookies, $location, $alert){
         console.log('UserSearchCtrl');
