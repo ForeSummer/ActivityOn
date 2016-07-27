@@ -21,12 +21,14 @@
           <br/>
           <md-input-container class="nickname-input">
             <label>昵称</label>
-            <input type="text" ng-model="nickname">
+            <input type="text" ng-model="nickname" onfocus="$('.nickname-input #warning').css('display', 'inline')" onblur="$('.nickname-input #warning').css('display', 'none')">
+            <div id="warning">昵称长度应在3-9之间</div>
           </md-input-container>
           <br/>
           <md-input-container class="password-input">
             <label>密码</label>
-            <input type="password" ng-model="password">
+            <input type="password" ng-model="password" onfocus="$('.password-input #warning').css('display', 'inline')" onblur="$('.password-input #warning').css('display', 'none')">
+            <div id="warning">密码长度应在6-18之间</div>
           </md-input-container>
           <br/>
           <md-input-container class="confirm-input">

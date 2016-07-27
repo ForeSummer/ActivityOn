@@ -9,8 +9,9 @@
 				<div class="tags">
 					<span class="tag" ng-repeat="x in user_suggest"><span ng-click="search(x)">[[x]]</span></span>
 				</div>
-				<h3>动态:</h3>
+				<h3 class="h3style">动态:</h3>
 				<md-list ng-if="hasFollow">
+				<hr>
 					<div ng-repeat="x in user_timeline" class="noright">
 						<div ng-if="x.type < 2">
 							<md-list-item ng-click="jumptoUser(x.uid)">

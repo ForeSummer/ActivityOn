@@ -6,11 +6,14 @@
 				<md-list>
 					<div ng-repeat="x in user_sys_msg" class="noright">
 						<md-list-item>
-							<p class="from">[[x.from]]:</p>
+							<p class="from">
+								[[x.from]]:&nbsp;&nbsp;
+								<span class="span-hover" ng-click="jump(x.type, x.id)">[[msgTitle(x.type, x.title)]]</span>
+							</p>
 							<span class="date">[[x.date]]</span>
 						</md-list-item>
 						<md-list-item>
-							<p>[[x.content]]</p>
+							<p>[[msgContent(x.type, x.title)]]</p>
 						</md-list-item>
 						<hr>
 					</div>

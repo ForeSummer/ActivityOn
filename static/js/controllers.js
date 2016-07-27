@@ -270,9 +270,9 @@ angular.module('act.controllers', []).
                 $scope.alertError($scope.errormessage);
                 return;
             }
-            if ($scope.nickname.length>16 || $scope.nickname.length<6) {
+            if ($scope.nickname.length>9 || $scope.nickname.length<3) {
                 $scope.nickname = "";
-                $scope.errormessage = "请输入长度为6~16字节的昵称！";
+                $scope.errormessage = "请输入长度为3~9字节的昵称！";
                 //console.log($scope.errormessage);
                 $scope.alertError($scope.errormessage);
                 return;
@@ -321,6 +321,16 @@ angular.module('act.controllers', []).
                 //$csrf.show_error(data.error);
                 if(data.ErrorCode == 1){
                     $user.create(1,data.UID);
+                    var mail = {
+                        "api_user": "activityon_test_SDlkX8",
+                        "api_key": "1PTTvfwTzh627yVb",
+                        "from": "activityon@126.com",
+                        "to": $scope.privateemail,
+                        "html": "恭喜您已注册成功，祝您使用Activityon愉快",
+                        "subject": "ActivityOn注册成功通知"
+                    }
+                    $http.post("http://www.sendcloud.net/webapi/mail.send.json", $.param(mail)).success(function(data){
+                    });
                     $alert.showAlert(false, "注册成功！", function() {
                         //console.log($user.isLogged());
                         $rootScope.$broadcast('userLog');
@@ -1048,13 +1058,61 @@ angular.module('act.controllers', []).
     controller('UserMsgCtrl', ['$scope', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$cookies', '$location', 'AlertService', function($scope, $http, $csrf, urls, $filter, $routeParams, $user, $cookies, $location, $alert){
         console.log('UserMsgCtrl');
         $scope.user_sys_msg = [
-            {"from": "系统", "date": "2016-7-20", "content": "你看到"},
-            {"from": "系统", "date": "2016-7-20", "content": "这些消息"},
-            {"from": "系统", "date": "2016-7-20", "content": "就说明"},
-            {"from": "系统", "date": "2016-7-20", "content": "你的代码"},
-            {"from": "系统", "date": "2016-7-20", "content": "还tm没写完"}
+            {"from": "系统", "date": "2016-7-20", "type": 0, "id": 0, "title": ""},
+            {"from": "系统", "date": "2016-7-20", "type": 1, "id": 0, "title": "活动(创建测试)"},
+            {"from": "系统", "date": "2016-7-20", "type": 2, "id": 0, "title": "活动(报名测试)"},
+            {"from": "系统", "date": "2016-7-20", "type": 3, "id": 0, "title": "活动(批准测试)"},
+            {"from": "系统", "date": "2016-7-20", "type": 4, "id": 0, "title": "活动(拒绝测试)"},
+            {"from": "系统", "date": "2016-7-20", "type": 5, "id": 0, "title": "用户(followed)测试"},
+            {"from": "系统", "date": "2016-7-20", "type": 6, "id": 0, "title": "用户(follow)测试"}
         ];
-        $scope.user_user_msg = [{"from": "django", "date": "2016-7-20", "content": "你能看到就说明用户间通信还tm没写"}];
+        $scope.user_user_msg = [{"from": "系统", "date": "2016-7-20", "content": "此功能暂未开放"}];
+        $scope.msgUrl = function (type, id) {
+            if (type == 0) {
+                return "/";
+            } else if (type == 1 || type == 2 || type == 3 || type == 4) {
+                return "/act/" + id + "/info";
+            } else {
+                return "/user/" + id + "/info";
+            }
+        }
+        $scope.msgTitle = function (type, title) {
+            if (type == 0) {
+                return "注册成功";
+            } else if (type == 1) {
+                return "活动" + title + "创建成功";
+            } else if (type == 2) {
+                return "活动" + title + "报名成功";
+            } else if (type == 3) {
+                return "您已被活动" + title + "批准";
+            } else if (type == 4) {
+                return "您已被活动" + title + "拒绝";
+            } else if (type == 5) {
+                return "" + title + "follow了你";
+            } else {
+                return "您已follow" + title;
+            }
+        }
+        $scope.msgContent = function (type, title) {
+            if (type == 0) {
+                return "恭喜您已注册成功，欢迎加入ActivityOn";
+            } else if (type == 1) {
+                return "您已成功创建活动" + title;
+            } else if (type == 2) {
+                return "您已成功报名活动" + title;
+            } else if (type == 3) {
+                return "您已被活动" + title + "批准，请按时参加该活动";
+            } else if (type == 4) {
+                return "您已被活动" + title + "拒绝";
+            } else if (type == 5) {
+                return "" + title + "刚刚follow了你";
+            } else {
+                return "您已成功follow了" + title + "，今后您将接收到来自他的动态";
+            }
+        }
+        $scope.jump = function (type, id) {
+            $location.url($scope.msgUrl(type, id));
+        }
     }]).
     controller('UserSearchCtrl', ['$scope', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$cookies', '$location', 'AlertService', function($scope, $http, $csrf, urls, $filter, $routeParams, $user, $cookies, $location, $alert){
         console.log('UserSearchCtrl');
