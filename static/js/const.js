@@ -5,24 +5,8 @@ function String2Date(str) {
   return new Date(time.getTime() - new Date().getTimezoneOffset() * 60 * 60 * 1000);
 }
 
-function getDate(start, end) {
-	var year1 = parseInt(start.slice(0, 4));
-  var month1 = parseInt(start.slice(5, 7));
-  var day1 = parseInt(start.slice(8, 10));
-  var hour1 = parseInt(start.slice(11, 13)) + 8;
-  var minute1 = parseInt(start.slice(14, 16));
-
-  var year2 = parseInt(start.slice(0, 4));
-  var month2 = parseInt(start.slice(5, 7));
-  var day2 = parseInt(start.slice(8, 10));
-  var hour2 = parseInt(start.slice(11, 13));
-  var minute2 = parseInt(start.slice(14, 16));
-
-  if(hour1 >= 24) {
-    hour1 -= 24;
-    day1 ++;
-  }
-  return;
+function getDate(string) {
+  var str = '';
 	var date = new Date(string);
   str += date.getFullYear();
   str += '-';
@@ -32,26 +16,42 @@ function getDate(start, end) {
   return str;
 }
 
-function getTimeLeap(before, now) {
-  var time;
+function getTimeLeap(start, end) {
   var str;
-  //get accurency in minute
-  if(time < 60) {
-    str = time + '分钟前';
-    return str;
-  }
-  time = (time / 60 + 0.5).toFixed(0);
-  if(time < 24) {
-    str = time + '小时前';
-    return str;
-  }
-  time = (time / 24 + 0.5).toFixed(0);
-  if(time < 5) {
-    str = time + '天前';
-    return str;
+  var time;
+
+  var year1 = parseInt(start.slice(0, 4));
+  var month1 = parseInt(start.slice(5, 7));
+  var day1 = parseInt(start.slice(8, 10));
+  var hour1 = parseInt(start.slice(11, 13));
+  var minute1 = parseInt(start.slice(14, 16));
+
+  var year2 = parseInt(end.slice(0, 4));
+  var month2 = parseInt(end.slice(5, 7));
+  var day2 = parseInt(end.slice(8, 10));
+  var hour2 = parseInt(end.slice(11, 13));
+  var minute2 = parseInt(end.slice(14, 16));
+
+  
+  if(day1 == day2) {
+    time = 60 * (hour2 - hour1) + minute2 - minute1;
+    if(time < 60) {
+      str = time + '分钟前';
+      return str;
+    }
+    time = (time / 60 + 0.5).toFixed(0);
+    if(time < 24) {
+      str = time + '小时前';
+      return str;
+    }
   }
   else {
-    str = '很久以前';
+    if(day2 - day1 > 5) {
+      str = '很久以前';
+      return str;
+    }
+    time = day2 - day1;
+    str = time + '天前';
     return str;
   }
 }

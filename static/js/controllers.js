@@ -229,6 +229,7 @@ angular.module('act.controllers', []).
                         //console.log($user.isLogged());
                         $location.url('/');
                     });
+                    //$location.url('/');
                     //console.log("login succeed");
                 }
                 else {
@@ -969,7 +970,7 @@ angular.module('act.controllers', []).
             });
         };
 
-        $scope.follow_user(25,26);
+        /*$scope.follow_user(25,26);
         setTimeout(function(){
             $scope.follow_user(2,1);
         },1000);
@@ -978,7 +979,7 @@ angular.module('act.controllers', []).
         },1000);
         setTimeout(function(){
             //$scope.follow_user(25,27);
-        },1000);
+        },1000);*/
         /*$scope.init = function() {
 =======
             $scope.follow_user(2,3);
@@ -1030,9 +1031,10 @@ angular.module('act.controllers', []).
         };*/
         //$scope.createAct();
         /*var end = "2016-07-26 23:27:55.356013";
-        var start = "2016-07-26 15:08:22.145142+00:00";
+        var start = "2016-07-26 23:08:22.145142";
         console.log(start);
-        getDate(start, end);*/
+        var str = getTimeLeap(start, end);
+        console.log(str);*/
     }]).
     controller('UserMsgCtrl', ['$scope', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$cookies', '$location', 'AlertService', function($scope, $http, $csrf, urls, $filter, $routeParams, $user, $cookies, $location, $alert){
         console.log('UserMsgCtrl');
