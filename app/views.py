@@ -134,7 +134,7 @@ def Create_Activity(request):
         UActivity.save()
         re['ErrorCode'] = 1
         re["AID"] = act.AId
-        me = UMessage.objects.get(UId = CT.AAdmin)
+        me = UMessage.objects.get(UId = act.AAdmin)
         me.MTo += ','+str(act.AId)
         me.MType += ',1'
         me.MTime += ','+str(datetime.now())
@@ -201,9 +201,9 @@ def participate(request):
             re['ErrorCode']=0
         else:
             if useractivity.UInAct.find(','+str(activity.AId)) == -1:
-                useravtivity.UInAct+=','+str(activity.AId)
+                useractivity.UInAct+=','+str(activity.AId)
                 useractivity.UInActNum+=1
-                activity.Unregister+= ','+str(useractivity.UId)
+                activity.AUnregister+= ','+str(useractivity.UId)
                 useractivity.save()
                 activity.save()
                 re['ErrorCode']=1
@@ -212,13 +212,13 @@ def participate(request):
                 me.MType += ',2'
                 me.MTime += ','+str(datetime.now())
                 me.save()
-                user = UserBase.objects.get(UId = useravtivity.UId)
+                user = UserBase.objects.get(UId = useractivity.UId)
                 if len(user.UFollowed) != 0:
                     followedList = list(map(int,user.UFollowed[1:].split(',')))
                     for i in followedList:
                         ut = UserTimeline.objects.get(UId = i)
                         ut.UTimelineFrom += ',' +str(user.UId)
-                        ut.UTimelineAct += ',' + str(act.AId)
+                        ut.UTimelineAct += ',' + str(activity.AId)
                         ut.UTimelineType += ',1'
                         ut.UTimelineTime += ','+str(datetime.now())
                         ut.save()
@@ -361,11 +361,15 @@ def GetFollow(request):
 def Follow(request):
     re = dict()
     user = UserBase.objects.get(UId = request.POST.get('UID'))
+    print(user.UId)
     if user.UFollow.find( ','+str(request.POST.get('FollowID'))) == -1:
         user.UFollow += ','+str(request.POST.get('FollowID'))
+        print('FOllow')
         user.save()
     fo = UserBase.objects.get(UId = request.POST.get('FollowID'))
+    print(fo.UId)
     if fo.UFollowed.find( ','+str(user.UId)) == -1:
+        print('Followed')
         fo.UFollowed += ','+str(user.UId)
     fo.save()
     me = UMessage.objects.get(UId = request.POST.get('UID'))

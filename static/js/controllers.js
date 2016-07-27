@@ -133,6 +133,7 @@ angular.module('act.controllers', []).
                                 event.followedUser = data.Timeline[i].AName;
                                 event.uid = data.Timeline[i].UID;
                                 event.aid = data.Timeline[i].AID;
+                                event.ago = getTimeLeap(data.Timeline[i].Time,data.EndTime);
                                 event.UAvatar = data.Timeline[i].Avatar;
                                 event.AAvatar = data.Timeline[i].AAvatar;
                                 event.type = data.Timeline[i].Type;
@@ -951,11 +952,11 @@ angular.module('act.controllers', []).
 
     }]).
     controller('TestCtrl', ['$scope', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$cookies', '$location', 'AlertService', function($scope, $http, $csrf, urls, $filter, $routeParams, $user, $cookies, $location, $alert){
-        //var testUser1 = ['ljj@a.b', '111111', 'a@a.a', '李俊杰', '1'];
-        //var testUser2 = ['trj@a.b', '111111', 'a@a.a', '唐人杰', '2'];
-        //var testUser3 = ['wgy@a.b', '111111', 'a@a.a', '卫国扬', '3'];
+        var testUser1 = ['ljj@a.b', '111111', 'a@a.a', '李俊杰', '1'];
+        var testUser2 = ['trj@a.b', '111111', 'a@a.a', '唐人杰', '2'];
+        var testUser3 = ['wgy@a.b', '111111', 'a@a.a', '卫国扬', '3'];
         var userId = [1,2,3];
-        var actId = [0,0,0];
+        var actId = [1,2,3];
         $scope.registUser = function(user) {
             var param = {
                 'privateemail': user[0],
@@ -965,7 +966,7 @@ angular.module('act.controllers', []).
                 'Avatar': '/static/images/default_' + user[4] + '.png'
             };
             $http.post(urls.api + "/user/regist", $.param(param)).success(function(data){
-                //console.log(data);
+                console.log(data);
                 //$csrf.show_error(data.error);
                 if(data.ErrorCode == 1){
                     console.log("success");
@@ -993,25 +994,39 @@ angular.module('act.controllers', []).
                 }
             });
         };
+        //$scope.follow_user(userId[0], userId[2]);
         /*$scope.registUser(testUser1);
-        setTimeout(function(){},500);
-        $scope.registUser(testUser2);
-        setTimeout(function(){},500);
-        $scope.registUser(testUser3);
-        setTimeout(function(){},500);*/
-        $scope.follow_user(userId[0], userId[1]);
-        setTimeout(function(){},500);
-        $scope.follow_user(userId[1], userId[0]);
-        setTimeout(function(){},500);
-        $scope.follow_user(userId[0], userId[2]);
-        setTimeout(function(){},500);
-        $scope.follow_user(userId[1], userId[2]);
-        setTimeout(function(){},500);
-        $scope.follow_user(userId[2], userId[1]);
-        setTimeout(function(){},500);
-        $scope.follow_user(userId[2], userId[0]);
-        setTimeout(function(){},500);
-        /*$scope.init = function() {
+        setTimeout(function(){
+            $scope.registUser(testUser2);
+            setTimeout(function(){
+                $scope.registUser(testUser3);
+            },500);
+        },500);*/
+        
+        
+        /*$scope.follow_user(userId[0], userId[1]);
+        setTimeout(function(){
+            $scope.follow_user(userId[1], userId[0]);
+            setTimeout(function(){
+                $scope.follow_user(userId[0], userId[2]);
+                setTimeout(function(){
+                    $scope.follow_user(userId[1], userId[2]);
+                    setTimeout(function(){
+                        $scope.follow_user(userId[2], userId[1]);
+                        setTimeout(function(){
+                            $scope.follow_user(userId[2], userId[0]);
+                            
+                        },500);
+                    },500);
+                },500);
+            },500);
+        },500);*/
+        
+        
+        
+        
+        
+        $scope.init = function() {
             $scope.act_title = "写大作业";
             $scope.act_location = "宿舍";
             $scope.act_maxRegister = 3;
@@ -1051,12 +1066,16 @@ angular.module('act.controllers', []).
                 }
             });
         };
-        $scope.createAct(userId[0]);
-        setTimeout(function(){},500);
-        $scope.createAct(userId[1]);
-        setTimeout(function(){},500);
-        $scope.createAct(userId[2]);
-        setTimeout(function(){},500);
+        /*$scope.createAct(userId[0]);
+        setTimeout(function(){
+            $scope.createAct(userId[1]);
+            setTimeout(function(){
+                $scope.createAct(userId[2]);
+            },500);
+        },500);*/
+        
+        
+        //console.log(actId);
         $scope.join = function(user, act) {
             var param = {
                 'UID': user,
@@ -1080,18 +1099,28 @@ angular.module('act.controllers', []).
             });
         }
 
-        $scope.join(userId[1], actId[0]);
-        setTimeout(function(){},500);
-        $scope.join(userId[2], actId[0]);
-        setTimeout(function(){},500);
-        $scope.join(userId[0], actId[1]);
-        setTimeout(function(){},500);
-        $scope.join(userId[2], actId[1]);
-        setTimeout(function(){},500);
-        $scope.join(userId[0], actId[2]);
-        setTimeout(function(){},500);
-        $scope.join(userId[1], actId[2]);
-        setTimeout(function(){},500);
+        /*$scope.join(userId[1], actId[0]);
+        setTimeout(function(){
+            $scope.join(userId[2], actId[0]);
+            setTimeout(function(){
+                $scope.join(userId[0], actId[1]);
+                setTimeout(function(){
+                    $scope.join(userId[2], actId[1]);
+                    setTimeout(function(){
+                        $scope.join(userId[0], actId[2]);
+                        setTimeout(function(){
+                            $scope.join(userId[1], actId[2]);
+                        },500);
+                    },500);
+                },500);
+            },500);  
+        },500);*/
+        
+        
+        
+        
+        
+        setTimeout(function(){},1500);
         /*$scope.follow_user(25,26);
         setTimeout(function(){
             $scope.follow_user(2,1);
