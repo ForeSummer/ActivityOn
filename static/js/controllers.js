@@ -116,7 +116,7 @@ angular.module('act.controllers', []).
             $scope.timeLineStart = 0;
             $scope.timeLineEnd = 9;
             $scope.timeline = [];
-            
+
             $scope.getTimeLine = function() {
                 var param = {
                     'UID': $user.userId,
@@ -395,7 +395,7 @@ angular.module('act.controllers', []).
         $scope.isFollowed = false;
         $scope.isShowFollow = !$scope.isMe && !$scope.isFollowed;
         $scope.isShowUnFollow = !$scope.isMe && $scope.isFollowed;
-        /*$scope.follow_user = function () {
+        $scope.follow_user = function () {
             var param = {
                 'UID': $user.userId,
                 'FollowID': parseInt($routeParams.user_id)
@@ -410,8 +410,8 @@ angular.module('act.controllers', []).
                     console.log("follow error");
                 }
             });
-        };*/
-        /*$scope.follow_user = function () {
+        };
+        $scope.unfollow_user = function () {
             var param = {
                 'UID': 20,
                 'UnfollowID': parseInt($routeParams.user_id)
@@ -425,7 +425,7 @@ angular.module('act.controllers', []).
                     console.log("unfollow error");
                 }
             });
-        };*/
+        };
     }]).
     controller('UserModifyInfoCtrl', ['$scope', '$rootScope','$window', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$location', 'AlertService', 'FileUploader', function($scope, $rootScope,$window, $http, $csrf, urls, $filter, $routeParams, $user, $location, $alert, FileUploader){
         console.log('UserModifyInfoCtrl');
