@@ -102,7 +102,7 @@ angular.module('act.controllers', []).
             $scope.createActivity = function () {
                 $location.url('/act/create');
             }
-            $scope.user_suggest = ["写代码", "写大作业", "发呆"];
+            $scope.user_suggest = ["学习", "体育", "娱乐"];
             $scope.search = function (content) {
                 console.log(content);
             }
@@ -198,6 +198,15 @@ angular.module('act.controllers', []).
                         $scope.user_followed_num = data.Followed;
                         $scope.user_activity_num = data.InAct;
                         $scope.user_organize_num = data.OAct;
+                        var tmp = parseInt($scope.user_follow_num);
+                        $("#num1").val(tmp);
+                        tmp = parseInt($scope.user_followed_num);
+                        $("#num2").val(tmp);
+                        tmp = parseInt($scope.user_activity_num);
+                        $("#num3").val(tmp);
+                        tmp = parseInt($scope.user_organize_num);
+                        $("#num4").val(tmp);
+                        anime();
                     }
                     else {
                         console.log("get const error");
@@ -205,7 +214,6 @@ angular.module('act.controllers', []).
                 });
             };
             $scope.getConst();
-            anime();
         }
         //console.log("homepage");
         //get user info
