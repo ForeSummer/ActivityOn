@@ -116,6 +116,11 @@ angular.module('act.controllers', []).
             $scope.timeLineStart = 0;
             $scope.timeLineEnd = 9;
             $scope.timeline = [];
+            $scope.suggest = [
+                {"aid": 0, "Title": "写后端", "Location": "宿舍", "StartTime": "2016-7-20", "EndTime": "2016-7-28", "Summary": "用django@python.shit写一大堆无聊冗长毫无意义的后端代码并把它们强行放到工程里冒充自己有很多代码量"},
+                {"aid": 0, "Title": "写前端逻辑", "Location": "宿舍", "StartTime": "2016-7-20", "EndTime": "2016-7-28", "Summary": "用angularJS写一大堆无聊冗长毫无意义的前段逻辑代码并把它们强行放到工程里冒充自己有很多代码量"},
+                {"aid": 0, "Title": "写前端样式", "Location": "宿舍", "StartTime": "2016-7-20", "EndTime": "2016-7-28", "Summary": "用HTML和less写一大堆无聊冗长毫无意义而且难看的前段样式代码并把它们强行放到工程里冒充自己有很多代码量"}
+            ];
 
             $scope.getTimeLine = function() {
                 var param = {
@@ -200,7 +205,11 @@ angular.module('act.controllers', []).
         //console.log("homepage");
         //get user info
         
-        //
+        $scope.noSuggest = false;
+        console.log($scope.suggest.length)
+        if ($scope.suggest.length == 0) {
+            $scope.noSuggest = true;
+        }
         
     }]).
     controller('UserLoginCtrl', ['$scope', '$rootScope', '$window', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$location', 'AlertService', function($scope, $rootScope, $window, $http, $csrf, urls, $filter, $routeParams, $user, $location, $alert){
@@ -367,8 +376,15 @@ angular.module('act.controllers', []).
         $scope.isMe = false;
         $scope.user_name = "NickName";
         $scope.user_publicEmail = "email@wtf.com";
-        $scope.user_info = "个人简介orz凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数";
-        $scope.user_inact = ["写前期文档", "应付中期检查", "交大作业"];
+        $scope.user_info = "";
+        $scope.user_inact = [
+            {"aid": 0, "Title": "推荐1", "Location": "宿舍", "StartTime": "2016-7-20", "EndTime": "2016-7-28", "Summary": "用django@python.shit写一大堆无聊冗长毫无意义的后端代码并把它们强行放到工程里冒充自己有很多代码量"},
+            {"aid": 0, "Title": "推荐2", "Location": "宿舍", "StartTime": "2016-7-20", "EndTime": "2016-7-28", "Summary": "用angularJS写一大堆无聊冗长毫无意义的前段逻辑代码并把它们强行放到工程里冒充自己有很多代码量"},
+            {"aid": 0, "Title": "推荐3", "Location": "宿舍", "StartTime": "2016-7-20", "EndTime": "2016-7-28", "Summary": "用HTML和less写一大堆无聊冗长毫无意义而且难看的前段样式代码并把它们强行放到工程里冒充自己有很多代码量"}
+        ];
+        $scope.jumptoAct = function(id) {
+            $location.url('/act/' + id + '/info');
+        };
         $scope.user_follow = [];
         $scope.user_followed = [];
         $scope.user_follow_avatar = [];
@@ -376,6 +392,10 @@ angular.module('act.controllers', []).
         $scope.user_follow_id = [];
         $scope.user_followed_id = [];
         $scope.user_publicEmailLink = "mailto:" + $scope.user_publicEmail;
+        $scope.noInfo = false;
+        $scope.nofollow = false;
+        $scope.nofollowed = false;
+        $scope.noInAct = false;
         //console.log($routeParams.user_id);
         $scope.get_user_info = function() {
             $http.get(urls.api + '/user/info/?UID=' + $routeParams.user_id).success(function(data) {
@@ -384,11 +404,13 @@ angular.module('act.controllers', []).
                     $scope.user_name = data.UName;
                     $scope.user_publicEmail = data.UPublicEmail;
                     $scope.user_info = data.UInfo;
-                    $scope.user_inact = data.UInact;
                     $scope.user_publicEmailLink = "mailto:" + data.UPublicEmail;
                 }
                 else {
                     console.log("get info error");
+                }
+                if ($scope.user_info.length == 0) {
+                    $scope.noInfo = true;
                 }
             });
             $http.get(urls.api + '/user/followInfo/?UID=' + $routeParams.user_id).success(function(data) {
@@ -406,7 +428,13 @@ angular.module('act.controllers', []).
                 }
                 else {
                     console.log("get follow info error");
-                } 
+                }
+                if ($scope.user_follow.length == 0) {
+                    $scope.nofollow = true;
+                }
+                if ($scope.user_followed.length == 0) {
+                    $scope.nofollowed = true;
+                }
             });
         };
 
@@ -469,6 +497,10 @@ angular.module('act.controllers', []).
                 }
             });
         };
+
+        if ($scope.user_inact.length == 0) {
+            $scope.noInAct = true;
+        }
     }]).
     controller('UserModifyInfoCtrl', ['$scope', '$rootScope','$window', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$location', 'AlertService', 'FileUploader', function($scope, $rootScope,$window, $http, $csrf, urls, $filter, $routeParams, $user, $location, $alert, FileUploader){
         console.log('UserModifyInfoCtrl');
@@ -1330,14 +1362,14 @@ angular.module('act.controllers', []).
     controller('UserSearchCtrl', ['$scope', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$cookies', '$location', 'AlertService', function($scope, $http, $csrf, urls, $filter, $routeParams, $user, $cookies, $location, $alert){
         console.log('UserSearchCtrl');
         $scope.result = [
-            {"Title": "写后端", "Location": "宿舍", "StartTime": "2016-7-20", "EndTime": "2016-7-28", "Summary": "用django@python.shit写一大堆无聊冗长毫无意义的后端代码并把它们强行放到工程里冒充自己有很多代码量"},
-            {"Title": "写前端逻辑", "Location": "宿舍", "StartTime": "2016-7-20", "EndTime": "2016-7-28", "Summary": "用angularJS写一大堆无聊冗长毫无意义的前段逻辑代码并把它们强行放到工程里冒充自己有很多代码量"},
-            {"Title": "写前端样式", "Location": "宿舍", "StartTime": "2016-7-20", "EndTime": "2016-7-28", "Summary": "用HTML和less写一大堆无聊冗长毫无意义而且难看的前段样式代码并把它们强行放到工程里冒充自己有很多代码量"}
+            {"aid": 0, "Title": "写后端", "Location": "宿舍", "StartTime": "2016-7-20", "EndTime": "2016-7-28", "Summary": "用django@python.shit写一大堆无聊冗长毫无意义的后端代码并把它们强行放到工程里冒充自己有很多代码量"},
+            {"aid": 0, "Title": "写前端逻辑", "Location": "宿舍", "StartTime": "2016-7-20", "EndTime": "2016-7-28", "Summary": "用angularJS写一大堆无聊冗长毫无意义的前段逻辑代码并把它们强行放到工程里冒充自己有很多代码量"},
+            {"aid": 0, "Title": "写前端样式", "Location": "宿舍", "StartTime": "2016-7-20", "EndTime": "2016-7-28", "Summary": "用HTML和less写一大堆无聊冗长毫无意义而且难看的前段样式代码并把它们强行放到工程里冒充自己有很多代码量"}
         ];
         $scope.suggest = [
-            {"Title": "推荐1", "Location": "宿舍", "StartTime": "2016-7-20", "EndTime": "2016-7-28", "Summary": "用django@python.shit写一大堆无聊冗长毫无意义的后端代码并把它们强行放到工程里冒充自己有很多代码量"},
-            {"Title": "推荐2", "Location": "宿舍", "StartTime": "2016-7-20", "EndTime": "2016-7-28", "Summary": "用angularJS写一大堆无聊冗长毫无意义的前段逻辑代码并把它们强行放到工程里冒充自己有很多代码量"},
-            {"Title": "推荐3", "Location": "宿舍", "StartTime": "2016-7-20", "EndTime": "2016-7-28", "Summary": "用HTML和less写一大堆无聊冗长毫无意义而且难看的前段样式代码并把它们强行放到工程里冒充自己有很多代码量"}
+            {"aid": 0, "Title": "推荐1", "Location": "宿舍", "StartTime": "2016-7-20", "EndTime": "2016-7-28", "Summary": "用django@python.shit写一大堆无聊冗长毫无意义的后端代码并把它们强行放到工程里冒充自己有很多代码量"},
+            {"aid": 0, "Title": "推荐2", "Location": "宿舍", "StartTime": "2016-7-20", "EndTime": "2016-7-28", "Summary": "用angularJS写一大堆无聊冗长毫无意义的前段逻辑代码并把它们强行放到工程里冒充自己有很多代码量"},
+            {"aid": 0, "Title": "推荐3", "Location": "宿舍", "StartTime": "2016-7-20", "EndTime": "2016-7-28", "Summary": "用HTML和less写一大堆无聊冗长毫无意义而且难看的前段样式代码并把它们强行放到工程里冒充自己有很多代码量"}
         ];
         $scope.getActInfo = function () {
             // body...
@@ -1350,4 +1382,7 @@ angular.module('act.controllers', []).
         if ($scope.suggest.length == 0) {
             $scope.noSuggest = true;
         }
+        $scope.jumptoAct = function(id) {
+            $location.url('/act/' + id + '/info');
+        };
     }]);

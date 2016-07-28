@@ -3,12 +3,12 @@
 		<h3>搜索结果:</h3>
 		<md-list>
 			<div ng-repeat="x in result" class="noright">
-				<md-list-item ng-click="getActInfo($index, 0)">
+				<md-list-item ng-click="jumptoAct(x.aid)">
 					<p><span class="title">[[x.Title]]</span></p>
 					<span class="location">[[x.Location]]</span>
 					<span>[[x.StartTime]] - [[x.EndTime]]</span>
 				</md-list-item>
-				<md-list-item ng-click="getActInfo($index, 0)">
+				<md-list-item ng-click="jumptoAct(x.aid)">
 					[[x.Summary]]
 				</md-list-item>
 				<hr>
@@ -20,12 +20,12 @@
 		<h3 ng-if="!noSuggest">向您推荐：</h3>
 		<md-list ng-if="!noSuggest">
 			<div ng-repeat="x in suggest" class="noright">
-				<md-list-item ng-click="getActInfo($index, 0)">
+				<md-list-item ng-click="jumptoAct(x.aid)">
 					<p><span class="title">[[x.Title]]</span></p>
 					<span class="location">[[x.Location]]</span>
 					<span>[[x.StartTime]] - [[x.EndTime]]</span>
 				</md-list-item>
-				<md-list-item ng-click="getActInfo($index, 0)">
+				<md-list-item ng-click="jumptoAct(x.aid)">
 					[[x.Summary]]
 				</md-list-item>
 				<hr>

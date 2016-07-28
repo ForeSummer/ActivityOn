@@ -13,13 +13,26 @@
 				</div>
 				<div class="detail">
 					<div class="user-info">
-					[[user_info]]
+						<h3>个人简介</h3>
+						[[user_info]]
+						<div ng-if="noInfo">这人很懒，什么也没留下</div>
 					</div>
 					<div class="user-activity">
 						<h3>参加的活动</h3>
 						<md-list flex>
-							<md-list-item ng-repeat="x in user_inact"><a href="#">[[x]]</a></md-list-item>
+							<div ng-repeat="x in user_inact" class="noright">
+								<md-list-item ng-click="jumptoAct(x.aid)">
+									<p><span class="title">[[x.Title]]</span></p>
+									<span class="location">[[x.Location]]</span>
+									<span>[[x.StartTime]] - [[x.EndTime]]</span>
+								</md-list-item>
+								<md-list-item ng-click="jumptoAct(x.aid)">
+									[[x.Summary]]
+								</md-list-item>
+								<hr>
+							</div>
 						</md-list>
+						<div ng-if="noInAct">该用户还未参加任何活动</div>
 						<md-button class="md-raised md-primary" ng-if="isMe" ng-click="edit_user_info()">编辑信息</md-button>
 						<md-button class="md-raised md-primary" ng-if="isShowFollow" ng-click="follow_user()">Follow</md-button>
 						<md-button class="md-raised md-primary" ng-if="isShowUnFollow" ng-click="unfollow_user()">UnFollow</md-button>
@@ -34,6 +47,7 @@
 						<md-grid-tile-footer><h3>[[x]]</h3></md-grid-tile-footer>
 					</md-grid-tile>
 				</md-grid-list>
+				<div ng-if="nofollow">你还未follow任何人<br></div>
 				<h3>These people followed you:</h3>
 				<md-grid-list md-cols="3" md-gutter="1em" md-row-height="100px" class="follow-list">
 					<md-grid-tile ng-repeat="x in user_followed">
@@ -41,6 +55,7 @@
 						<md-grid-tile-footer><h3>[[x]]</h3></md-grid-tile-footer>
 					</md-grid-tile>
 				</md-grid-list>
+				<div ng-if="nofollowed">还没有人follow了你</div>
 			</md-sidenav>
 		</div>
 	</div>

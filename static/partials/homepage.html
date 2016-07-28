@@ -17,7 +17,7 @@
 							<md-list-item ng-click="jumptoUser(x.uid)">
 								<img src="[[x.UAvatar]]" class="icon_img">
 								<p>
-									<span>[[x.user]]<span class="right-msg" ng-if="x.type == 1">参加</span><span class="right-msg" ng-if="x.type == 0">创建</span>了活动&nbsp;</span>
+									<span><span class="user-name-bold">[[x.user]]</span><span class="right-msg" ng-if="x.type == 1">参加</span><span class="right-msg" ng-if="x.type == 0">创建</span>了活动&nbsp;</span>
 								</p>
 								[[x.ago]]
 							</md-list-item>
@@ -49,6 +49,23 @@
 				</md-list>
 				<div ng-if="!hasFollow">
 					<h4>关注您的朋友来获得他们的动态</h4>
+				</div>
+				<div ng-if="!noSuggest" class="suggest-list">
+					<h4>我们还为您推荐了以下内容:</h4>
+					<md-list>
+					<hr>
+						<div ng-repeat="x in suggest" class="noright">
+							<md-list-item ng-click="jumptoAct(x.aid)">
+								<p><span class="title">[[x.Title]]</span></p>
+								<span class="location">[[x.Location]]</span>
+								<span>[[x.StartTime]] - [[x.EndTime]]</span>
+							</md-list-item>
+							<md-list-item ng-click="jumptoAct(x.aid)">
+								[[x.Summary]]
+							</md-list-item>
+							<hr>
+						</div>
+					</md-list>
 				</div>
 			</md-content>
 			<md-sidenav flex-gt-sm="30" md-is-locked-open="true" class="md-whiteframe-z2" id="side">
