@@ -13,9 +13,10 @@ angular.module('act.controllers', []).
             if(!$user.isLogged()) {
                 return;
             }
-            //$http.post(urls.api + '').success(function(){
+            var searchResult;
 
-            //});
+            $location.url('/user/' + searchResult + '/search');
+            //get search result id
         };
         //logout
         $scope.logout = function(){
@@ -41,13 +42,7 @@ angular.module('act.controllers', []).
         $scope.returnHome = function(){
             $location.url('/');
         };
-        //get message list
-        $scope.messageList = function() {
-            get_user_info();
-            //console.log($user.userId);
-            //console.log("233");
-            //window.location = urls + '/user/messages';
-        };
+
         //get user info
         $scope.get_user_info = function() {
             $http.get(urls.api + '/user/info/?UID=' + $user.userId).success(function(data) {
@@ -90,22 +85,16 @@ angular.module('act.controllers', []).
     controller('HomepageCtrl', ['$scope', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$location', 'AlertService', function($scope, $http, $csrf, urls, $filter, $routeParams, $user, $location, $alert){
         console.log('HomepageCtrl');
         if (!$user.isLogged()) {
-            //console.log($user.isLogged);
             $location.url('/user/login');
-            //console.log('turn to login fail');
         }
         else {
             $scope.user_follow_num = 0;
+            $scope.user_followed_num = 0;
             $scope.user_activity_num = 0;
             $scope.user_organize_num = 0;
             $scope.createActivity = function () {
                 $location.url('/act/create');
             }
-            $scope.user_timeline = [
-            {"uid": 0, "aid": 1, "user": "Riverfish", "type": 2, "followedUser": "李俊杰", "ago": "10分钟前", 'UAvatar': '/static/images/admin.png', 'AAvatar': '/static/images/admin.png'},
-            {"uid": 1, "aid": 1, "user": "李俊杰", "type": 0, "act": "写后端", "ago": "10分钟前", "summary": "用django@python.shit写一大堆无聊冗长毫无意义的后端代码并把它们强行放到工程里冒充自己有很多代码量", 'UAvatar': '/static/images/admin.png'},
-            {"uid": 2, "aid": 1, "user": "卫国扬", "type": 1, "act": "写前端逻辑", "ago": "10分钟前", "summary": "用angularJS写一大堆无聊冗长毫无意义的前段逻辑代码并把它们强行放到工程里冒充自己有很多代码量", 'UAvatar': '/static/images/admin.png'},
-            {"uid": 3, "aid": 1, "user": "唐人杰", "type": 1, "act": "写前端样式", "ago": "10分钟前", "summary": "用HTML和less写一大堆无聊冗长毫无意义而且难看的前段样式代码并把它们强行放到工程里冒充自己有很多代码量", 'UAvatar': '/static/images/admin.png'}];
             $scope.user_suggest = ["写代码", "写大作业", "发呆"];
             $scope.search = function (content) {
                 console.log(content);
@@ -158,9 +147,13 @@ angular.module('act.controllers', []).
                     else {
                         console.log("get timeline error");
                     }
+                    if ($scope.timeline.length == 0) {
+                        $scope.hasFollow = false;
+                    }
                 });
             };
             $scope.getTimeLine();
+            console.log($scope.timeline);
             $scope.isFirstLogin = false;
             if($user.guestAID) {
                 $scope.isFirstLogin = true;
@@ -184,24 +177,23 @@ angular.module('act.controllers', []).
                 }
                 return false;
             }
-            if ($scope.timeline.length == 0) {
-                $scope.hasFollow = false;
-            }
+            
             $scope.getConst = function() {
                 $http.get(urls.api + '/user/const/?UID=' + $user.userId).success(function(data) {
-                    console.log(data);
-                });
-                $http.get(urls.api + '/act/search/?Type=' + '3').success(function(data) {
-                    console.log(data);
+                    if(data.ErrorCode == 1) {
+                        console.log(data);
+                        $scope.user_follow_num = data.Follow;
+                        $scope.user_followed_num = data.Followed;
+                        $scope.user_activity_num = data.InAct;
+                        $scope.user_organize_num = data.OAct;
+                    }
+                    else {
+                        console.log("get const error");
+                    }
                 });
             };
             $scope.getConst();
         }
-        //console.log("homepage");
-        //get user info
-        
-        //
-        
     }]).
     controller('UserLoginCtrl', ['$scope', '$rootScope', '$window', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$location', 'AlertService', function($scope, $rootScope, $window, $http, $csrf, urls, $filter, $routeParams, $user, $location, $alert){
         console.log('UserLoginCtrl');
@@ -365,9 +357,10 @@ angular.module('act.controllers', []).
         console.log('UserInfoCtrl');
         //defualt is false
         $scope.isMe = false;
+        $scope.isFollowed = false;
         $scope.user_name = "NickName";
         $scope.user_publicEmail = "email@wtf.com";
-        $scope.user_info = "个人简介orz凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数";
+        $scope.user_info = "";
         $scope.user_inact = ["写前期文档", "应付中期检查", "交大作业"];
         $scope.user_follow = [];
         $scope.user_followed = [];
@@ -430,14 +423,12 @@ angular.module('act.controllers', []).
                     console.log("get follow status error");
                 }
             });
+             $scope.isShowFollow = !$scope.isMe && !$scope.isFollowed;
+            $scope.isShowUnFollow = !$scope.isMe && $scope.isFollowed;
         };
         $scope.getFollowStatus();
-        $scope.confirmStatus = false;
         $scope.get_user_info();
 
-        $scope.isFollowed = false;
-        $scope.isShowFollow = !$scope.isMe && !$scope.isFollowed;
-        $scope.isShowUnFollow = !$scope.isMe && $scope.isFollowed;
         $scope.follow_user = function () {
             var param = {
                 'UID': $user.userId,
@@ -499,7 +490,7 @@ angular.module('act.controllers', []).
         $scope.modifyInfo = function () {
             if ($scope.user_name.length>16 || $scope.user_name.length<6) {
                 $scope.user_name = "";
-                $scope.errormessage = "请输入长度为6~16字节的昵称！";
+                $scope.errormessage = "请输入长度为3~9的昵称！";
                 //console.log($scope.errormessage);
                 $scope.alertError($scope.errormessage);
                 return;
@@ -533,13 +524,10 @@ angular.module('act.controllers', []).
             });
             uploader.uploadAll();
         }
-
-        $scope.confirmStatus = false;
         $scope.get_user_info();
         $scope.modifyPassword = function () {
             $location.url('/user/password');
-        }
-
+        };
         var uploader = $scope.uploader = new FileUploader({
             url: urls.api + "/user/changeAvatar?UID="+$user.userId
         });
@@ -626,6 +614,12 @@ angular.module('act.controllers', []).
                 else {
                     console.log("get act list error");
                 }
+                if ($scope.user_inact.length == 0) {
+                    $scope.noInact = true;
+                }
+                if ($scope.user_organizedact.length == 0) {
+                    $scope.noOrganizedact = true;
+                }
             });
         };
         $scope.getActInfo = function (index, value) {
@@ -642,12 +636,7 @@ angular.module('act.controllers', []).
         $scope.getActList();
         $scope.noInact = false;
         $scope.noOrganizedact = false;
-        if ($scope.user_inact.length == 0) {
-            $scope.noInact = true;
-        }
-        if ($scope.user_organizedact.length == 0) {
-            $scope.noOrganizedact = true;
-        }
+       
     }]).
     controller('ActivityCreateCtrl', ['$scope', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$cookies', '$location', 'AlertService',function($scope, $http, $csrf, urls, $filter, $routeParams, $user, $cookies, $location, $alert){
         console.log('ActivityCreateCtrl');
@@ -944,6 +933,12 @@ angular.module('act.controllers', []).
                 else {
                     console.log('get register failed');
                 }
+                if ($scope.act_register.length == 0) {
+                    $scope.noRegister = true;
+                }
+                if ($scope.act_unregister.length == 0) {
+                    $scope.noUnRegister = true;
+                }
             });
         };
 
@@ -983,14 +978,6 @@ angular.module('act.controllers', []).
 
         $scope.noRegister = false;
         $scope.noUnRegister = false;
-        if ($scope.act_register.length == 0) {
-            $scope.noRegister = true;
-        }
-        if ($scope.act_unregister.length == 0) {
-            $scope.noUnRegister = true;
-        }
-
-        //$scope.act_register = ["Orz"];
 
     }]).
     controller('TestCtrl', ['$scope', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$cookies', '$location', 'AlertService', function($scope, $http, $csrf, urls, $filter, $routeParams, $user, $cookies, $location, $alert){
@@ -1340,8 +1327,11 @@ angular.module('act.controllers', []).
             {"Title": "推荐3", "Location": "宿舍", "StartTime": "2016-7-20", "EndTime": "2016-7-28", "Summary": "用HTML和less写一大堆无聊冗长毫无意义而且难看的前段样式代码并把它们强行放到工程里冒充自己有很多代码量"}
         ];
         $scope.getActInfo = function () {
-            // body...
-        }
+            $http.get(urls.api + '/act/search/?Type=' + $routeParams.search_id).success(function(data) {
+                console.log(data);
+            });
+        };
+        //$scope.getActInfo();
         $scope.noResult = false;
         $scope.noSuggest = false;
         if ($scope.result.length == 0) {
