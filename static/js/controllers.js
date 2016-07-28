@@ -614,8 +614,6 @@ angular.module('act.controllers', []).
                     $scope.user_publicEmail = data.UPublicEmail;
                     $scope.user_info = data.UInfo;
                     $scope.user_inact = data.UInact;
-                    $scope.user_follow = data.UFollow;
-                    $scope.user_followed = data.UFollowed;
                     $scope.user_publicEmailLink = "mailto:" + data.UPublicEmail;
                 }
                 else {
@@ -659,6 +657,9 @@ angular.module('act.controllers', []).
                 }
             });
             uploader.uploadAll();
+        };
+        $scope.alertError = function(msg) {
+            $alert.showAlert(false, msg, function(){});
         }
         $scope.get_user_info();
         $scope.modifyPassword = function () {
