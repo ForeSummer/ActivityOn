@@ -373,10 +373,11 @@ angular.module('act.controllers', []).
         $scope.user_name = "NickName";
         $scope.user_publicEmail = "email@wtf.com";
         $scope.user_info = "";
+        $scope.user_avatar = "/static/images/admin.png";
         $scope.user_inact = [
-            {"aid": 0, "Title": "推荐1", "Location": "宿舍", "StartTime": "2016-7-20", "EndTime": "2016-7-28", "Summary": "用django@python.shit写一大堆无聊冗长毫无意义的后端代码并把它们强行放到工程里冒充自己有很多代码量"},
-            {"aid": 0, "Title": "推荐2", "Location": "宿舍", "StartTime": "2016-7-20", "EndTime": "2016-7-28", "Summary": "用angularJS写一大堆无聊冗长毫无意义的前段逻辑代码并把它们强行放到工程里冒充自己有很多代码量"},
-            {"aid": 0, "Title": "推荐3", "Location": "宿舍", "StartTime": "2016-7-20", "EndTime": "2016-7-28", "Summary": "用HTML和less写一大堆无聊冗长毫无意义而且难看的前段样式代码并把它们强行放到工程里冒充自己有很多代码量"}
+            {"Title": "写后端", "Location": "宿舍", "StartTime": "2016-7-20", "EndTime": "2016-7-28", "Summary": "用django@python.shit写一大堆无聊冗长毫无意义的后端代码并把它们强行放到工程里冒充自己有很多代码量"},
+            {"Title": "写前端逻辑", "Location": "宿舍", "StartTime": "2016-7-20", "EndTime": "2016-7-28", "Summary": "用angularJS写一大堆无聊冗长毫无意义的前段逻辑代码并把它们强行放到工程里冒充自己有很多代码量"},
+            {"Title": "写前端样式", "Location": "宿舍", "StartTime": "2016-7-20", "EndTime": "2016-7-28", "Summary": "用HTML和less写一大堆无聊冗长毫无意义而且难看的前段样式代码并把它们强行放到工程里冒充自己有很多代码量"}
         ];
         $scope.jumptoAct = function(id) {
             $location.url('/act/' + id + '/info');
@@ -397,6 +398,7 @@ angular.module('act.controllers', []).
             $http.get(urls.api + '/user/info/?UID=' + $routeParams.user_id).success(function(data) {
                 //console.log(data);
                 if(data.ErrorCode == 1) {
+                    $scope.user_avatar = data.UAvatar;
                     $scope.user_name = data.UName;
                     $scope.user_publicEmail = data.UPublicEmail;
                     $scope.user_info = data.UInfo;
@@ -494,6 +496,21 @@ angular.module('act.controllers', []).
 
         if ($scope.user_inact.length == 0) {
             $scope.noInAct = true;
+        }
+
+        $scope.jumpToUser = function (id, type) {
+            if (type == 0) {
+                $location.url('/user/' + $scope.user_follow_id[id] + '/info');
+            } else {
+                $location.url('/user/' + $scope.user_followed_id[id] + '/info');
+            }
+        }
+        $scope.getAvatar = function (id, type) {
+            if (type == 0) {
+                return $scope.user_follow_avatar[id];
+            } else {
+                return $scope.user_followed_avatar[id];
+            }
         }
     }]).
     controller('UserModifyInfoCtrl', ['$scope', '$rootScope','$window', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$location', 'AlertService', 'FileUploader', function($scope, $rootScope,$window, $http, $csrf, urls, $filter, $routeParams, $user, $location, $alert, FileUploader){
@@ -639,7 +656,7 @@ angular.module('act.controllers', []).
                     $scope.user_organizedact = data.OrganizedActivity;
                     for(var i = 0; i < data.InActivity.length; i ++) {
                         $scope.user_inact[i].StartTime = getDate($scope.user_inact[i].StartTime);
-                        $scope.user_inact[i].EndTime = getDate(scope.user_inact[i].EndTime);
+                        $scope.user_inact[i].EndTime = getDate($scope.user_inact[i].EndTime);
                     }
                     for(var i = 0; i < data.OrganizedActivity.length; i ++) {
                         $scope.user_organizedact[i].StartTime = getDate($scope.user_organizedact[i].StartTime);
@@ -1016,10 +1033,10 @@ angular.module('act.controllers', []).
 
     }]).
     controller('TestCtrl', ['$scope', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$cookies', '$location', 'AlertService', function($scope, $http, $csrf, urls, $filter, $routeParams, $user, $cookies, $location, $alert){
-        /*var testUser1 = ['ljj@a.b', '111111', 'a@a.a', '李俊杰', '1'];
+        var testUser1 = ['ljj@a.b', '111111', 'a@a.a', '李俊杰', '1'];
         var testUser2 = ['trj@a.b', '111111', 'a@a.a', '唐人杰', '2'];
         var testUser3 = ['wgy@a.b', '111111', 'a@a.a', '卫国扬', '3'];
-        var userId = [1,2,3];
+        var userId = [2,3,4];
         var actId = [1,2,3];
         $scope.registUser = function(user) {
             var param = {
@@ -1090,7 +1107,7 @@ angular.module('act.controllers', []).
         
         
         
-        /*$scope.init = function() {
+        $scope.init = function() {
             $scope.act_title = "写大作业";
             $scope.act_location = "宿舍";
             $scope.act_maxRegister = 3;
