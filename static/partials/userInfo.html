@@ -4,7 +4,7 @@
 			<md-content flex-gt-sm="70" id="content" layout="column">
 				<div layout="row">
 					<div class="left-col" flex-gt-sm="20">
-						<img src="/static/images/admin.png" class="icon">
+						<img src="[[user_avatar]]" class="icon">
 					</div>
 					<div class="right-col" flex-gt-sm="80">
 						<h1>[[user_name]]</h1>
@@ -21,12 +21,12 @@
 						<h3>参加的活动</h3>
 						<md-list flex>
 							<div ng-repeat="x in user_inact" class="noright">
-								<md-list-item ng-click="jumptoAct(x.aid)">
+								<md-list-item ng-click="getActInfo($index, 0)">
 									<p><span class="title">[[x.Title]]</span></p>
 									<span class="location">[[x.Location]]</span>
 									<span>[[x.StartTime]] - [[x.EndTime]]</span>
 								</md-list-item>
-								<md-list-item ng-click="jumptoAct(x.aid)">
+								<md-list-item ng-click="getActInfo($index, 0)">
 									[[x.Summary]]
 								</md-list-item>
 								<hr>
@@ -43,16 +43,20 @@
 				<h3>You followed:</h3>
 				<md-grid-list md-cols="3" md-gutter="1em" md-row-height="100px" class="follow-list">
 					<md-grid-tile ng-repeat="x in user_follow">
-						<img src="/static/images/admin.png">
-						<md-grid-tile-footer><h3>[[x]]</h3></md-grid-tile-footer>
+						<div ng-click="jumpToUser($index, 0)">
+							<img src="[[getAvatar($index, 0)]]">
+							<div class="follow-name">[[x]]</div>
+						</div>
 					</md-grid-tile>
 				</md-grid-list>
 				<div ng-if="nofollow">你还未follow任何人<br></div>
 				<h3>These people followed you:</h3>
 				<md-grid-list md-cols="3" md-gutter="1em" md-row-height="100px" class="follow-list">
 					<md-grid-tile ng-repeat="x in user_followed">
-						<img src="/static/images/admin.png">
-						<md-grid-tile-footer><h3>[[x]]</h3></md-grid-tile-footer>
+						<div ng-click="jumpToUser($index, 1)">
+							<img src="/static/images/admin.png">
+							<div class="follow-name">[[x]]</div>
+						</div>
 					</md-grid-tile>
 				</md-grid-list>
 				<div ng-if="nofollowed">还没有人follow了你</div>
