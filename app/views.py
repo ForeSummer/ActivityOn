@@ -531,15 +531,16 @@ def GetNum(request):
 def IsFollowed(request):
     re = dict()
     try:
-	user = request.POST.get('UID')
-	followID = int(request.POST.get('FolowID'))
-	followList = list(map(int,user.UFollow[1:].split(',')))
-	if followID in followList:
-	    re['IsFollowed']=True
-	else:
-	    re['IsFollowed']=False
-	re['ErrorCode']=1
+        user = UserBase.objects.get(UId = request.POST.get('UID'))
+        followID = int(request.POST.get('FollowID'))
+        followList = list(map(int,user.UFollow[1:].split(',')))
+        if followID in followList:
+            re['IsFollowed']=True
+        else:
+            re['IsFollowed']=False
+        re['ErrorCode']=1
     except:
-	re['ErrorCode'] = 0
+        print('111')
+        re['ErrorCode']=0
     return HttpResponse(json.dumps(re))
 

@@ -369,29 +369,44 @@ angular.module('act.controllers', []).
         $scope.user_publicEmail = "email@wtf.com";
         $scope.user_info = "个人简介orz凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数凑字数";
         $scope.user_inact = ["写前期文档", "应付中期检查", "交大作业"];
-        $scope.user_follow = ["李俊杰", "卫国扬", "唐人杰", "某某某", "abc", "一个很长的名字作为测试", "日了狗了", "可以的很django"];
-        $scope.user_followed = ["你一点都不django", "django强无敌", "毕竟django", "python"];
+        $scope.user_follow = [];
+        $scope.user_followed = [];
+        $scope.user_follow_avatar = [];
+        $scope.user_followed_avatar = [];
+        $scope.user_follow_id = [];
+        $scope.user_followed_id = [];
         $scope.user_publicEmailLink = "mailto:" + $scope.user_publicEmail;
         //console.log($routeParams.user_id);
         $scope.get_user_info = function() {
             $http.get(urls.api + '/user/info/?UID=' + $routeParams.user_id).success(function(data) {
-                console.log(data);
+                //console.log(data);
                 if(data.ErrorCode == 1) {
                     $scope.user_name = data.UName;
                     $scope.user_publicEmail = data.UPublicEmail;
                     $scope.user_info = data.UInfo;
                     $scope.user_inact = data.UInact;
-                    //$scope.user_follow = data.UFollow;
-                    //$scope.user_followed = data.UFollowed;
                     $scope.user_publicEmailLink = "mailto:" + data.UPublicEmail;
-                    var follow = data.UFollow.split(',');
-                    var followed = data.UFollowed.split(',');
-                    console.log(follow);
-                    console.log(followed);
                 }
                 else {
                     console.log("get info error");
                 }
+            });
+            $http.get(urls.api + '/user/followInfo/?UID=' + $routeParams.user_id).success(function(data) {
+                if(data.ErrorCode == 1) {
+                    for(var i = 0; i < data.Follow.length; i ++) {
+                        $scope.user_follow.push(data.Follow[i].Name);
+                        $scope.user_follow_avatar.push(data.Follow[i].Avatar);
+                        $scope.user_follow_id.push(data.Follow[i].UID);
+                    }
+                    for(var i = 0; i < data.Followed.length; i ++) {
+                        $scope.user_followed.push(data.Followed[i].Name);
+                        $scope.user_followed_avatar.push(data.Followed[i].Avatar);
+                        $scope.user_followed_id.push(data.Followed[i].UID);
+                    }
+                }
+                else {
+                    console.log("get follow info error");
+                } 
             });
         };
 
@@ -407,7 +422,7 @@ angular.module('act.controllers', []).
                 'UID': $user.userId,
                 'FollowID': parseInt($routeParams.user_id)
             };
-            $http.post(urls.api+ '/user/canfollow', $.param(param)).success(function(data) {
+            $http.post(urls.api+ '/user/isFollowed', $.param(param)).success(function(data) {
                 if(data.ErrorCode) {
                     $scope.isFollowed = data.isFollowed;
                 }
@@ -416,7 +431,7 @@ angular.module('act.controllers', []).
                 }
             });
         };
-        //$scope.getFollowStatus();
+        $scope.getFollowStatus();
         $scope.confirmStatus = false;
         $scope.get_user_info();
 
@@ -979,7 +994,7 @@ angular.module('act.controllers', []).
 
     }]).
     controller('TestCtrl', ['$scope', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$cookies', '$location', 'AlertService', function($scope, $http, $csrf, urls, $filter, $routeParams, $user, $cookies, $location, $alert){
-        var testUser1 = ['ljj@a.b', '111111', 'a@a.a', '李俊杰', '1'];
+        /*var testUser1 = ['ljj@a.b', '111111', 'a@a.a', '李俊杰', '1'];
         var testUser2 = ['trj@a.b', '111111', 'a@a.a', '唐人杰', '2'];
         var testUser3 = ['wgy@a.b', '111111', 'a@a.a', '卫国扬', '3'];
         var userId = [1,2,3];
@@ -1053,7 +1068,7 @@ angular.module('act.controllers', []).
         
         
         
-        $scope.init = function() {
+        /*$scope.init = function() {
             $scope.act_title = "写大作业";
             $scope.act_location = "宿舍";
             $scope.act_maxRegister = 3;
@@ -1147,7 +1162,7 @@ angular.module('act.controllers', []).
         
         
         
-        setTimeout(function(){},1500);
+        
         /*$scope.follow_user(25,26);
         setTimeout(function(){
             $scope.follow_user(2,1);
