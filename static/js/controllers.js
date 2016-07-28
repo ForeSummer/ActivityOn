@@ -1124,6 +1124,8 @@ angular.module('act.controllers', []).
                 $http.post(urls.api + '/act/accept', $.param(param)).success(function(data) {
                     if (data.ErrorCode == 1) {
                         console.log("accept success");
+                        $location.url('/act/' + $routeParams.act_id + '/manage');
+
                     }
                     else {
                         console.log("change user status error");
@@ -1135,6 +1137,7 @@ angular.module('act.controllers', []).
                 $http.post(urls.api + '/act/reject', $.param(param)).success(function(data) {
                     if (data.ErrorCode == 1) {
                         console.log("reject success");
+                        $location.url('/act/' + $routeParams.act_id + '/manage');
                     }
                     else {
                         console.log("change user status error");
