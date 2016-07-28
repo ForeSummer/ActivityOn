@@ -544,3 +544,45 @@ def IsFollowed(request):
         re['ErrorCode']=0
     return HttpResponse(json.dumps(re))
 
+def IsParticipated(request):
+    re = dict()
+    try:
+        uact = UserActivity.objects.get( UId = request.POST.get('UID'))
+        AID = int(request.POST.get('AID'))
+        InList = list(map(int,uact.UInAct[1:].split(',')))
+        if AID in InList:
+            re['IsParticipated']=True
+        else:
+            re['IsParticipated']=False
+        re['ErrorCode']=1
+    except:
+        re['ErrorCode'] = 0
+    return HttpResponse(json.dumps(re))
+
+def UnParticipate(request):
+    re = dict()
+    try:
+        UID =  request.POST.get('UID')
+        AID = request.POST.get('AID')
+        uact = UserActivity.objects.get( UId = UID)
+        act = Activity.objects.get(AId = AID)
+        if uact.UInAct.find(str(AID)) != -1:
+            print(uact.UInAct)
+            print(','+str(AID))
+            uact.UInActNum -=1
+            uact.UInAct.replace(','+str(AID),'')
+            print(uact.UInAct)
+        if act.ARegister.find(str(UID)) != -1:
+            print(uact.UInAct)
+            act.ARegister.replace(','+str(UID),'')
+            print(uact.UInAct)
+        if act.AUnregister.find(str(UID)) != -1:
+            print(uact.UInAct)
+            act.AUnregister.replace(','+str(UID),'')
+            print(uact.UInAct)
+        uact.save()
+        act.save()
+        re['ErrorCode'] = 1
+    except:
+        re['ErrorCode'] = 0
+    return HttpResponse(json.dumps(re))

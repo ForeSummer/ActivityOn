@@ -117,7 +117,26 @@ angular.module('act.controllers', []).
                 {"aid": 0, "Title": "写前端逻辑", "Location": "宿舍", "StartTime": "2016-7-20", "EndTime": "2016-7-28", "Summary": "用angularJS写一大堆无聊冗长毫无意义的前段逻辑代码并把它们强行放到工程里冒充自己有很多代码量"},
                 {"aid": 0, "Title": "写前端样式", "Location": "宿舍", "StartTime": "2016-7-20", "EndTime": "2016-7-28", "Summary": "用HTML和less写一大堆无聊冗长毫无意义而且难看的前段样式代码并把它们强行放到工程里冒充自己有很多代码量"}
             ];
-
+            $scope.suggest = [];
+            $scope.getSuggest = function() {
+                $http.get(urls.api + '/act/search/?Type= -1').success(function(data) {
+                    if(data.ErrorCode == 1) {
+                        for(var i = 0; i < data.ActList.length; i ++) {
+                            var event = {};
+                            event.aid = data.ActList[i].AID;
+                            event.Title = data.ActList[i].Title;
+                            event.Location = data.ActList[i].Location;
+                            event.StartTime = getDate(data.ActList[i].StartTime);
+                            event.EndTime = getDate(data.ActList[i].EndTime);
+                            event.Summary = data.ActList[i].Summary;
+                            $scope.suggest.push(event);
+                        }
+                    }
+                    else{
+                        console.log("get search error");
+                    }
+                });
+            };
             $scope.getTimeLine = function() {
                 var param = {
                     'UID': $user.userId,
@@ -165,6 +184,7 @@ angular.module('act.controllers', []).
                 });
             };
             $scope.getTimeLine();
+            $scope.getSuggest();
             console.log($scope.timeline);
             $scope.isFirstLogin = false;
             if($user.guestAID) {
@@ -813,7 +833,7 @@ angular.module('act.controllers', []).
             $scope.act_info = "花10天时间写一个有很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多代码的大作业";
             $scope.isAdmin = false;
             $scope.showParticipate = true;
-            $scope.showCancel = true;
+            $scope.showCancel = false;
             $scope.act_maxRegister = 3;
             $scope.act_register = ["李俊杰", "卫国扬", "唐人杰", "某某某", "abc", "一个很长的名字作为测试", "日了狗了", "可以的很django"];
             $scope.act_unregister = ["你一点都不django", "django强无敌", "毕竟django", "python"];
@@ -862,6 +882,26 @@ angular.module('act.controllers', []).
                 }
                 else {
                     console.log('get register failed');
+                }
+            });
+            var param = {
+                'UID': $user.userId,
+                'AID': parseInt($routeParams.act_id)
+            };
+            $http.post(urls.api + '/user/ispart', $.param(param)).success(function(data) {
+                console.log(data);
+                if(data.ErrorCode == 1) {
+                    if(data.IsParticipated) {
+                        $scope.showParticipate = false;
+                        $scope.showCancel = true;
+                    }
+                    else {
+                        $scope.showParticipate = true;
+                        $scope.showCancel = false;
+                    }
+                }
+                else {
+                    console.log("get is participate error");
                 }
             });
         };
@@ -936,9 +976,17 @@ angular.module('act.controllers', []).
                     $scope.init();
                 }
             });
-            //if 1 success message
-            //if 0 error message
-            //if -1 you have already join the act
+        };
+        $scope.quit = function() {
+            $alert.showAlert(true, "真的要取消报名吗？",function() {
+                var param = {
+                    'UID': $user.userId,
+                    'AID': parseInt($routeParams.act_id)
+                };
+                $http.post(urls.api + '/user/unregist', $.param(param)).success(function(data) {
+                    console.log(data);
+                });
+            }, function() {});
         };
 
         $('#qrcode').qrcode({width: 100,height: 100,text: urls.host + '/act/' + $routeParams.act_id + '/info'});
@@ -1261,11 +1309,14 @@ angular.module('act.controllers', []).
         },500);*/
         
         
-        $http.get(urls.api + '/act/search/?Type=' + '3').success(function(data) {
-                console.log(data);
-            });
-        
-        
+        var param = {
+                'UID': 3,
+                'AID': 2
+            };
+           
+                $http.post(urls.api + '/user/unregist', $.param(param)).success(function(data) {
+                    console.log(data);
+                });
         
         /*$scope.follow_user(25,26);
         setTimeout(function(){

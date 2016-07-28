@@ -47,6 +47,8 @@ urlpatterns = [
     url(r'^api/act/search/$',app.views.Search),
     url(r'^api/user/const/$',app.views.GetNum),
     url(r'^api/user/isFollowed',app.views.IsFollowed),
+    url(r'^api/user/ispart',app.views.IsParticipated),
+    url(r'^api/user/unregist',app.views.UnParticipate),
 ]
 
 
