@@ -375,13 +375,14 @@ angular.module('act.controllers', []).
         //console.log($routeParams.user_id);
         $scope.get_user_info = function() {
             $http.get(urls.api + '/user/info/?UID=' + $routeParams.user_id).success(function(data) {
+                console.log(data);
                 if(data.ErrorCode == 1) {
                     $scope.user_name = data.UName;
                     $scope.user_publicEmail = data.UPublicEmail;
                     $scope.user_info = data.UInfo;
                     $scope.user_inact = data.UInact;
-                    $scope.user_follow = data.UFollow;
-                    $scope.user_followed = data.UFollowed;
+                    //$scope.user_follow = data.UFollow;
+                    //$scope.user_followed = data.UFollowed;
                     $scope.user_publicEmailLink = "mailto:" + data.UPublicEmail;
                 }
                 else {
@@ -402,9 +403,9 @@ angular.module('act.controllers', []).
                 'UID': $user.userId,
                 'FollowID': parseInt($routeParams.user_id)
             };
-            $http.post().success(function(data) {
+            $http.post(urls.api+ '/user/canfollow', $.param(param)).success(function(data) {
                 if(data.ErrorCode) {
-                    $scope,isFollowed = data.isFollowed;
+                    $scope.isFollowed = data.isFollowed;
                 }
                 else {
                     console.log("get follow status error");
@@ -1154,7 +1155,6 @@ angular.module('act.controllers', []).
             //$scope.follow_user(25,27);
         },1000);*/
         /*$scope.init = function() {
-=======
             $scope.follow_user(2,3);
         },1000);
         setTimeout(function(){
@@ -1210,7 +1210,7 @@ angular.module('act.controllers', []).
     }]).
     controller('UserMsgCtrl', ['$scope', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$cookies', '$location', 'AlertService', function($scope, $http, $csrf, urls, $filter, $routeParams, $user, $cookies, $location, $alert){
         console.log('UserMsgCtrl');
-        $scope.user_sys_msg = [
+        /*$scope.user_sys_msg = [
             {"from": "系统", "date": "2016-7-20", "type": 0, "id": 0, "title": ""},
             {"from": "系统", "date": "2016-7-20", "type": 1, "id": 0, "title": "活动(创建测试)"},
             {"from": "系统", "date": "2016-7-20", "type": 2, "id": 0, "title": "活动(报名测试)"},
@@ -1218,7 +1218,8 @@ angular.module('act.controllers', []).
             {"from": "系统", "date": "2016-7-20", "type": 4, "id": 0, "title": "活动(拒绝测试)"},
             {"from": "系统", "date": "2016-7-20", "type": 5, "id": 0, "title": "用户(followed)测试"},
             {"from": "系统", "date": "2016-7-20", "type": 6, "id": 0, "title": "用户(follow)测试"}
-        ];
+        ];*/
+        $scope.user_sys_msg = [];
         $scope.user_user_msg = [{"from": "系统", "date": "2016-7-20", "content": "此功能暂未开放"}];
         $scope.msgUrl = function (type, id) {
             if (type == 0) {
@@ -1265,15 +1266,44 @@ angular.module('act.controllers', []).
         }
         $scope.jump = function (type, id) {
             $location.url($scope.msgUrl(type, id));
-        }
+        };
+        $scope.messageStart = 0;
+        $scope.messageEnd = 9;
+
         $scope.getMessage = function() {
             var param = {
                 'UID': $user.userId,
-                'Start': 0,
-                'End': 9
+                'Start': $scope.messageStart,
+                'End': $scope.messageEnd
             };
             $http.post(urls.api + '/user/message', $.param(param)).success(function(data) {
                 console.log(data);
+                if(data.ErrorCode == 1) {
+                    //access data
+                    for(var i = 0; i < data.Timeline.length; i ++) {
+                        var event = {};
+                        event.from = "系统",
+                        event.date = getTimeLeap(data.Timeline[i].Time, data.EndTime);
+                        event.type = data.Timeline[i].Type;
+                        if(event.type >= 1 && event.type <= 4) {
+                            event.id = data.Timeline[i].AId;
+                            event.title = data.Timeline[i].Title;
+                        }
+                        else if (event.type > 4) {
+                            event.id = data.Timeline[i].FUID;
+                            event.title = data.Timeline[i].Name;
+                        }
+                        else {
+                            event.title = "";
+                        }
+                        $scope.user_sys_msg.push(event);
+                    }
+                    $scope.messageStart += 10;
+                    $scope.messageEnd += 10;
+                }
+                else {
+                    console.log('getMessage error');
+                }
             });
         };
         $scope.getMessage();
