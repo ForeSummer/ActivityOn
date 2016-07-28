@@ -622,7 +622,7 @@ angular.module('act.controllers', []).
             });
         };
         $scope.modifyInfo = function () {
-            if ($scope.user_name.length>16 || $scope.user_name.length<6) {
+            if ($scope.user_name.length>9 || $scope.user_name.length<3) {
                 $scope.user_name = "";
                 $scope.errormessage = "请输入长度为3~9的昵称！";
                 //console.log($scope.errormessage);
