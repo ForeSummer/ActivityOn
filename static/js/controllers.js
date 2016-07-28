@@ -104,7 +104,8 @@ angular.module('act.controllers', []).
             }
             $scope.user_suggest = ["学习", "体育", "娱乐"];
             $scope.search = function (content) {
-                console.log(content);
+                var route = [3, 0, 4];
+                $location.url('/user/'+ route[content] + '/search');
             }
             $scope.getActList = function () {
                 $location.url("/user/actlist");
