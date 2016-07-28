@@ -7,7 +7,7 @@
 				</div>
 				<h3>您可能对以下内容感兴趣:</h3>
 				<div class="tags">
-					<span class="tag" ng-repeat="x in user_suggest"><span ng-click="search(x)">[[x]]</span></span>
+					<span class="tag" ng-repeat="x in user_suggest"><span ng-click="search($index)">[[x]]</span></span>
 				</div>
 				<h3 class="h3style">动态:</h3>
 				<md-list ng-if="hasFollow">
