@@ -384,6 +384,10 @@ angular.module('act.controllers', []).
                     //$scope.user_follow = data.UFollow;
                     //$scope.user_followed = data.UFollowed;
                     $scope.user_publicEmailLink = "mailto:" + data.UPublicEmail;
+                    var follow = data.UFollow.split(',');
+                    var followed = data.UFollowed.split(',');
+                    console.log(follow);
+                    console.log(followed);
                 }
                 else {
                     console.log("get info error");
