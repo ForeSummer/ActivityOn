@@ -346,13 +346,13 @@ def GetFollow(request):
         followList = list(map(int,user.UFollow[1:].split(',')))
         for i in followList:
             u = UserBase.objects.get(UId = i)
-            follow.append({'UID':u.UId,'Avatar':'static/images/admin.png','Name':u.UName})
+            follow.append({'UID':u.UId,'Avatar':u.UAvatar,'Name':u.UName})
     followed = []
     if len(user.UFollowed) != 0:
         followedList = list(map(int,user.UFollowed[1:].split(',')))
         for i in followedList:
             u = UserBase.objects.get(UId = i)
-            followed.append({'UID':u.UId,'Avatar':'static/images/admin.png','Name':u.UName})
+            followed.append({'UID':u.UId,'Avatar':u.UAvatar,'Name':u.UName})
     re['ErrorCode'] = 1
     re['Follow'] = follow 
     re['Followed'] = followed 

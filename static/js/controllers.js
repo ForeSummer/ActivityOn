@@ -432,6 +432,40 @@ angular.module('act.controllers', []).
                     $scope.nofollowed = true;
                 }
             });
+            if($scope.isMe) {
+                $http.get(urls.api + '/act/UAinfo/?UID=' + $user.userId).success(function(data) {
+                    console.log(data);
+                    if(data.ErrorCode == 1) {
+                        console.log('succeed');
+                        if(data.InActivity.length > 3) {
+                            $scope.user_inact = data.InActivity.slice(0,2);
+                        }
+                        else{
+                            $scope.user_inact = data.InActivity;
+                        }
+                        if(data.OrganizedActivity.length > 3) {
+                            $scope.user_organizedact = data.OrganizedActivity.slice(0,2);
+                        }
+                        else {
+                            $scope.user_organizedact = data.OrganizedActivity;
+                        }
+                        for(var i = 0; i < data.InActivity.length; i ++) {
+                            $scope.user_inact[i].StartTime = getDate($scope.user_inact[i].StartTime);
+                            $scope.user_inact[i].EndTime = getDate(scope.user_inact[i].EndTime);
+                        }
+                        for(var i = 0; i < data.OrganizedActivity.length; i ++) {
+                            $scope.user_organizedact[i].StartTime = getDate($scope.user_organizedact[i].StartTime);
+                            $scope.user_organizedact[i].EndTime = getDate($scope.user_organizedact[i].EndTime);
+                        }
+                    }
+                    else {
+                        console.log("get act list error");
+                    }
+                    if ($scope.user_inact.length == 0) {
+                        $scope.noInact = true;
+                    }
+                });
+            }
         };
 
         if ($routeParams.user_id == $user.userId) {
@@ -454,7 +488,7 @@ angular.module('act.controllers', []).
                     console.log("get follow status error");
                 }
             });
-             $scope.isShowFollow = !$scope.isMe && !$scope.isFollowed;
+            $scope.isShowFollow = !$scope.isMe && !$scope.isFollowed;
             $scope.isShowUnFollow = !$scope.isMe && $scope.isFollowed;
         };
         $scope.getFollowStatus();
@@ -490,11 +524,7 @@ angular.module('act.controllers', []).
                     console.log("unfollow error");
                 }
             });
-        };
-
-        if ($scope.user_inact.length == 0) {
-            $scope.noInAct = true;
-        }
+        };        
     }]).
     controller('UserModifyInfoCtrl', ['$scope', '$rootScope','$window', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$location', 'AlertService', 'FileUploader', function($scope, $rootScope,$window, $http, $csrf, urls, $filter, $routeParams, $user, $location, $alert, FileUploader){
         console.log('UserModifyInfoCtrl');
@@ -1181,7 +1211,9 @@ angular.module('act.controllers', []).
         },500);*/
         
         
-        
+        $http.get(urls.api + '/act/search/?Type=' + '3').success(function(data) {
+                console.log(data);
+            });
         
         
         
@@ -1363,18 +1395,29 @@ angular.module('act.controllers', []).
         ];
         $scope.getActInfo = function () {
             $http.get(urls.api + '/act/search/?Type=' + $routeParams.search_id).success(function(data) {
-                console.log(data);
+                if(data.ErrorCode == 1) {
+                    if(data.TypeList.length == 0) {
+                        
+                    }
+                    else {
+                        
+                    }
+                }
+                else{
+                    console.log("get search error");
+                }
+                if ($scope.result.length == 0) {
+                    $scope.noResult = true;
+                }
+                if ($scope.suggest.length == 0) {
+                    $scope.noSuggest = true;
+                }
             });
         };
         //$scope.getActInfo();
         $scope.noResult = false;
         $scope.noSuggest = false;
-        if ($scope.result.length == 0) {
-            $scope.noResult = true;
-        }
-        if ($scope.suggest.length == 0) {
-            $scope.noSuggest = true;
-        }
+        
         $scope.jumptoAct = function(id) {
             $location.url('/act/' + id + '/info');
         };
