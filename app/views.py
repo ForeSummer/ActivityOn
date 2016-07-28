@@ -492,7 +492,7 @@ def Search(request):
                 print(i)
                 x = Activity.objects.all()[i]
                 print(x)
-                actList.append({'AID':x.AId,'Title':x.ATitle,'Summary':x.ASummary})
+                actList.append({'AID':x.AId,'Title':x.ATitle,'Summary':x.ASummary,'StartTime':x.AStartTime,'EndTime':x.AEndTime,'Location':x.ALocation,'Summary':x.ASummary})
         print(Type)
         if int(Type) != -1 :
             print('test')
@@ -503,7 +503,7 @@ def Search(request):
                 TypeList=[]
             print(TypeList)
             for i in TypeList:
-                typeList.append({'AID':i.AId,'Title':i.ATitle,'Summary':i.ASummary})
+                typeList.append({'AID':x.AId,'Title':x.ATitle,'Summary':x.ASummary,'StartTime':x.AStartTime,'EndTime':x.AEndTime,'Location':x.ALocation,'Summary':x.ASummary})
         print('aa')
         re['ActList'] = actList
         re['TypeList'] = typeList
