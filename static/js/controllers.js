@@ -235,6 +235,12 @@ angular.module('act.controllers', []).
                 });
             };
             $scope.getConst();
+        };
+        $scope.jumpToStaticUser = function () {
+            $location.url('/user/' + $user.userId + '/info');
+        };
+        $scope.jumpToStaticAct = function () {
+            $location.url('/user/actlist');
         }
         //console.log("homepage");
         //get user info
