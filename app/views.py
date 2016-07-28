@@ -439,7 +439,7 @@ def GetTimeline(request):
                     user = UserBase.objects.get(UId = fromList[i])
                     act = UserBase.objects.get(UId = actList[i])
                     CTime = timeList[i]
-                    tl.append({'UID':user.UId,'Avatar':user.UAvatar,'Name':user.UName,'AID':act.UId,'Type':typeList[i],'AAvatar':user.UAvatar,'AName':act.UName,'Time':CTime})
+                    tl.append({'UID':user.UId,'Avatar':user.UAvatar,'Name':user.UName,'AID':act.UId,'Type':typeList[i],'AAvatar':UserBase.objects.get(UId = act.UId).UAvatar,'AName':act.UName,'Time':CTime})
         re['ErrorCode']=1
         re['Timeline'] = tl
         re['EndTime'] = str(time)

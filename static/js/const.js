@@ -5,14 +5,16 @@ function String2Date(str) {
   return new Date(time.getTime() - new Date().getTimezoneOffset() * 60 * 60 * 1000);
 }
 
-function getDate(string) {
+function getDate(start) {
+  var year1 = parseInt(start.slice(0, 4));
+  var month1 = parseInt(start.slice(5, 7));
+  var day1 = parseInt(start.slice(8, 10));
   var str = '';
-	var date = new Date(string);
-  str += date.getFullYear();
+  str += year1;
   str += '-';
-  str += date.getMonth();
+  str += month1;
   str += '-';
-  str += date.getDate();
+  str += day1;
   return str;
 }
 
