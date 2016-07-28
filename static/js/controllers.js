@@ -1148,8 +1148,9 @@ angular.module('act.controllers', []).
         var testUser1 = ['ljj@a.b', '111111', 'a@a.a', '李俊杰', '1'];
         var testUser2 = ['trj@a.b', '111111', 'a@a.a', '唐人杰', '2'];
         var testUser3 = ['wgy@a.b', '111111', 'a@a.a', '卫国扬', '3'];
-        var userId = [2,3,4];
-        var actId = [1,2,3];
+        var testUser4 = ['test@a.b', '111111', 'a@a.a', '测试样例', '4'];
+        var userId = [1,2,3,4];
+        var actId = [1,2,3,4];
         $scope.registUser = function(user) {
             var param = {
                 'privateemail': user[0],
@@ -1187,12 +1188,14 @@ angular.module('act.controllers', []).
                 }
             });
         };
-        //$scope.follow_user(userId[0], userId[2]);
         /*$scope.registUser(testUser1);
         setTimeout(function(){
             $scope.registUser(testUser2);
             setTimeout(function(){
                 $scope.registUser(testUser3);
+                setTimeout(function () {
+                    $scope.registUser(testUser4);
+                }, 500);
             },500);
         },500);*/
         
@@ -1208,7 +1211,10 @@ angular.module('act.controllers', []).
                         $scope.follow_user(userId[2], userId[1]);
                         setTimeout(function(){
                             $scope.follow_user(userId[2], userId[0]);
-                            
+                            setTimeout(function () {
+                                $scope.follow_user(userId[0], userId[3]);
+                                //
+                            }, 500);
                         },500);
                     },500);
                 },500);
@@ -1264,6 +1270,10 @@ angular.module('act.controllers', []).
             $scope.createAct(userId[1]);
             setTimeout(function(){
                 $scope.createAct(userId[2]);
+                setTimeout(function () {
+                    $scope.createAct(userId[3]);
+                    //
+                }, 500);
             },500);
         },500);*/
         
@@ -1309,15 +1319,6 @@ angular.module('act.controllers', []).
             },500);  
         },500);*/
         
-        
-        var param = {
-                'UID': 3,
-                'AID': 2
-            };
-           
-                $http.post(urls.api + '/user/unregist', $.param(param)).success(function(data) {
-                    console.log(data);
-                });
         
         /*$scope.follow_user(25,26);
         setTimeout(function(){
