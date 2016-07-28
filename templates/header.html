@@ -3,14 +3,14 @@
     <div flex-gt-sm="20" class="left-col" ng-click="returnHome()">
       <h3 class="icon">Activity On</h3>
     </div>
-    <div flex-gt-sm="55" class="mid-col">
+    <div flex-gt-sm="45" class="mid-col">
       <md-input-container class="search">
         <label>输入要搜索的活动</label>
         <input class="search-input" ng-model="search" type="text">
       </md-input-container>
       <md-button class="search-btn" ng-click="getResult()">Search!</md-button>
     </div>
-    <div flex-gt-sm="25" class="right-col">
+    <div flex-gt-sm="" class="right-col">
       <img class="user-icon" ng-src="[[avatarUrl]]"  ng-click="infoDetail()">
       <div class="user-name" ng-click="infoDetail()">[[nickname]]</div>
       <div class="user-name" id="nickname_tmp" ng-click="logout()">点击登陆</div>

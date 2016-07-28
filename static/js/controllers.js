@@ -198,14 +198,15 @@ angular.module('act.controllers', []).
                 });
             };
             $scope.getConst();
+            anime();
         }
         //console.log("homepage");
         //get user info
         
         $scope.noSuggest = false;
-        if ($scope.suggest.length == 0) {
+        /*if ($scope.suggest.length == 0) {
             $scope.noSuggest = true;
-        }
+        }*/
     }]).
     controller('UserLoginCtrl', ['$scope', '$rootScope', '$window', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$location', 'AlertService', function($scope, $rootScope, $window, $http, $csrf, urls, $filter, $routeParams, $user, $location, $alert){
         console.log('UserLoginCtrl');
@@ -786,6 +787,8 @@ angular.module('act.controllers', []).
             $scope.act_type = $scope.types[3].name;
             $scope.act_info = "花10天时间写一个有很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多很多代码的大作业";
             $scope.isAdmin = false;
+            $scope.showParticipate = true;
+            $scope.showCancel = true;
             $scope.act_maxRegister = 3;
             $scope.act_register = ["李俊杰", "卫国扬", "唐人杰", "某某某", "abc", "一个很长的名字作为测试", "日了狗了", "可以的很django"];
             $scope.act_unregister = ["你一点都不django", "django强无敌", "毕竟django", "python"];
@@ -807,6 +810,8 @@ angular.module('act.controllers', []).
                     $scope.act_type = data.Type;
                     if(data.Admin == $user.userId) {
                         $scope.isAdmin = true;
+                        $scope.showParticipate = false;
+                        $scope.showCancel = false;
                     }
                     else {
                         $user.guestAID = $routeParams.act_id;
