@@ -13,8 +13,15 @@ angular.module('act.controllers', []).
             if(!$user.isLogged()) {
                 return;
             }
-            var searchResult;
-
+            // is null return error message
+            var searchResult = -1;
+            var keyWord = ["体育","调查","编程","学习","娱乐"];
+            for(var i = 0; i < keyWord.length; i ++) {
+                if($scope.search.match(keyWord[i])) {
+                    searchResult = i;
+                    break;
+                }
+            }
             $location.url('/user/' + searchResult + '/search');
             //get search result id
         };
@@ -203,10 +210,15 @@ angular.module('act.controllers', []).
         //console.log("homepage");
         //get user info
         
-        $scope.noSuggest = false;
-        /*if ($scope.suggest.length == 0) {
-            $scope.noSuggest = true;
+        /*$scope.noSuggest = false;
+
+            $scope.noSuggest = false;
+            if ($scope.suggest.length == 0) {
+                $scope.noSuggest = true;
+            }
         }*/
+        //console.log("homepage");
+        //get user info
     }]).
     controller('UserLoginCtrl', ['$scope', '$rootScope', '$window', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$location', 'AlertService', function($scope, $rootScope, $window, $http, $csrf, urls, $filter, $routeParams, $user, $location, $alert){
         console.log('UserLoginCtrl');
@@ -723,7 +735,6 @@ angular.module('act.controllers', []).
         $scope.getActList();
         $scope.noInact = false;
         $scope.noOrganizedact = false;
-       
     }]).
     controller('ActivityCreateCtrl', ['$scope', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$cookies', '$location', 'AlertService',function($scope, $http, $csrf, urls, $filter, $routeParams, $user, $cookies, $location, $alert){
         console.log('ActivityCreateCtrl');
@@ -1069,7 +1080,6 @@ angular.module('act.controllers', []).
 
         $scope.noRegister = false;
         $scope.noUnRegister = false;
-
     }]).
     controller('TestCtrl', ['$scope', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$cookies', '$location', 'AlertService', function($scope, $http, $csrf, urls, $filter, $routeParams, $user, $cookies, $location, $alert){
         var testUser1 = ['ljj@a.b', '111111', 'a@a.a', '李俊杰', '1'];
@@ -1409,40 +1419,48 @@ angular.module('act.controllers', []).
     }]).
     controller('UserSearchCtrl', ['$scope', '$http', 'CsrfService', 'urls', '$filter', '$routeParams', 'UserService', '$cookies', '$location', 'AlertService', function($scope, $http, $csrf, urls, $filter, $routeParams, $user, $cookies, $location, $alert){
         console.log('UserSearchCtrl');
-        $scope.result = [
-            {"aid": 0, "Title": "写后端", "Location": "宿舍", "StartTime": "2016-7-20", "EndTime": "2016-7-28", "Summary": "用django@python.shit写一大堆无聊冗长毫无意义的后端代码并把它们强行放到工程里冒充自己有很多代码量"},
-            {"aid": 0, "Title": "写前端逻辑", "Location": "宿舍", "StartTime": "2016-7-20", "EndTime": "2016-7-28", "Summary": "用angularJS写一大堆无聊冗长毫无意义的前段逻辑代码并把它们强行放到工程里冒充自己有很多代码量"},
-            {"aid": 0, "Title": "写前端样式", "Location": "宿舍", "StartTime": "2016-7-20", "EndTime": "2016-7-28", "Summary": "用HTML和less写一大堆无聊冗长毫无意义而且难看的前段样式代码并把它们强行放到工程里冒充自己有很多代码量"}
-        ];
-        $scope.suggest = [
-            {"aid": 0, "Title": "推荐1", "Location": "宿舍", "StartTime": "2016-7-20", "EndTime": "2016-7-28", "Summary": "用django@python.shit写一大堆无聊冗长毫无意义的后端代码并把它们强行放到工程里冒充自己有很多代码量"},
-            {"aid": 0, "Title": "推荐2", "Location": "宿舍", "StartTime": "2016-7-20", "EndTime": "2016-7-28", "Summary": "用angularJS写一大堆无聊冗长毫无意义的前段逻辑代码并把它们强行放到工程里冒充自己有很多代码量"},
-            {"aid": 0, "Title": "推荐3", "Location": "宿舍", "StartTime": "2016-7-20", "EndTime": "2016-7-28", "Summary": "用HTML和less写一大堆无聊冗长毫无意义而且难看的前段样式代码并把它们强行放到工程里冒充自己有很多代码量"}
-        ];
+        $scope.result = [];
+        $scope.suggest = [];
         $scope.getActInfo = function () {
             $http.get(urls.api + '/act/search/?Type=' + $routeParams.search_id).success(function(data) {
                 if(data.ErrorCode == 1) {
-                    if(data.TypeList.length == 0) {
-                        
+                    if(data.TypeList.length != 0) {
+                        for(var i = 0; i < data.TypeList.length; i ++) {
+                            var event = {};
+                            event.aid = data.TypeList[i].AID;
+                            event.Title = data.TypeList[i].Title;
+                            event.Location = data.TypeList[i].Location;
+                            event.StartTime = getDate(data.TypeList[i].StartTime);
+                            event.EndTime = getDate(data.TypeList[i].EndTime);
+                            event.Summary = data.TypeList[i].Summary;
+                            $scope.result.push(event);
+                        }
                     }
-                    else {
-                        
+                    for(var i = 0; i < data.ActList.length; i ++) {
+                        var event = {};
+                        event.aid = data.ActList[i].AID;
+                        event.Title = data.ActList[i].Title;
+                        event.Location = data.ActList[i].Location;
+                        event.StartTime = getDate(data.ActList[i].StartTime);
+                        event.EndTime = getDate(data.ActList[i].EndTime);
+                        event.Summary = data.ActList[i].Summary;
+                        $scope.suggest.push(event);
                     }
                 }
                 else{
                     console.log("get search error");
                 }
-                if ($scope.result.length == 0) {
-                    $scope.noResult = true;
+                if ($scope.result.length != 0) {
+                    $scope.noResult = false;
                 }
-                if ($scope.suggest.length == 0) {
-                    $scope.noSuggest = true;
+                if ($scope.suggest.length != 0) {
+                    $scope.noSuggest = false;
                 }
             });
         };
-        //$scope.getActInfo();
-        $scope.noResult = false;
-        $scope.noSuggest = false;
+        $scope.getActInfo();
+        $scope.noResult = true;
+        $scope.noSuggest = true;
         
         $scope.jumptoAct = function(id) {
             $location.url('/act/' + id + '/info');
