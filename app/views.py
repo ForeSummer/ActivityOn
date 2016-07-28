@@ -567,19 +567,12 @@ def UnParticipate(request):
         uact = UserActivity.objects.get( UId = UID)
         act = Activity.objects.get(AId = AID)
         if uact.UInAct.find(str(AID)) != -1:
-            print(uact.UInAct)
-            print(','+str(AID))
             uact.UInActNum -=1
-            uact.UInAct.replace(','+str(AID),'')
-            print(uact.UInAct)
+            uact.UInAct = uact.UInAct.replace(','+str(AID),'')
         if act.ARegister.find(str(UID)) != -1:
-            print(uact.UInAct)
-            act.ARegister.replace(','+str(UID),'')
-            print(uact.UInAct)
+            act.ARegister = act.ARegister.replace(','+str(UID),'')
         if act.AUnregister.find(str(UID)) != -1:
-            print(uact.UInAct)
-            act.AUnregister.replace(','+str(UID),'')
-            print(uact.UInAct)
+            act.AUnregister = act.AUnregister.replace(','+str(UID),'')
         uact.save()
         act.save()
         re['ErrorCode'] = 1
