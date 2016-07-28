@@ -21,12 +21,12 @@
 						<h3>参加的活动</h3>
 						<md-list flex>
 							<div ng-repeat="x in user_inact" class="noright">
-								<md-list-item ng-click="getActInfo($index, 0)">
+								<md-list-item ng-click="jumptoAct(x.AID)">
 									<p><span class="title">[[x.Title]]</span></p>
 									<span class="location">[[x.Location]]</span>
 									<span>[[x.StartTime]] - [[x.EndTime]]</span>
 								</md-list-item>
-								<md-list-item ng-click="getActInfo($index, 0)">
+								<md-list-item ng-click="jumptoAct(x.AID)">
 									[[x.Summary]]
 								</md-list-item>
 								<hr>
@@ -40,7 +40,7 @@
 				</div>
 			</md-content>
 			<md-sidenav flex-gt-sm="30" md-is-locked-open="true" class="md-whiteframe-z2" id="side">
-				<h3>You followed:</h3>
+				<h3>following:</h3>
 				<md-grid-list md-cols="3" md-gutter="1em" md-row-height="100px" class="follow-list">
 					<md-grid-tile ng-repeat="x in user_follow">
 						<div ng-click="jumpToUser($index, 0)">
@@ -50,7 +50,7 @@
 					</md-grid-tile>
 				</md-grid-list>
 				<div ng-if="nofollow">你还未follow任何人<br></div>
-				<h3>These people followed you:</h3>
+				<h3>followed:</h3>
 				<md-grid-list md-cols="3" md-gutter="1em" md-row-height="100px" class="follow-list">
 					<md-grid-tile ng-repeat="x in user_followed">
 						<div ng-click="jumpToUser($index, 1)">

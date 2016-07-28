@@ -27,9 +27,10 @@ def ChangeAvatar(request):
     for chunk in f.chunks():
         destination.write(chunk)
     destination.close()
-    user = UserBase.objects,get(UId = int(UID))
+    user = UserBase.objects.get(UId = int(UID))
     user.UAvatar = 'static/images/'+str(UID)+'.png'
     user.save()
+    print(user.UAvatar)
     return HttpResponse({'Avatar':user.UAvatar})
 
 def register(request):
