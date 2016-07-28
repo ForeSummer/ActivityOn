@@ -69,28 +69,29 @@
 				</div>
 			</md-content>
 			<md-sidenav flex-gt-sm="30" md-is-locked-open="true" class="md-whiteframe-z2" id="side">
+				<table class="statis">
+					<tr>
+						<td>
+							<div>您follow了:</div>
+							<input id="num1" class="knob" data-fgColor="rgb(3, 169, 244)" data-width="100" data-thickness=".2" data-max="20" data-readOnly=true value="0">
+						</td>
+						<td>
+							<div>您的followers:</div>
+							<input id="num2" class="knob" data-fgColor="rgb(0, 150, 136)" data-width="100" data-thickness=".2" data-max="20" data-readOnly=true value="0">
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<div>您参加的活动数量:</div>
+							<input id="num3" class="knob" data-fgColor="rgb(255, 193, 7)" data-width="100" data-thickness=".2" data-max="20" data-readOnly=true value="0">
+						</td>
+						<td>
+							<div>您创建的活动数量:</div>
+							<input id="num4" class="knob" data-fgColor="rgb(255, 87, 34)" data-width="100" data-thickness=".2" data-max="20" data-readOnly=true value="0">
+						</td>
+					</tr>
+				</table>
 				<md-button class="md-raised md-primary" ng-click="createActivity()">创建一个活动!</md-button>
-
-
-
-
-				<input class="knob" data-fgColor="chartreuse" data-thickness=".2" data-readOnly=true value="5">
-
-
-
-				<div class="user-info">
-					<md-list>
-						<md-list-item ng-click="getFollowList()">
-							您follow了[[user_follow_num]]个人
-						</md-list-item>
-						<md-list-item ng-click="getActList()">
-							您已报名[[user_activity_num]]个活动
-						</md-list-item>
-						<md-list-item ng-click="getActList()">
-							您已创建[[user_organize_num]]个活动
-						</md-list-item>
-					</md-list>
-				</div>
 			</md-sidenav>
 		</div>
 	</div>
