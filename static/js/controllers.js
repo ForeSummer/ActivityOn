@@ -501,7 +501,7 @@ angular.module('act.controllers', []).
                         }
                         for(var i = 0; i < data.InActivity.length; i ++) {
                             $scope.user_inact[i].StartTime = getDate($scope.user_inact[i].StartTime);
-                            $scope.user_inact[i].EndTime = getDate(scope.user_inact[i].EndTime);
+                            $scope.user_inact[i].EndTime = getDate($scope.user_inact[i].EndTime);
                         }
                         for(var i = 0; i < data.OrganizedActivity.length; i ++) {
                             $scope.user_organizedact[i].StartTime = getDate($scope.user_organizedact[i].StartTime);
@@ -531,15 +531,17 @@ angular.module('act.controllers', []).
                 'FollowID': parseInt($routeParams.user_id)
             };
             $http.post(urls.api+ '/user/isFollowed', $.param(param)).success(function(data) {
-                if(data.ErrorCode) {
-                    $scope.isFollowed = data.isFollowed;
+                if(data.ErrorCode == 1) {
+                    $scope.isFollowed = data.IsFollowed;
+                    $scope.isShowFollow = !$scope.isMe && !$scope.isFollowed;
+                    $scope.isShowUnFollow = !$scope.isMe && $scope.isFollowed;
                 }
                 else {
                     console.log("get follow status error");
                 }
+
             });
-            $scope.isShowFollow = !$scope.isMe && !$scope.isFollowed;
-            $scope.isShowUnFollow = !$scope.isMe && $scope.isFollowed;
+            
         };
         $scope.getFollowStatus();
         $scope.get_user_info();
@@ -554,6 +556,8 @@ angular.module('act.controllers', []).
                 if(data.ErrorCode == 1) {
                     $alert.showAlert(false, "关注用户成功！",function(){});
                     $scope.isFollowed = true;
+                    $scope.isShowFollow = !$scope.isMe && !$scope.isFollowed;
+                    $scope.isShowUnFollow = !$scope.isMe && $scope.isFollowed;
                 }
                 else {
                     console.log("follow error");
@@ -562,23 +566,21 @@ angular.module('act.controllers', []).
         };
         $scope.unfollow_user = function () {
             var param = {
-                'UID': 20,
+                'UID': $user.userId,
                 'UnfollowID': parseInt($routeParams.user_id)
             };
             $http.post(urls.api + '/user/unfollow', $.param(param)).success(function(data) {
                 if(data.ErrorCode == 1) {
                     $alert.showAlert(false, "取消关注用户成功！");
                     $scope.isFollowed = false;
+                    $scope.isShowFollow = !$scope.isMe && !$scope.isFollowed;
+                    $scope.isShowUnFollow = !$scope.isMe && $scope.isFollowed;
                 }
                 else {
                     console.log("unfollow error");
                 }
             });
         };
-
-        if ($scope.user_inact.length == 0) {
-            $scope.noInAct = true;
-        }
 
         $scope.jumpToUser = function (id, type) {
             if (type == 0) {
@@ -1311,14 +1313,25 @@ angular.module('act.controllers', []).
         
         
         var param = {
-                'UID': 3,
-                'AID': 2
+                'UID': 1,
+                'FollowID': 2
             };
-           
-                $http.post(urls.api + '/user/unregist', $.param(param)).success(function(data) {
-                    console.log(data);
-                });
-        
+            $http.post(urls.api+ '/user/isFollowed', $.param(param)).success(function(data) {
+                console.log(data);
+                if(data.ErrorCode == 1) {
+                    /*$scope.isFollowed = data.isFollowed;
+                    console.log(data.isFollowed);
+                    $scope.isShowFollow = !$scope.isMe && !$scope.isFollowed;
+                    $scope.isShowUnFollow = !$scope.isMe && $scope.isFollowed;
+                    console.log($scope.isFollowed);
+                    console.log($scope.isShowFollow);
+                    console.log($scope.isShowUnFollow);*/
+                }
+                else {
+                    console.log("get follow status error");
+                }
+
+            });
         /*$scope.follow_user(25,26);
         setTimeout(function(){
             $scope.follow_user(2,1);
