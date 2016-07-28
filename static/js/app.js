@@ -42,6 +42,7 @@ angular.module('act', [
         $routeProvider.when('/act/:act_id/manage', {templateUrl: urls.part + '/modifyActivityInfo.html', controller: 'ActivityManageCtrl', title: "活动管理"});
         $routeProvider.when('/act/:act_id/user', {templateUrl: urls.part + '/verifyActivityUser.html', controller: 'ActivityUserCtrl', title: "人员管理"});
         $routeProvider.when('/user/test', {templateUrl: urls.part + '/verifyActivityUser.html', controller: 'TestCtrl', title: "人员管理"});
+        $routeProvider.when('/user/:act_id/terminal', {templateUrl: urls.part + '/verifyActivityUser.html', controller: 'TurnCtrl', title: "人员管理"});
         //
         $routeProvider.when('/act/:act_id/login', {templateUrl: urls.part + '/act_login.html', controller: 'ActivityLoginCtrl', title: "活动登录"});
         $routeProvider.when('/act/:act_id/regist', {templateUrl: urls.part + '/act_regist.html', controller: 'ActivityRegistCtrl', title: "活动报名"});

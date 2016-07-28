@@ -189,7 +189,7 @@ def Get_Activity(request):
     except Activity.DoesNotExist:
         return HttpResponse(json.dumps({'ErrorCode':0}))
     else:
-        return HttpResponse(json.dumps({'ErrorCode':1,'Admin':act.AAdmin,'Type':act.AType,'Register':act.ARegister,'Unregister':act.AUnregister, 'MaxRegister':act.AMaxRegister,'StartTime':act.AStartTime, 'EntryDDL':act.AEntryDDL,'EndTime':act.AEndTime,'Title':act.ATitle, 'Location':act.ALocation, 'Info':act.AInfo, 'Summary':act.ASummary})) 
+        return HttpResponse(json.dumps({'ErrorCode':1,'Admin':act.AAdmin,'AdminName':UserBase.objects.get(UId = act.AAdmin).UName,'Type':act.AType,'Register':act.ARegister,'Unregister':act.AUnregister, 'MaxRegister':act.AMaxRegister,'StartTime':act.AStartTime, 'EntryDDL':act.AEntryDDL,'EndTime':act.AEndTime,'Title':act.ATitle, 'Location':act.ALocation, 'Info':act.AInfo, 'Summary':act.ASummary})) 
 
 def participate(request):
     re = dict()
@@ -238,9 +238,9 @@ def Accept(request):
             re['ErrorCode']=0
         else:
             activity.ARegister+=','+ str(request.POST.get('UID'))
-            activity.AUnregister.replace(','+ str(request.POST.get('UID')),'')
+            activity.AUnregister = activity.AUnregister.replace(','+ str(request.POST.get('UID')),'')
             activity.save()
-            me = UMessage.objects.get(UId = request.objects.get('UID'))
+            me = UMessage.objects.get(UId = request.POST.get('UID'))
             me.MType+= ',3'
             me.MTo += ','+str(activity.AId)
             me.MTime += ','+str(datetime.now())
@@ -258,12 +258,12 @@ def Reject(request):
         except:
             re['ErrorCode']=0
         else:
-            activity.AUnregister.replace(','+ str(request.POST.get('UID')),'')
+            activity.AUnregister = activity.AUnregister.replace(','+ str(request.POST.get('UID')),'')
             activity.save()
             uact = UserActivity.objects.get(UId = request.POST.get('UID'))
-            uact.UInAct.replace(','+str(activity.AId),'')
+            uact.UInAct = uact.UInAct.replace(','+str(activity.AId),'')
             uact.save()
-            me = UMessage.objects.get(request.POST.get('UID'))
+            me = UMessage.objects.get(UId = request.POST.get('UID'))
             me.MTo += ','+str(activity.AId)
             me.MType += ',4'
             me.MTime += ','+str(datetime.now())
@@ -302,13 +302,13 @@ def Get_Register(request):
         RegisterList = list(map(int,act.ARegister[1:].split(',')))
         for i in RegisterList:
             user = UserBase.objects.get(UId = i)
-            Register.append({'UID':user.UId,'Name':user.UName,'Avator':user.UAvator})
+            Register.append({'UID':user.UId,'Name':user.UName,'Avatar':user.UAvatar})
     Unregister = []
     if act.AUnregister != '':
         UnregisterList = list(map(int,act.AUnregister[1:].split(',')))
         for i in UnregisterList:
             user = UserBase.objects.get(UId = i)
-            Unregister.append({'UID':user.UId,'Name':user.UName,'Avator':None})
+            Unregister.append({'UID':user.UId,'Name':user.UName,'Avatar':user.UAvatar})
     re['ErrorCode']=1
     re['Register'] = Register 
     re['Unregister'] = Unregister 
@@ -321,18 +321,18 @@ def Delete_Activity(request):
         RegisterList = list(map(int,act.ARegister[1:].split(',')))
         for i in RegisterList:
             uact = UserActivity.objects.get(UId = i)
-            uact.UInAct.replace(','+str(request.GET.get('AID')),'')
+            uact.UInAct = uact.UInAct.replace(','+str(request.GET.get('AID')),'')
             uact.UInActNum -=1
             uact.save()
     if act.AUnregister != '':
         UnregisterList = list(map(int,act.AUnregister[1:].split(',')))
         for i in UnregisterList:
             uact = UserActivity.objects.get(UId = i)
-            uact.UInAct.replace(','+str(request.GET.get('AID')),'')
+            uact.UInAct = uact.UInAct.replace(','+str(request.GET.get('AID')),'')
             uact.UInActNum -=1
             uact.save()
     uact = UserActivity.objects.get(UId = act.AAdmin)
-    uact.UOrganizedAct.replace(','+str(request.GET.get('AID')),'')
+    uact.UOrganizedAct =  uact.UOrganizedAct.replace(','+str(request.GET.get('AID')),'')
     uact.UOrganizedNum -=1
     uact.save()
     act.delete()
@@ -571,15 +571,15 @@ def UnParticipate(request):
             print(uact.UInAct)
             print(','+str(AID))
             uact.UInActNum -=1
-            uact.UInAct.replace(','+str(AID),'')
+            uact.UInAct = uact.UInAct.replace(','+str(AID),'')
             print(uact.UInAct)
         if act.ARegister.find(str(UID)) != -1:
             print(uact.UInAct)
-            act.ARegister.replace(','+str(UID),'')
+            act.ARegister = act.ARegister.replace(','+str(UID),'')
             print(uact.UInAct)
         if act.AUnregister.find(str(UID)) != -1:
             print(uact.UInAct)
-            act.AUnregister.replace(','+str(UID),'')
+            act.AUnregister = act.AUnregister.replace(','+str(UID),'')
             print(uact.UInAct)
         uact.save()
         act.save()

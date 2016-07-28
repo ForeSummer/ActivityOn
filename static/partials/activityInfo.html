@@ -4,7 +4,7 @@
 		<table>
 			<tr>
 				<td>发起人:</td>
-				<td>[[act_admin]]</td>
+				<td>[[act_adminName]]</td>
 				<td rowspan="6">
 					<div id="qrcode"></div>
 				</td>
@@ -39,15 +39,19 @@
 			<h3>已报名用户:</h3>
 			<md-grid-list md-cols="8" md-gutter="1em" md-row-height="100px" class="user-list">
 				<md-grid-tile ng-repeat="x in act_register track by $index">
-					<img src="/static/images/admin.png">
-					<md-grid-tile-footer><h3>[[x]]</h3></md-grid-tile-footer>
+					<div ng-click="jumpToUser($index, 0)">
+						<img src="[[getAvatar($index, 0)]]">
+						<div class="follow-name">[[x]]</div>
+					</div>
 				</md-grid-tile>
 			</md-grid-list>
 			<h3>待审批用户:</h3>
 			<md-grid-list md-cols="8" md-gutter="1em" md-row-height="100px" class="user-list">
 				<md-grid-tile ng-repeat="x in act_unregister track by $index">
-					<img src="/static/images/admin.png">
-					<md-grid-tile-footer><h3>[[x]]</h3></md-grid-tile-footer>
+					<div ng-click="jumpToUser($index, 1)">
+						<img src="[[getAvatar($index, 1)]]">
+						<div class="follow-name">[[x]]</div>
+					</div>
 				</md-grid-tile>
 			</md-grid-list>
 			<br><br>

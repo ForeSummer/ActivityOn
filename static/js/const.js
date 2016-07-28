@@ -65,6 +65,7 @@ function getTimeLeap(start, end) {
 var reg = /^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$/;
 
 var act_types = [{"id": 0, "name": "体育"}, {"id": 1, "name": "调查"}, {"id": 2, "name": "编程"}, {"id": 3, "name": "学习"}, {"id": 4, "name": "娱乐"}, {"id": 5, "name": "django"}, {"id": 6, "name": "其他"}];
+var act = ["体育", "调查", "编程", "学习", "娱乐", "django", "其他"];
 
 function anime() {
   $(".knob").knob();
