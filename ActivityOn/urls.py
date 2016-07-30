@@ -53,34 +53,3 @@ urlpatterns = [
 ]
 
 
-
-'''urlpatterns = patterns(
-    '',
-    # Examples:
-    # url(r'^$', 'aips.views.home', name='home'),
-    # url(r'^blog/', include('blog.urls')),
-
-    url(r'^api/test$', 'app.activity.test'),
-    url(r'^api/user/auth_student$', 'app.user.auth_student'),
-    url(r'^api/user/status$', 'app.user.get_user_status'),
-    url(r'^api/user/logout$', 'app.user.logout'),
-    url(r'^api/server_time$', 'app.views.server_time'),
-    url(r'^api/activity/count$', 'app.activity.get_activity_count'),
-    url(r'^api/activity/create$', 'app.activity.create_activity'),
-    url(r'^api/activity/(?P<act_id>.*?)/set$', 'app.activity.set_activity'),
-    url(r'^api/activity/(?P<act_id>.*?)/info$', 'app.activity.get_activity'),
-    url(r'^api/activity/(?P<act_id>.*?)/send_base$', 'app.activity.send_base'),
-    url(r'^api/activity/(?P<act_id>.*?)/send_info$', 'app.activity.send_info'),
-    url(r'^api/activity/(?P<act_id>.*?)/export_csv$', 'app.activity.export_csv'),
-    url(r'^api/registration/(?P<act_id>.*?)/reg$', 'app.registration.reg'),
-    url(r'^api/registration/(?P<reg_id>.*?)/delete$', 'app.registration.delete_registration'),
-    url(r'^api/registration/(?P<act_id>.*?)/list$', 'app.registration.get_list'),
-    url(r'^api/registration/(?P<act_id>.*?)/current_num$', 'app.registration.current_num'),
-    url(r'^api/registration/(?P<act_id>.*?)/csv$', 'app.registration.get_csv'),
-    url(r'^api/registration/(?P<act_id>.*?)/modify/(?P<reg_id>.*?)$', 'app.registration.set_registration'),
-    url(r'^api/registration/(?P<act_id>.*?)/approval/(?P<reg_id>.*?)$', 'app.registration.approval'),
-    url(r'^regist/(?P<act_id>.*?)$', 'app.registration.regist_all'),
-    url(r'^admin/', include(admin.site.urls)),
-    url(r'^.*$', 'app.views.index'),
-)'''
-
