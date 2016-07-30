@@ -83,6 +83,11 @@ angular.module('act.controllers', []).
         $rootScope.$on('userNameChange', function(event, data){
             $scope.nickname = data;
         });
+        $rootScope.$on('userAvatarChange', function(event){
+            $http.get(urls.api + '/user/avatar/?UID='+ $user.userId).success(function(data){
+                $scope.avatarUrl = data.Avatar;
+            });
+        });
 
         $scope.messageList = function () {
             $location.url('user/message');
@@ -227,21 +232,26 @@ angular.module('act.controllers', []).
                         $("#num3").val(tmp);
                         tmp = parseInt($scope.user_organize_num);
                         $("#num4").val(tmp);
-                        anime();
+                        //anime();
                     }
                     else {
                         console.log("get const error");
+                        $scope.user_follow_num = 0;
+                        $scope.user_followed_num = 0;
+                        $scope.user_activity_num = 0;
+                        $scope.user_organize_num = 0;
                     }
+                    anime();
                 });
             };
             $scope.getConst();
-        };
+        }
         $scope.jumpToStaticUser = function () {
             $location.url('/user/' + $user.userId + '/info');
         };
         $scope.jumpToStaticAct = function () {
             $location.url('/user/actlist');
-        }
+        };
         //console.log("homepage");
         //get user info
         
@@ -622,7 +632,7 @@ angular.module('act.controllers', []).
             });
         };
         $scope.modifyInfo = function () {
-            if ($scope.user_name.length>9 || $scope.user_name.length<3) {
+            if ($scope.user_name.length > 9 || $scope.user_name.length<3) {
                 $scope.user_name = "";
                 $scope.errormessage = "请输入长度为3~9的昵称！";
                 //console.log($scope.errormessage);
@@ -648,6 +658,7 @@ angular.module('act.controllers', []).
                 if(data.ErrorCode == 1){
                     $alert.showAlert(false, "修改成功！", function() {
                         $rootScope.$broadcast('userNameChange', $scope.user_name);
+                        $rootScope.$broadcast('userAvatarChange');
                         $location.url('/');
                     });
                 }
@@ -1276,7 +1287,7 @@ angular.module('act.controllers', []).
                 'EntryDDL': $scope.act_entryDDL.toISOString(),
                 'StartTime': $scope.act_startDate.toISOString(),
                 'EndTime': $scope.act_endDate.toISOString(),
-                'Title': $scope.act_title,
+                'Title': $scope.act_title + user,
                 'Location': $scope.act_location,
                 'Summary': $scope.act_summary,
                 'Info': $scope.act_info

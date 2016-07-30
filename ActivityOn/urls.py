@@ -49,6 +49,7 @@ urlpatterns = [
     url(r'^api/user/isFollowed',app.views.IsFollowed),
     url(r'^api/user/ispart',app.views.IsParticipated),
     url(r'^api/user/unregist',app.views.UnParticipate),
+    url(r'^api/user/avatar/$',app.views.GetAvatar),
 ]
 
 

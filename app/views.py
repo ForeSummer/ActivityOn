@@ -580,3 +580,14 @@ def UnParticipate(request):
     except:
         re['ErrorCode'] = 0
     return HttpResponse(json.dumps(re))
+
+def GetAvatar(request):
+    re = dict()
+    try:
+        UID = request.GET.get('UID')
+        user = UserBase.objects.get(UId = UID)
+        re['Avatar'] = user.UAvatar
+        re['ErrorCode'] = 1
+    except:
+        re['ErrorCode'] = 0
+    return HttpResponse(json.dumps(re))
