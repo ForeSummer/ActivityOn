@@ -10,7 +10,6 @@ angular.module('act', [
     'act.services',
     'act.directives',
     'act.controllers',
-    //semantic directives
     'ngMaterial'
 ]).
     constant('urls', {
@@ -43,16 +42,6 @@ angular.module('act', [
         $routeProvider.when('/act/:act_id/user', {templateUrl: urls.part + '/verifyActivityUser.html', controller: 'ActivityUserCtrl', title: "人员管理"});
         $routeProvider.when('/user/test', {templateUrl: urls.part + '/verifyActivityUser.html', controller: 'TestCtrl', title: "人员管理"});
         $routeProvider.when('/user/:act_id/terminal', {templateUrl: urls.part + '/verifyActivityUser.html', controller: 'TurnCtrl', title: "人员管理"});
-        //
-        $routeProvider.when('/act/:act_id/login', {templateUrl: urls.part + '/act_login.html', controller: 'ActivityLoginCtrl', title: "活动登录"});
-        $routeProvider.when('/act/:act_id/regist', {templateUrl: urls.part + '/act_regist.html', controller: 'ActivityRegistCtrl', title: "活动报名"});
-        $routeProvider.when('/regist/:act_id', {templateUrl: urls.part + '/act_regist.html', controller: 'ActivityRegistCtrl', title: "活动报名"});
-        $routeProvider.when('/auth/:act_id',{templateUrl:urls.part+'/authentication.html',controller:'authenticationCtrl',title:"认证"});
-        $routeProvider.when('/act/:act_id/statistic', {templateUrl: urls.part + '/act_statistic.html', controller: 'ActivityStatisticCtrl', title: "报名统计"});
-        $routeProvider.when('/form/:act_id/view', {templateUrl: urls.part + '/form_view.html', controller: 'FormViewCtrl', title: "编辑报名表"});
-        $routeProvider.when('/act/:act_id/setemail', {templateUrl: urls.part + '/set_email.html', controller: 'SetEmailCtrl', title: "填写邮箱"});
-        $routeProvider.when('/dev', {templateUrl: urls.part + '/dev.html', controller: 'DevCtrl', title: 'Dev page'});
-        $routeProvider.when('/q1', {templateUrl: urls.part + '/instruction.html', controller: 'InstructionCtrl', title: '导入说明'});
         
         $routeProvider.otherwise({redirectTo: '/'});
     }]).
